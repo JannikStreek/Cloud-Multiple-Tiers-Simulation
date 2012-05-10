@@ -1,4 +1,4 @@
-package de.hpiweb.internet.cloudsim.multitier.example;
+package de.hpi_web.cloudSim.multitier.example;
 
 import java.util.ArrayList;
 import java.util.Calendar;

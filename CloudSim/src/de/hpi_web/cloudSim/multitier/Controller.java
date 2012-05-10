@@ -1,4 +1,4 @@
-package de.hpiweb.internet.cloudsim.multitier;
+package de.hpi_web.cloudSim.multitier;
 
 import java.util.Observable;
 import java.util.Observer;
