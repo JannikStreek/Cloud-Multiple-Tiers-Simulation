@@ -25,16 +25,16 @@ public class DatacenterFactory {
 	 * @return the datacenter
 	 */
 	public static Datacenter createDatacenter(String name) {
-		return createDatacenter(name, 1);
+		return createDatacenter(name, 0, 1);
 	}
-	public static Datacenter createDatacenter(String name, int hosts) {
+	public static Datacenter createDatacenter(String name, int startId, int hosts) {
 		List<Host> hostList = new ArrayList<Host>();
 		List<Pe> peList = new ArrayList<Pe>();
 
 		int mips = 1000;
 		peList.add(new Pe(0, new PeProvisionerSimple(mips)));
 
-		for(int hostId = 0; hostId < hosts; hostId++) {
+		for(int hostId = startId; hostId < startId + hosts; hostId++) {
 			hostList.add(defaultHost(hostId, peList));
 		}
 		return createDatacenter(name, defaultCharacteristics(hostList), hostList);

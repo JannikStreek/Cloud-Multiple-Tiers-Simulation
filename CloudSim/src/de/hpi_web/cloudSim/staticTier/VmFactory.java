@@ -11,9 +11,9 @@ public class VmFactory {
 		return defaultVm(0, brokerId);
 	}
 
-	public static List<Vm> createVms(int count, int brokerId) {
+	public static List<Vm> createVms(int startId, int count, int brokerId) {
 		List<Vm> vms = new ArrayList<Vm>();
-		for (int i = 0; i < count; i++)
+		for (int i = startId; i < startId + count; i++)
 			vms.add(defaultVm(i, brokerId));
 		return vms;
 	}
