@@ -20,40 +20,56 @@ public class StaticTier {
 
 	/** The cloudlet list. */
 	private static List<Cloudlet> cloudletList;
-
-	/** The vmlist. */
-	private static List<Vm> vmlist;
 	
 	public static void main(String[] args) {
 
 		Log.printLine("Starting StaticTier...");
 		initializeCloudSim();
-		Datacenter datacenter0 = DatacenterFactory.createDatacenter("Datacenter_0");
-		DatacenterBroker broker = createBroker();
-		Vm vm = VmFactory.createVm(broker.getId());
-		vmlist = new ArrayList<Vm>();
-		vmlist.add(vm);
+		Datacenter wsDatacenter = DatacenterFactory.createDatacenter("WebserverCenter", 0, 3);
+		Datacenter appDatatacenter = DatacenterFactory.createDatacenter("ApplicationCenter", 3, 3);
+		Datacenter dbDatacenter = DatacenterFactory.createDatacenter("DatabaseCenter", 6, 3);
+		DatacenterBroker wsBroker = createBroker();
+		DatacenterBroker appBroker = createBroker();
+		DatacenterBroker dbBroker = createBroker();
+		
+		List<Vm> wsVms = VmFactory.createVms(0, 3, wsBroker.getId());
+		List<Vm> appVms = VmFactory.createVms(3, 2, appBroker.getId());
+		List<Vm> dbVms = VmFactory.createVms(6, 1, dbBroker.getId());
 
-		// submit vm list to the broker
-		broker.submitVmList(vmlist);
+		// submit vm lists to the brokers
+		wsBroker.submitVmList(wsVms);
+		appBroker.submitVmList(appVms);
+		dbBroker.submitVmList(dbVms);
 
 		// Create Cloudlet(s)
 		cloudletList = new ArrayList<Cloudlet>();
-		Cloudlet cloudlet = CloudletFactory.createCloudlet(broker.getId(), vm.getId());
+		Cloudlet cloudlet = CloudletFactory.createCloudlet(wsBroker.getId());
+		Cloudlet cloudlet2 = CloudletFactory.createCloudlet(wsBroker.getId());
+		Cloudlet cloudlet3 = CloudletFactory.createCloudlet(wsBroker.getId());
+		Cloudlet cloudlet4 = CloudletFactory.createCloudlet(wsBroker.getId());
 		cloudletList.add(cloudlet);
+		cloudletList.add(cloudlet2);
+		cloudletList.add(cloudlet3);
+		cloudletList.add(cloudlet4);
 
 		// submit cloudlet list to the broker
-		broker.submitCloudletList(cloudletList);
+		wsBroker.submitCloudletList(cloudletList);
 
 		CloudSim.startSimulation();
 		CloudSim.stopSimulation();
 
 		//Print results
-		List<Cloudlet> newList = broker.getCloudletReceivedList();
-		OutputWriter.printCloudletList(newList);
+		List<Cloudlet> wsList = wsBroker.getCloudletReceivedList();
+		List<Cloudlet> appList = appBroker.getCloudletReceivedList();
+		List<Cloudlet> dbList = dbBroker.getCloudletReceivedList();
+		OutputWriter.printCloudletList(wsList);
+		OutputWriter.printCloudletList(appList);
+		OutputWriter.printCloudletList(dbList);
 
 		// Print the debt of each user to each datacenter
-		datacenter0.printDebts();
+		wsDatacenter.printDebts();
+		appDatatacenter.printDebts();
+		dbDatacenter.printDebts();
 
 		Log.printLine("CloudSimExample1 finished!");
 		
