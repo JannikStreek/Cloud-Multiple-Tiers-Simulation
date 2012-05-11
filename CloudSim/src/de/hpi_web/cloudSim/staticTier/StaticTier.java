@@ -16,10 +16,6 @@ import de.hpi_web.cloudSim.staticTier.DatacenterFactory;
 import de.hpi_web.cloudSim.utils.OutputWriter;
 
 public class StaticTier {
-
-
-	/** The cloudlet list. */
-	private static List<Cloudlet> cloudletList;
 	
 	public static void main(String[] args) {
 
@@ -33,27 +29,21 @@ public class StaticTier {
 		DatacenterBroker dbBroker = createBroker();
 		
 		List<Vm> wsVms = VmFactory.createVms(0, 3, wsBroker.getId());
-		List<Vm> appVms = VmFactory.createVms(3, 2, appBroker.getId());
-		List<Vm> dbVms = VmFactory.createVms(6, 1, dbBroker.getId());
+		List<Vm> appVms = VmFactory.createVms(3, 3, appBroker.getId());
+		List<Vm> dbVms = VmFactory.createVms(6, 3, dbBroker.getId());
 
 		// submit vm lists to the brokers
 		wsBroker.submitVmList(wsVms);
 		appBroker.submitVmList(appVms);
 		dbBroker.submitVmList(dbVms);
 
-		// Create Cloudlet(s)
-		cloudletList = new ArrayList<Cloudlet>();
-		Cloudlet cloudlet = CloudletFactory.createCloudlet(wsBroker.getId());
-		Cloudlet cloudlet2 = CloudletFactory.createCloudlet(wsBroker.getId());
-		Cloudlet cloudlet3 = CloudletFactory.createCloudlet(wsBroker.getId());
-		Cloudlet cloudlet4 = CloudletFactory.createCloudlet(wsBroker.getId());
-		cloudletList.add(cloudlet);
-		cloudletList.add(cloudlet2);
-		cloudletList.add(cloudlet3);
-		cloudletList.add(cloudlet4);
+		List<Cloudlet> wsCloudlets = CloudletFactory.createCloudlets(0, 10, wsBroker.getId());
+		List<Cloudlet> appCloudlets = CloudletFactory.createCloudlets(10, 10, appBroker.getId());
+		List<Cloudlet> dbCloudlets = CloudletFactory.createCloudlets(20, 10, dbBroker.getId());
 
-		// submit cloudlet list to the broker
-		wsBroker.submitCloudletList(cloudletList);
+		wsBroker.submitCloudletList(wsCloudlets);
+		appBroker.submitCloudletList(appCloudlets);
+		dbBroker.submitCloudletList(dbCloudlets);
 
 		CloudSim.startSimulation();
 		CloudSim.stopSimulation();
@@ -71,7 +61,7 @@ public class StaticTier {
 		appDatatacenter.printDebts();
 		dbDatacenter.printDebts();
 
-		Log.printLine("CloudSimExample1 finished!");
+		Log.printLine("StaticTier Simulation finished!");
 		
 	}
 	
