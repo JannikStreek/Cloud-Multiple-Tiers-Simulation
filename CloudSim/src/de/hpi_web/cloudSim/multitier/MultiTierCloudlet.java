@@ -2,12 +2,20 @@ package de.hpi_web.cloudSim.multitier;
 
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.UtilizationModel;
-import java.util.Observable;
+
+import de.hpi_web.cloudSim.multitier.controller.CloudController;
+
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MultiTierCloudlet extends Cloudlet {
-	
-	private MultiTierCloudletObservable data;
+	private List<CloudController> listeners = new ArrayList<CloudController>();
 	private int tier;
+	
+	public static int TIER_DB = 3;
+	public static int TIER_APP = 2;
+	public static int TIER_SERVER = 1;
 
 	public MultiTierCloudlet(int cloudletId, long cloudletLength,
 			int pesNumber, long cloudletFileSize, long cloudletOutputSize,
@@ -18,9 +26,6 @@ public class MultiTierCloudlet extends Cloudlet {
 		super(cloudletId, cloudletLength, pesNumber, cloudletFileSize,
 				cloudletOutputSize, utilizationModelCpu, utilizationModelRam,
 				utilizationModelBw);
-		
-		this.data = new MultiTierCloudletObservable();
-		data.setParent(this);
 	}
 	
 	public int getTier() {
@@ -33,28 +38,18 @@ public class MultiTierCloudlet extends Cloudlet {
 	
 	@Override
 	public void setCloudletStatus(int newStatus) throws Exception {
-		data.setStatus(newStatus);
+		notifyListeners();
 		super.setCloudletStatus(newStatus);
 	}
-	
-	private class MultiTierCloudletObservable extends Observable{
-		int status = 0;
-		Cloudlet parent = null;
 		
-		private void setStatus(int newStatus) {
-			status = newStatus;
-			hasChanged();
+	private void notifyListeners() {
+		for (CloudController listener : listeners) {
+			listener.propertyChange(this);
 		}
-		
-		private void setParent(Cloudlet cloudlet) {
-			parent = cloudlet;
-		}
-		
-		public Cloudlet getParent(){
-			return this.parent;
-		}
-		
-		
+	}
+
+	public void addChangeListener(CloudController newListener) {
+		listeners.add(newListener);
 	}
 
 }
