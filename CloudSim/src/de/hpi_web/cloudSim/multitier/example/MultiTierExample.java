@@ -85,6 +85,7 @@ public class MultiTierExample {
                     cloudletList.add(cloudlet);
 
                     // submit cloudlet list to the broker
+                    broker.
                     broker.submitCloudletList(cloudletList);
 
                     // Sixth step: Starts the simulation
