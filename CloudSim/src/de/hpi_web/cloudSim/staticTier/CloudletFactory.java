@@ -1,5 +1,8 @@
 package de.hpi_web.cloudSim.staticTier;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.UtilizationModel;
 import org.cloudbus.cloudsim.UtilizationModelFull;
@@ -8,6 +11,13 @@ public class CloudletFactory {
 	public static Cloudlet createCloudlet(int brokerId) {
 		
 		return createDefaultCloudlet(0, brokerId);
+	}
+	public static List<Cloudlet> createCloudlets(int startId, int count, int brokerId) {
+		List<Cloudlet> cloudlets = new ArrayList<Cloudlet>();
+		for (int i = startId; i < startId + count; i++) {
+			cloudlets.add(createDefaultCloudlet(i, brokerId));
+		}
+		return cloudlets;
 	}
 	public static Cloudlet createCloudlet(int brokerId, int vmId) {
 		
