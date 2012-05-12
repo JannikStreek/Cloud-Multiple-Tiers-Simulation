@@ -12,6 +12,17 @@ public class CloudletFactory {
 		
 		return createDefaultCloudlet(0, brokerId);
 	}
+	/**
+	 * Create a List of default cloudlets
+	 * 
+	 * @param startId first ID to be used
+	 * @param count number of cloudlets to be created
+	 * @param brokerId owner (broker ID)
+	 * @return List<Cloudlet>
+	 * @pre startId >= 0
+	 * @pre startId >= 0
+	 * @post $none
+	 */
 	public static List<Cloudlet> createCloudlets(int startId, int count, int brokerId) {
 		List<Cloudlet> cloudlets = new ArrayList<Cloudlet>();
 		for (int i = startId; i < startId + count; i++) {
