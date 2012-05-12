@@ -2,8 +2,9 @@ package de.hpi_web.cloudSim.multitier;
 
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.UtilizationModel;
+import org.cloudbus.cloudsim.core.SimEntity;
 
-import de.hpi_web.cloudSim.multitier.controller.CloudController;
+import de.hpi_web.cloudSim.multitier.datacenter.CloudController;
 
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -12,6 +13,9 @@ import java.util.List;
 public class MultiTierCloudlet extends Cloudlet {
 	private List<CloudController> listeners = new ArrayList<CloudController>();
 	private int tier;
+	private MultiTierCloudlet parent;
+
+	private SimEntity originator;
 	
 	public static int TIER_DB = 3;
 	public static int TIER_APP = 2;
@@ -50,6 +54,14 @@ public class MultiTierCloudlet extends Cloudlet {
 
 	public void addChangeListener(CloudController newListener) {
 		listeners.add(newListener);
+	}
+	
+	public MultiTierCloudlet getParent() {
+		return parent;
+	}
+
+	public SimEntity getOriginator() {
+		return originator;
 	}
 
 }
