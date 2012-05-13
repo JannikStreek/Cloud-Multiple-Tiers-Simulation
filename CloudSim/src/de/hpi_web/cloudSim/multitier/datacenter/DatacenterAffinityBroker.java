@@ -20,14 +20,14 @@ import de.hpi_web.cloudSim.multitier.MultiTierCloudlet;
  * Override default behavior and limit the datacenter => vm mapping to only one possible datacenter.
  * Despite that properties/behaviour is introduced to fit the multiple tier architecture.
  */
-public class DataCenterController extends DatacenterBroker {
+public class DatacenterAffinityBroker extends DatacenterBroker {
 	
 	private int tier;
 	private List<Integer> dcAffinity;
 	
 	//TODO how to disallow multiple datacenters?
 	
-	public DataCenterController(String name, int tier) throws Exception {
+	public DatacenterAffinityBroker(String name, int tier) throws Exception {
 		super(name);
 		this.tier = tier;
 		this.dcAffinity = new ArrayList<Integer>();
