@@ -29,6 +29,7 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 	private int tier;
 	private List<Integer> dcAffinity;
 	private DatacenterAffinityBroker successor;
+	private LoadBalancer loadBalancer;
 	
 	//TODO how to disallow multiple datacenters?
 
@@ -36,6 +37,7 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 		super(name);
 		this.tier = tier;
 		this.dcAffinity = new ArrayList<Integer>();
+		this.loadBalancer = new FirstAvailableLoadBalancer(this);
 		addAffinity(datacenterId);
 	}
 	
@@ -196,11 +198,14 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 	@Override
 	protected void submitCloudlets() {
 		int vmIndex = 0;
+		
 		for (Cloudlet cloudlet : getCloudletList()) {
 			Vm vm;
 			// if user didn't bind this cloudlet and it has not been executed yet
 			if (cloudlet.getVmId() == -1) {
-				vm = getVmsCreatedList().get(vmIndex);
+				//TODO Load Balancer HERE. He determines what vm to use.
+				vm = loadBalancer.getNextVm();
+				//vm = getVmsCreatedList().get(vmIndex);
 			} else { // submit to the specific vm
 				vm = VmList.getById(getVmsCreatedList(), cloudlet.getVmId());
 				if (vm == null) { // vm was not created
