@@ -1,4 +1,4 @@
-package de.hpi_web.cloudSim.staticTier;
+package de.hpi_web.cloudSim.multitier.example;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -12,6 +12,9 @@ import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
 
 import de.hpi_web.cloudSim.multitier.datacenter.DatacenterAffinityBroker;
+import de.hpi_web.cloudSim.multitier.staticTier.CloudletFactory;
+import de.hpi_web.cloudSim.multitier.staticTier.DatacenterFactory;
+import de.hpi_web.cloudSim.multitier.staticTier.VmFactory;
 import de.hpi_web.cloudSim.utils.OutputWriter;
 
 public class StaticTier {
@@ -30,7 +33,7 @@ public class StaticTier {
 		DatacenterAffinityBroker appBroker = createBroker("appBroker");
 		DatacenterAffinityBroker dbBroker = createBroker("dbBroker");
 		
-		List<Vm> wsVms = VmFactory.createVms(0, 3, wsBroker.getId());
+		List<Vm> wsVms = VmFactory.createVms(0, 1, wsBroker.getId());
 		List<Vm> appVms = VmFactory.createVms(3, 1, appBroker.getId());
 		List<Vm> dbVms = VmFactory.createVms(6, 1, dbBroker.getId());
 		
@@ -50,9 +53,9 @@ public class StaticTier {
 		appBroker.submitVmList(appVms);
 		dbBroker.submitVmList(dbVms);
 
-		List<Cloudlet> wsCloudlets = CloudletFactory.createCloudlets(0, 10, wsBroker.getId());
-		List<Cloudlet> appCloudlets = CloudletFactory.createCloudlets(10, 10, appBroker.getId());
-		List<Cloudlet> dbCloudlets = CloudletFactory.createCloudlets(20, 10, dbBroker.getId());
+		List<Cloudlet> wsCloudlets = CloudletFactory.createCloudlets(0, 2, wsBroker.getId());
+		List<Cloudlet> appCloudlets = CloudletFactory.createCloudlets(10, 5, appBroker.getId());
+		List<Cloudlet> dbCloudlets = CloudletFactory.createCloudlets(20, 2, dbBroker.getId());
 
 		wsBroker.submitCloudletList(wsCloudlets);
 		appBroker.submitCloudletList(appCloudlets);
