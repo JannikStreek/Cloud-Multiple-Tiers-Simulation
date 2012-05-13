@@ -33,9 +33,12 @@ public class StaticTier {
 		DatacenterAffinityBroker appBroker = createBroker("appBroker");
 		DatacenterAffinityBroker dbBroker = createBroker("dbBroker");
 		
-		List<Vm> wsVms = VmFactory.createVms(0, 1, wsBroker.getId());
-		List<Vm> appVms = VmFactory.createVms(3, 1, appBroker.getId());
-		List<Vm> dbVms = VmFactory.createVms(6, 1, dbBroker.getId());
+		wsBroker.setSuccessor(appBroker);
+		appBroker.setSuccessor(dbBroker);
+		
+		List<Vm> wsVms = VmFactory.createVms(0, 3, wsBroker.getId());
+		List<Vm> appVms = VmFactory.createVms(3, 3, appBroker.getId());
+		List<Vm> dbVms = VmFactory.createVms(6, 3, dbBroker.getId());
 		
 		List<Integer> wsDcAffinity = new ArrayList<Integer>();
 		List<Integer> appDcAffinity = new ArrayList<Integer>();
