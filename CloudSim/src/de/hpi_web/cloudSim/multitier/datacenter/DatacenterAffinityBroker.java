@@ -79,16 +79,20 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 	}
 
 	private void processFurtherLoad() {
-		
-        int id3 = 3;
-        long length = 400000;
-        long fileSize = 300;
-        long outputSize = 300;
-        int pesNumber = 1;
-        UtilizationModel utilizationModel = new UtilizationModelFull();
-        Cloudlet cloudlet3 = new Cloudlet(id3, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
-        cloudlet3.setUserId(this.successor.getId());
-		CloudSim.send(getId(), this.successor.getId(), 0.1, MultiTierCloudTags.REQUEST_TAG, cloudlet3);
+		if(this.successor != null) {
+			
+	        int id3 = 3;
+	        long length = 400000;
+	        long fileSize = 300;
+	        long outputSize = 300;
+	        int pesNumber = 1;
+	        UtilizationModel utilizationModel = new UtilizationModelFull();
+	        Cloudlet cloudlet3 = new Cloudlet(id3, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
+	        cloudlet3.setUserId(this.successor.getId());
+			CloudSim.send(getId(), this.successor.getId(), 0.1, MultiTierCloudTags.REQUEST_TAG, cloudlet3);
+			
+		}
+
 
 	}
 

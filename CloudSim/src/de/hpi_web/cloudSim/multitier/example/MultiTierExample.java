@@ -63,12 +63,14 @@ public class MultiTierExample {
                     Datacenter datacenter1 = createDatacenter("Datacenter_1");
 
                     // Third step: Create two Brokers
-                    DatacenterBroker broker = createBroker(datacenter0);
+                    DatacenterAffinityBroker broker = createBroker(datacenter0);
                     int brokerId = broker.getId();
                     
-                    DatacenterBroker broker2 = createBroker(datacenter1);
+                    DatacenterAffinityBroker broker2 = createBroker(datacenter1);
                     int broker2Id = broker2.getId();
-
+                    
+                    broker.setSuccessor(broker2);
+                    
                     // Fourth step: Create one virtual machine
                     vmlist = new ArrayList<Vm>();
                     vmlist2 = new ArrayList<Vm>();
@@ -237,7 +239,7 @@ public class MultiTierExample {
      *
      * @return the datacenter broker
      */
-    private static DatacenterBroker createBroker(Datacenter datacenter) {
+    private static DatacenterAffinityBroker createBroker(Datacenter datacenter) {
             DatacenterAffinityBroker broker = null;
             try {
                     broker = new DatacenterAffinityBroker("Broker", 0, datacenter.getId());
