@@ -18,7 +18,6 @@ import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.cloudsim.lists.VmList;
 
 import de.hpi_web.cloudSim.multitier.MultiTierCloudTags;
-import de.hpi_web.cloudSim.multitier.MultiTierCloudlet;
 /*
  * DataCenterController
  * Override default behavior and limit the datacenter => vm mapping to only one possible datacenter.
@@ -46,31 +45,31 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 		this.dcAffinity = new ArrayList<Integer>();
 	}
 	
-	@Override
-	public void processOtherEvent(SimEvent ev) {
-		Object payload = ev.getData();
-		
-		switch (ev.getTag()) {
-			// Request
-			case MultiTierCloudTags.REQUEST_TAG:
-				processRequestTag(ev);
-				break;
-		}
-		
-		//TODO process new events like request/response
-		
-
-	}
+//	@Override
+//	public void processOtherEvent(SimEvent ev) {
+//		Object payload = ev.getData();
+//		
+//		switch (ev.getTag()) {
+//			// Request
+//			case MultiTierCloudTags.REQUEST_TAG:
+//				processRequestTag(ev);
+//				break;
+//		}
+//		
+//		//TODO process new events like request/response
+//		
+//
+//	}
 	
-	private void processRequestTag(SimEvent ev) {
-		// gets the Cloudlet object
-		Cloudlet cl = (Cloudlet) ev.getData();
-		
-		getCloudletList().add(cl);
-		submitCloudlets();
-		processFurtherLoad();
-		
-	}
+//	private void processRequestTag(SimEvent ev) {
+//		// gets the Cloudlet object
+//		Cloudlet cl = (Cloudlet) ev.getData();
+//		
+//		getCloudletList().add(cl);
+//		submitCloudlets();
+//		processFurtherLoad();
+//		
+//	}
 	
 	public DatacenterAffinityBroker getSuccessor() {
 		return successor;
@@ -92,7 +91,6 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
         cloudlet3.setUserId(this.successor.getId());
 		CloudSim.send(getId(), this.successor.getId(), 0.1, MultiTierCloudTags.REQUEST_TAG, cloudlet3);
 
-		
 	}
 
 	public void setDcAffinityList(List<Integer> dcAffinity) {
@@ -316,6 +314,7 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 		// all the requested VMs have been created
 		if (getVmsCreatedList().size() == getVmList().size() - getVmsDestroyed()) {
 			submitCloudlets();
+			processFurtherLoad();
 		} else {
 			// all the acks received, but some VMs were not created
 			if (getVmsRequested() == getVmsAcks()) {
@@ -330,6 +329,7 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 				// all datacenters already queried
 				if (getVmsCreatedList().size() > 0) { // if some vm were created
 					submitCloudlets();
+					processFurtherLoad();
 				} else { // no vms created. abort
 					Log.printLine(CloudSim.clock() + ": " + getName()
 							+ ": none of the required VMs could be created. Aborting");
