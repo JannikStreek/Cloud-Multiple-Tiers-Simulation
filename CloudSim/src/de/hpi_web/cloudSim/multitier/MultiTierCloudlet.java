@@ -32,12 +32,25 @@ public class MultiTierCloudlet extends Cloudlet {
 				utilizationModelBw);
 	}
 	
+	public MultiTierCloudlet(Cloudlet cloudlet) {
+		super(cloudlet.getCloudletId(), cloudlet.getCloudletLength(), cloudlet.getNumberOfPes(), cloudlet.getCloudletFileSize(),
+				cloudlet.getCloudletOutputSize(), cloudlet.getUtilizationModelCpu(), cloudlet.getUtilizationModelRam(),
+				cloudlet.getUtilizationModelBw());
+		setVmId(cloudlet.getVmId());
+		setUserId(cloudlet.getUserId());
+		
+	}
+	
 	public int getTier() {
 		return tier;
 	}
 
 	public void setTier(int tier) {
 		this.tier = tier;
+	}
+	
+	public void setParent(MultiTierCloudlet parent) {
+		this.parent = parent;
 	}
 	
 	@Override
