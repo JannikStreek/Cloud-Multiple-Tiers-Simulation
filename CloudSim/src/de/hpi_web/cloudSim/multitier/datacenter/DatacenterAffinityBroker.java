@@ -174,7 +174,7 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 	@Override
 	protected void processVmCreate(SimEvent ev) {
 		int[] data = (int[]) ev.getData();
-		int datacenterId = 0; //TODO override
+		int datacenterId = data[0]; //TODO override
 		int vmId = data[1];
 		int result = data[2];
 

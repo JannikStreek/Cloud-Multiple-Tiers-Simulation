@@ -51,7 +51,7 @@ public class StaticTier {
 		dbBroker.submitVmList(dbVms);
 
 		List<Cloudlet> wsCloudlets = CloudletFactory.createCloudlets(0, 10, wsBroker.getId());
-		List<Cloudlet> appCloudlets = CloudletFactory.createCloudlets(10, 10, appBroker.getId());
+		List<Cloudlet> appCloudlets = CloudletFactory.createCloudlets(10, 2, appBroker.getId());
 		List<Cloudlet> dbCloudlets = CloudletFactory.createCloudlets(20, 10, dbBroker.getId());
 
 		wsBroker.submitCloudletList(wsCloudlets);
