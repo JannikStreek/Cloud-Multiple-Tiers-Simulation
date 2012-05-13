@@ -44,31 +44,31 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 		this.dcAffinity = new ArrayList<Integer>();
 	}
 	
-//	@Override
-//	public void processOtherEvent(SimEvent ev) {
-//		Object payload = ev.getData();
-//		
-//		switch (ev.getTag()) {
-//			// Request
-//			case MultiTierCloudTags.REQUEST_TAG:
-//				processRequestTag(ev);
-//				break;
-//		}
-//		
-//		//TODO process new events like request/response
-//		
-//
-//	}
+	@Override
+	public void processOtherEvent(SimEvent ev) {
+		Object payload = ev.getData();
+		
+		switch (ev.getTag()) {
+			// Request
+			case MultiTierCloudTags.REQUEST_TAG:
+				processRequestTag(ev);
+				break;
+		}
+		
+		//TODO process new events like request/response
+		
+
+	}
 	
-//	private void processRequestTag(SimEvent ev) {
-//		// gets the Cloudlet object
-//		Cloudlet cl = (Cloudlet) ev.getData();
-//		
-//		getCloudletList().add(cl);
-//		submitCloudlets();
-//		processFurtherLoad();
-//		
-//	}
+	private void processRequestTag(SimEvent ev) {
+		// gets the Cloudlet object
+		Cloudlet cl = (Cloudlet) ev.getData();
+		
+		getCloudletList().add(cl);
+		submitCloudlets();
+		processFurtherLoad();
+		
+	}
 	
 	public DatacenterAffinityBroker getSuccessor() {
 		return successor;
