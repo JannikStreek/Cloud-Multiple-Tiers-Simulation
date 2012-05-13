@@ -123,9 +123,9 @@ public class MultiTierExample {
                     cloudletList2.add(cloudlet2);
 
                     // submit cloudlet list to the broker
-                    //broker.submitCloudletList(cloudletList);
+                    broker.submitCloudletList(cloudletList);
                     //broker2.submitCloudletList(cloudletList2);
-                    CloudSim.send(0, broker.getId(), 0.1, MultiTierCloudTags.REQUEST_TAG, cloudlet);
+                   // CloudSim.send(0, broker.getId(), 0.1, MultiTierCloudTags.REQUEST_TAG, cloudlet);
 
                     // Sixth step: Starts the simulation
                     CloudSim.startSimulation();
