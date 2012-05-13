@@ -82,9 +82,9 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 		if(this.successor != null) {
 			
 	        int id3 = 3;
-	        long length = 400000;
-	        long fileSize = 300;
-	        long outputSize = 300;
+	        long length = 4000000;
+	        long fileSize = 3000;
+	        long outputSize = 3000;
 	        int pesNumber = 1;
 	        UtilizationModel utilizationModel = new UtilizationModelFull();
 	        Cloudlet cloudlet3 = new Cloudlet(id3, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
@@ -202,12 +202,15 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 			Log.printLine(CloudSim.clock() + ": " + getName() + ": Sending cloudlet "
 					+ cloudlet.getCloudletId() + " to VM #" + vm.getId());
 			cloudlet.setVmId(vm.getId());
+
 			// TODO: take correct datacenter
-			if(!dcAffinity.isEmpty())
-				sendNow(dcAffinity.get(0), CloudSimTags.CLOUDLET_SUBMIT, cloudlet);
-			else
+			if(!dcAffinity.isEmpty()) {
+				sendNow(dcAffinity.get(0), CloudSimTags.CLOUDLET_SUBMIT, cloudlet);	
+			} else {
 				sendNow(datacenterIdsList.get(0), CloudSimTags.CLOUDLET_SUBMIT, cloudlet);
+			}
 			cloudletsSubmitted++;
+			
 			vmIndex = (vmIndex + 1) % getVmsCreatedList().size();
 			getCloudletSubmittedList().add(cloudlet);
 		}
