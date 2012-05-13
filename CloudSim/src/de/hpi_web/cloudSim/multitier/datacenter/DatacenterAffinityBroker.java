@@ -163,11 +163,11 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 			}
 		}
 	}
-	
+	/*
 	@Override
 	protected void processResourceCharacteristicsRequest(SimEvent ev) {
 		//dont get all datacenters, just take the the one which is passed by the conctructor
-		//setDatacenterIdsList(CloudSim.getCloudResourceList());  
+		setDatacenterIdsList(CloudSim.getCloudResourceList());  
 		setDatacenterCharacteristicsList(new HashMap<Integer, DatacenterCharacteristics>());
 
 		Log.printLine(CloudSim.clock() + ": " + getName() + ": Cloud Resource List received with "
@@ -176,7 +176,7 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 		for (Integer datacenterId : getDatacenterIdsList()) {
 			sendNow(datacenterId, CloudSimTags.RESOURCE_CHARACTERISTICS, getId());
 		}
-	}
+	}*/
 	
 	@Override
 	protected void submitCloudlets() {
