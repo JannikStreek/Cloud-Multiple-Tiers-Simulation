@@ -5,6 +5,7 @@ import org.cloudbus.cloudsim.UtilizationModel;
 import org.cloudbus.cloudsim.core.SimEntity;
 
 import de.hpi_web.cloudSim.multitier.datacenter.CloudController;
+import de.hpi_web.cloudSim.multitier.datacenter.DatacenterAffinityBroker;
 
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ public class MultiTierCloudlet extends Cloudlet {
 	private int tier;
 	private MultiTierCloudlet parent;
 
-	private SimEntity originator;
+	private DatacenterAffinityBroker originator;
 	
 	public static int TIER_DB = 2;
 	public static int TIER_APP = 1;
@@ -32,6 +33,10 @@ public class MultiTierCloudlet extends Cloudlet {
 				utilizationModelBw);
 	}
 	
+	public void setOriginator(DatacenterAffinityBroker originator) {
+		this.originator = originator;
+	}
+
 	public MultiTierCloudlet(Cloudlet cloudlet) {
 		super(cloudlet.getCloudletId(), cloudlet.getCloudletLength(), cloudlet.getNumberOfPes(), cloudlet.getCloudletFileSize(),
 				cloudlet.getCloudletOutputSize(), cloudlet.getUtilizationModelCpu(), cloudlet.getUtilizationModelRam(),
@@ -73,7 +78,7 @@ public class MultiTierCloudlet extends Cloudlet {
 		return parent;
 	}
 
-	public SimEntity getOriginator() {
+	public DatacenterAffinityBroker getOriginator() {
 		return originator;
 	}
 

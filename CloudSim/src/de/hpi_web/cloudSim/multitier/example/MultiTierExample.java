@@ -26,6 +26,7 @@ import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
 
 import de.hpi_web.cloudSim.multitier.MultiTierCloudTags;
+import de.hpi_web.cloudSim.multitier.MultiTierCloudlet;
 import de.hpi_web.cloudSim.multitier.datacenter.DatacenterAffinityBroker;
 
 public class MultiTierExample {
@@ -111,7 +112,7 @@ public class MultiTierExample {
                     long outputSize = 300;
                     UtilizationModel utilizationModel = new UtilizationModelFull();
 
-                    Cloudlet cloudlet = new Cloudlet(id, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
+                    MultiTierCloudlet cloudlet = new MultiTierCloudlet(id, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
                     cloudlet.setUserId(brokerId);
                     //cloudlet.setVmId(vmid);
                     

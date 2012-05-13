@@ -120,7 +120,14 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 	 */
 	@Override
 	protected void processCloudletReturn(SimEvent ev) {
-		Cloudlet cloudlet = (Cloudlet) ev.getData();
+		MultiTierCloudlet cloudlet = (MultiTierCloudlet) ev.getData();
+		
+		//TODO Resume the parent of the cloudlet, if there is one
+		int status = cloudlet.getParent().getStatus();
+		if(cloudlet.getParent() != null && (status == Cloudlet.PAUSED || status == Cloudlet.CREATED)) {
+			sendNow(cloudlet.getParent().getUserId(), CloudSimTags.CLOUDLET_RESUME, cloudlet.getParent());
+		}
+
 		getCloudletReceivedList().add(cloudlet);
 		Log.printLine(CloudSim.clock() + ": " + getName() + ": Cloudlet " + cloudlet.getCloudletId()
 				+ " received");
