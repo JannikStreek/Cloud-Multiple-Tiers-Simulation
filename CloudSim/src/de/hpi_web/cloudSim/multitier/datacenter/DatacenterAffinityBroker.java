@@ -36,7 +36,14 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 		super(name);
 		this.tier = tier;
 		this.dcAffinity = new ArrayList<Integer>();
-		this.datacenterIdsList.add(datacenterId);
+		addAffinity(datacenterId);
+		//this.datacenterIdsList.add(datacenterId);
+	}
+	
+	public DatacenterAffinityBroker(String name, int tier) throws Exception {
+		super(name);
+		this.tier = tier;
+		this.dcAffinity = new ArrayList<Integer>();
 	}
 	
 	@Override
@@ -93,6 +100,10 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 	}
 	public List<Integer> getDcAffinityList() {
 		return dcAffinity;
+	}
+	public void addAffinity(int datacenterId) {
+		if (!dcAffinity.contains(datacenterId))
+			dcAffinity.add(datacenterId);
 	}
 	
 /*	private void createMultiTierCloudlet(int tier, int src, int dest) {
