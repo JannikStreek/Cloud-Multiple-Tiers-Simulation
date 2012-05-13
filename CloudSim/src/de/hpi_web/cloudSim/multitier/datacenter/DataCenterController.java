@@ -1,6 +1,8 @@
 package de.hpi_web.cloudSim.multitier.datacenter;
 
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.DatacenterBroker;
@@ -21,12 +23,14 @@ import de.hpi_web.cloudSim.multitier.MultiTierCloudlet;
 public class DataCenterController extends DatacenterBroker {
 	
 	private int tier;
+	private List<Integer> dcAffinity;
 	
 	//TODO how to disallow multiple datacenters?
 	
 	public DataCenterController(String name, int tier) throws Exception {
 		super(name);
 		this.tier = tier;
+		this.dcAffinity = new ArrayList<Integer>();
 	}
 	
 	@Override
@@ -46,6 +50,13 @@ public class DataCenterController extends DatacenterBroker {
                  break;
 
         }
+	}
+	
+	public void setDcAffinityList(List<Integer> dcAffinity) {
+		this.dcAffinity = dcAffinity;
+	}
+	public List<Integer> getDcAffinityList() {
+		return dcAffinity;
 	}
 	
 /*	private void createMultiTierCloudlet(int tier, int src, int dest) {
@@ -117,7 +128,8 @@ public class DataCenterController extends DatacenterBroker {
 	
 	@Override
 	protected Map<Integer, Integer> getVmsToDatacentersMap() {
-		throw new NotImplementedException();
+		//throw new NotImplementedException();
+		return super.getVmsToDatacentersMap();
 	}
 	
 	/**
@@ -129,9 +141,13 @@ public class DataCenterController extends DatacenterBroker {
 	 */
 	@Override
 	protected void createVmsInDatacenter(int datacenterId) {
-		datacenterId = 0; //TODO Override input to map the requested behaviour, but bad code
+		if(!dcAffinity.isEmpty())
+			datacenterId = dcAffinity.get(0);
 		// send as much vms as possible for this datacenter before trying the next one
 		int requestedVms = 0;
+		// TODO: when (hard) affinity is provided and the DCs are full, throw an exception
+		
+		
 		String datacenterName = CloudSim.getEntityName(datacenterId);
 		for (Vm vm : getVmList()) {
 			if (!getVmsToDatacentersMap().containsKey(vm.getId())) {
