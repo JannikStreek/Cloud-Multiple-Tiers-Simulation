@@ -27,6 +27,16 @@ public class DatacenterFactory {
 	public static Datacenter createDatacenter(String name) {
 		return createDatacenter(name, 0, 1);
 	}
+	/**
+	 * Creates a new default Datacenter
+	 * 
+	 * @param startId first ID to be used
+	 * @param hosts number of default hosts to be created
+	 * @param name Name of this datacenter
+	 * @return Datacenter
+	 * @pre startId >= 0
+	 * @post $none
+	 */
 	public static Datacenter createDatacenter(String name, int startId, int hosts) {
 		List<Host> hostList = new ArrayList<Host>();
 		List<Pe> peList = new ArrayList<Pe>();

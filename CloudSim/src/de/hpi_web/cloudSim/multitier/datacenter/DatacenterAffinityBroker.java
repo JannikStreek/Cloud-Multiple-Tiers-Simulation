@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.DatacenterBroker;
+import org.cloudbus.cloudsim.DatacenterCharacteristics;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
@@ -77,6 +78,25 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 ////////////////////////////////////////////////////////////////////////////////////
 ///Methods which have to be overridden to realize a Broker 1:1 datacenter Mapping///
 ////////////////////////////////////////////////////////////////////////////////////
+
+	@Override
+	protected void processResourceCharacteristics(SimEvent ev) {
+		DatacenterCharacteristics characteristics = (DatacenterCharacteristics) ev.getData();
+		getDatacenterCharacteristicsList().put(characteristics.getId(), characteristics);
+
+		if (getDatacenterCharacteristicsList().size() == getDatacenterIdsList().size()) {
+			setDatacenterRequestedIdsList(new ArrayList<Integer>());
+			if(dcAffinity.isEmpty())
+				createVmsInDatacenter(getDatacenterIdsList().get(0));
+			else {
+				for (int id : getDatacenterIdsList()) {
+					if (dcAffinity.contains(id)) {
+						createVmsInDatacenter(id);
+					}
+				}
+			}
+		}
+	}
 	
 	@Override
 	protected void submitCloudlets() {
@@ -98,7 +118,9 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 			Log.printLine(CloudSim.clock() + ": " + getName() + ": Sending cloudlet "
 					+ cloudlet.getCloudletId() + " to VM #" + vm.getId());
 			cloudlet.setVmId(vm.getId());
-			sendNow(datacenterIdsList.get(0), CloudSimTags.CLOUDLET_SUBMIT, cloudlet);
+			// TODO: take correct datacenter
+			//sendNow(datacenterIdsList.get(0), CloudSimTags.CLOUDLET_SUBMIT, cloudlet);
+			sendNow(dcAffinity.get(0), CloudSimTags.CLOUDLET_SUBMIT, cloudlet);
 			cloudletsSubmitted++;
 			vmIndex = (vmIndex + 1) % getVmsCreatedList().size();
 			getCloudletSubmittedList().add(cloudlet);
@@ -120,7 +142,9 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 	protected void clearDatacenters() {
 		for (Vm vm : getVmsCreatedList()) {
 			Log.printLine(CloudSim.clock() + ": " + getName() + ": Destroying VM #" + vm.getId());
-			sendNow(datacenterIdsList.get(0), CloudSimTags.VM_DESTROY, vm);
+			// TODO: get correct datacenter
+			//sendNow(datacenterIdsList.get(0), CloudSimTags.VM_DESTROY, vm);
+			sendNow(dcAffinity.get(0), CloudSimTags.VM_DESTROY, vm);
 		}
 
 		getVmsCreatedList().clear();

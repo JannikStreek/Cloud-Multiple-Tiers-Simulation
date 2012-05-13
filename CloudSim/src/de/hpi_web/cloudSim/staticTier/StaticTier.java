@@ -30,7 +30,7 @@ public class StaticTier {
 		DatacenterAffinityBroker appBroker = createBroker("appBroker");
 		DatacenterAffinityBroker dbBroker = createBroker("dbBroker");
 		
-		List<Vm> wsVms = VmFactory.createVms(0, 3, wsBroker.getId());
+		List<Vm> wsVms = VmFactory.createVms(0, 1, wsBroker.getId());
 		List<Vm> appVms = VmFactory.createVms(3, 1, appBroker.getId());
 		List<Vm> dbVms = VmFactory.createVms(6, 1, dbBroker.getId());
 		
@@ -50,9 +50,9 @@ public class StaticTier {
 		appBroker.submitVmList(appVms);
 		dbBroker.submitVmList(dbVms);
 
-		List<Cloudlet> wsCloudlets = CloudletFactory.createCloudlets(0, 10, wsBroker.getId());
+		List<Cloudlet> wsCloudlets = CloudletFactory.createCloudlets(0, 2, wsBroker.getId());
 		List<Cloudlet> appCloudlets = CloudletFactory.createCloudlets(10, 2, appBroker.getId());
-		List<Cloudlet> dbCloudlets = CloudletFactory.createCloudlets(20, 10, dbBroker.getId());
+		List<Cloudlet> dbCloudlets = CloudletFactory.createCloudlets(20, 2, dbBroker.getId());
 
 		wsBroker.submitCloudletList(wsCloudlets);
 		appBroker.submitCloudletList(appCloudlets);
