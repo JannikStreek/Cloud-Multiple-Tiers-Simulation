@@ -1,4 +1,4 @@
-package de.hpi_web.cloudSim.staticTier;
+package de.hpi_web.cloudSim.multitier.staticTier;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

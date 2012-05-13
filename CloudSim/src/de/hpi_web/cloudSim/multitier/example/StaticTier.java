@@ -1,4 +1,4 @@
-package de.hpi_web.cloudSim.staticTier;
+package de.hpi_web.cloudSim.multitier.example;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -12,6 +12,9 @@ import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
 
 import de.hpi_web.cloudSim.multitier.datacenter.DatacenterAffinityBroker;
+import de.hpi_web.cloudSim.multitier.staticTier.CloudletFactory;
+import de.hpi_web.cloudSim.multitier.staticTier.DatacenterFactory;
+import de.hpi_web.cloudSim.multitier.staticTier.VmFactory;
 import de.hpi_web.cloudSim.utils.OutputWriter;
 
 public class StaticTier {
@@ -51,7 +54,7 @@ public class StaticTier {
 		dbBroker.submitVmList(dbVms);
 
 		List<Cloudlet> wsCloudlets = CloudletFactory.createCloudlets(0, 2, wsBroker.getId());
-		List<Cloudlet> appCloudlets = CloudletFactory.createCloudlets(10, 2, appBroker.getId());
+		List<Cloudlet> appCloudlets = CloudletFactory.createCloudlets(10, 5, appBroker.getId());
 		List<Cloudlet> dbCloudlets = CloudletFactory.createCloudlets(20, 2, dbBroker.getId());
 
 		wsBroker.submitCloudletList(wsCloudlets);
