@@ -1,19 +1,23 @@
 package de.hpi_web.cloudSim.multitier.datacenter;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.DatacenterBroker;
+import org.cloudbus.cloudsim.DatacenterCharacteristics;
 import org.cloudbus.cloudsim.Log;
+import org.cloudbus.cloudsim.UtilizationModel;
+import org.cloudbus.cloudsim.UtilizationModelFull;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.cloudsim.lists.VmList;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import de.hpi_web.cloudSim.multitier.MultiTierCloudTags;
 import de.hpi_web.cloudSim.multitier.MultiTierCloudlet;
 /*
  * DataCenterController
@@ -24,34 +28,66 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 	
 	private int tier;
 	private List<Integer> dcAffinity;
+	private DatacenterAffinityBroker successor;
 	
 	//TODO how to disallow multiple datacenters?
-	
-	public DatacenterAffinityBroker(String name, int tier) throws Exception {
+
+	public DatacenterAffinityBroker(String name, int tier, int datacenterId) throws Exception {
 		super(name);
 		this.tier = tier;
 		this.dcAffinity = new ArrayList<Integer>();
+		this.datacenterIdsList.add(datacenterId);
 	}
 	
 	@Override
 	public void processOtherEvent(SimEvent ev) {
 		Object payload = ev.getData();
 		
+		switch (ev.getTag()) {
+			// Request
+			case MultiTierCloudTags.REQUEST_TAG:
+				processRequestTag(ev);
+				break;
+		}
+		
 		//TODO process new events like request/response
 		
-        switch (this.tier) {
-        case 1:  this.tier = MultiTierCloudlet.TIER_SERVER;
-                 break;
-        case 2:  this.tier = MultiTierCloudlet.TIER_APP;
-                 break;
-        case 3:  this.tier = MultiTierCloudlet.TIER_DB;
-                 break;
-        default: this.tier = 0;
-                 break;
 
-        }
 	}
 	
+	private void processRequestTag(SimEvent ev) {
+		// gets the Cloudlet object
+		Cloudlet cl = (Cloudlet) ev.getData();
+		
+		getCloudletList().add(cl);
+		submitCloudlets();
+		processFurtherLoad();
+		
+	}
+	
+	public DatacenterAffinityBroker getSuccessor() {
+		return successor;
+	}
+
+	public void setSuccessor(DatacenterAffinityBroker successor) {
+		this.successor = successor;
+	}
+
+	private void processFurtherLoad() {
+		
+        int id3 = 3;
+        long length = 400000;
+        long fileSize = 300;
+        long outputSize = 300;
+        int pesNumber = 1;
+        UtilizationModel utilizationModel = new UtilizationModelFull();
+        Cloudlet cloudlet3 = new Cloudlet(id3, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
+        cloudlet3.setUserId(this.successor.getId());
+		CloudSim.send(getId(), this.successor.getId(), 0.1, MultiTierCloudTags.REQUEST_TAG, cloudlet3);
+
+		
+	}
+
 	public void setDcAffinityList(List<Integer> dcAffinity) {
 		this.dcAffinity = dcAffinity;
 	}
@@ -74,9 +110,61 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 		
 	}*/
 	
+	/**
+	 * Process a cloudlet return event.
+	 * 
+	 * @param ev a SimEvent object
+	 * @pre ev != $null
+	 * @post $none
+	 */
+	@Override
+	protected void processCloudletReturn(SimEvent ev) {
+		Cloudlet cloudlet = (Cloudlet) ev.getData();
+		getCloudletReceivedList().add(cloudlet);
+		Log.printLine(CloudSim.clock() + ": " + getName() + ": Cloudlet " + cloudlet.getCloudletId()
+				+ " received");
+		cloudletsSubmitted--;
+		if (getCloudletList().size() == 0 && cloudletsSubmitted == 0) { // all cloudlets executed
+			Log.printLine(CloudSim.clock() + ": " + getName() + ": All Cloudlets executed so far.");
+		} else { // some cloudlets haven't finished yet
+			if (getCloudletList().size() > 0 && cloudletsSubmitted == 0) {
+				// all the cloudlets sent finished. It means that some bount
+				// cloudlet is waiting its VM be created
+				clearDatacenters();
+				createVmsInDatacenter(0);
+			}
+
+		}
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see cloudsim.core.SimEntity#shutdownEntity()
+	 */
+	@Override
+	public void shutdownEntity() {
+		Log.printLine(getName() + " is shutting down...");
+		clearDatacenters();
+		finishExecution();
+	}
+	
 ////////////////////////////////////////////////////////////////////////////////////
 ///Methods which have to be overridden to realize a Broker 1:1 datacenter Mapping///
 ////////////////////////////////////////////////////////////////////////////////////
+	
+	@Override
+	protected void processResourceCharacteristicsRequest(SimEvent ev) {
+		//dont get all datacenters, just take the the one which is passed by the conctructor
+		//setDatacenterIdsList(CloudSim.getCloudResourceList());  
+		setDatacenterCharacteristicsList(new HashMap<Integer, DatacenterCharacteristics>());
+
+		Log.printLine(CloudSim.clock() + ": " + getName() + ": Cloud Resource List received with "
+				+ getDatacenterIdsList().size() + " resource(s)");
+
+		for (Integer datacenterId : getDatacenterIdsList()) {
+			sendNow(datacenterId, CloudSimTags.RESOURCE_CHARACTERISTICS, getId());
+		}
+	}
 	
 	@Override
 	protected void submitCloudlets() {

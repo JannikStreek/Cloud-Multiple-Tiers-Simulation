@@ -17,9 +17,9 @@ public class MultiTierCloudlet extends Cloudlet {
 
 	private SimEntity originator;
 	
-	public static int TIER_DB = 3;
-	public static int TIER_APP = 2;
-	public static int TIER_SERVER = 1;
+	public static int TIER_DB = 2;
+	public static int TIER_APP = 1;
+	public static int TIER_SERVER = 0;
 
 	public MultiTierCloudlet(int cloudletId, long cloudletLength,
 			int pesNumber, long cloudletFileSize, long cloudletOutputSize,
