@@ -36,7 +36,6 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 		this.tier = tier;
 		this.dcAffinity = new ArrayList<Integer>();
 		addAffinity(datacenterId);
-		//this.datacenterIdsList.add(datacenterId);
 	}
 	
 	public DatacenterAffinityBroker(String name, int tier) throws Exception {
@@ -103,21 +102,6 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 		if (!dcAffinity.contains(datacenterId))
 			dcAffinity.add(datacenterId);
 	}
-	
-/*	private void createMultiTierCloudlet(int tier, int src, int dest) {
-		
-		int id = 0;
-        long length = 400000;
-        long fileSize = 300;
-        long outputSize = 300;
-        UtilizationModel utilizationModel = new UtilizationModelFull();
-
-        MultiTierCloudlet cloudlet = new MultiTierCloudlet(id, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
-        cloudlet.setTier(tier);
-        CloudSim.send(src, dest, delay, tag, cloudlet);
-        Host
-		
-	}*/
 	
 	/**
 	 * Process a cloudlet return event.
@@ -215,8 +199,10 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 					+ cloudlet.getCloudletId() + " to VM #" + vm.getId());
 			cloudlet.setVmId(vm.getId());
 			// TODO: take correct datacenter
-			//sendNow(datacenterIdsList.get(0), CloudSimTags.CLOUDLET_SUBMIT, cloudlet);
-			sendNow(dcAffinity.get(0), CloudSimTags.CLOUDLET_SUBMIT, cloudlet);
+			if(!dcAffinity.isEmpty())
+				sendNow(dcAffinity.get(0), CloudSimTags.CLOUDLET_SUBMIT, cloudlet);
+			else
+				sendNow(datacenterIdsList.get(0), CloudSimTags.CLOUDLET_SUBMIT, cloudlet);
 			cloudletsSubmitted++;
 			vmIndex = (vmIndex + 1) % getVmsCreatedList().size();
 			getCloudletSubmittedList().add(cloudlet);
