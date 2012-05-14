@@ -1,7 +1,9 @@
 package de.hpi_web.cloudSim.multitier;
 
 import org.cloudbus.cloudsim.Cloudlet;
+import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.UtilizationModel;
+import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.SimEntity;
 
 import de.hpi_web.cloudSim.multitier.datacenter.CloudController;
@@ -21,6 +23,8 @@ public class MultiTierCloudlet extends Cloudlet {
 	public static int TIER_DB = 2;
 	public static int TIER_APP = 1;
 	public static int TIER_SERVER = 0;
+	
+	private double finishTime;
 
 	public MultiTierCloudlet(int cloudletId, long cloudletLength,
 			int pesNumber, long cloudletFileSize, long cloudletOutputSize,
@@ -60,6 +64,7 @@ public class MultiTierCloudlet extends Cloudlet {
 	
 	@Override
 	public void setCloudletStatus(int newStatus) throws Exception {
+		Log.printLine("Status of Cloudet " + Cloudlet.getStatusString(newStatus) + " changed at time " + CloudSim.clock());
 		notifyListeners();
 		super.setCloudletStatus(newStatus);
 	}
@@ -81,5 +86,6 @@ public class MultiTierCloudlet extends Cloudlet {
 	public DatacenterAffinityBroker getOriginator() {
 		return originator;
 	}
+	
 
 }
