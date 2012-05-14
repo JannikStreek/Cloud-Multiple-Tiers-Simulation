@@ -103,27 +103,23 @@ public class MultiTierExample {
                     // Fifth step: Create one Cloudlet
                     cloudletList = new ArrayList<Cloudlet>();
                     cloudletList2 = new ArrayList<Cloudlet>();
+                    MultiTierCloudlet cloudlet;
+                    for(int i=0;i < 500;i++) {
+                    	
+                        long length = 400000;
+                        long fileSize = 300;
+                        long outputSize = 300;
+                        UtilizationModel utilizationModel = new UtilizationModelFull();
 
-                    // Cloudlet properties
-                    int id = 0;
-                    int id2 = 1;
-                    long length = 400000;
-                    long fileSize = 300;
-                    long outputSize = 300;
-                    UtilizationModel utilizationModel = new UtilizationModelFull();
+                        cloudlet = new MultiTierCloudlet(i, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
+                        cloudlet.setUserId(brokerId);
 
-                    MultiTierCloudlet cloudlet = new MultiTierCloudlet(id, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
-                    cloudlet.setUserId(brokerId);
-                    //cloudlet.setVmId(vmid);
+                        // add the cloudlet to the list
+                        cloudletList.add(cloudlet);
+                    	
+                    }
                     
-                    // Cloudlet2 properties
-                    Cloudlet cloudlet2 = new Cloudlet(id2, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
-                    cloudlet2.setUserId(broker2Id);
-                    cloudlet2.setVmId(vm2id);
 
-                    // add the cloudlet to the list
-                    cloudletList.add(cloudlet);
-                    cloudletList2.add(cloudlet2);
 
                     // submit cloudlet list to the broker
                     broker.submitCloudletList(cloudletList);

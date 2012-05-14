@@ -84,8 +84,8 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 	private void processFurtherLoad(MultiTierCloudlet parent) {
 		if(this.successor != null) {
 			
-	        int id3 = 3;
-	        long length = 4000000;
+	        int id3 = 1001;
+	        long length = 400000;
 	        long fileSize = 3000;
 	        long outputSize = 3000;
 	        int pesNumber = 1;
@@ -95,6 +95,7 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 	        cloudlet3.setUserId(this.successor.getId());
 			CloudSim.send(getId(), this.successor.getId(), 0, MultiTierCloudTags.REQUEST_TAG, cloudlet3);
 			
+			Log.printLine("Halting Cloudlet" + CloudSim.clock());
 			sendNow(getDcAffinityList().get(0), CloudSimTags.CLOUDLET_PAUSE, parent);
 			
 		}
@@ -122,12 +123,17 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 	 */
 	@Override
 	protected void processCloudletReturn(SimEvent ev) {
+		Log.printLine("Returning Cloudlet " + CloudSim.clock());
 		MultiTierCloudlet cloudlet = (MultiTierCloudlet) ev.getData();
 		
 		//TODO Resume the parent of the cloudlet, if there is one
-		int status = cloudlet.getParent().getStatus();
-		if(cloudlet.getParent() != null && (status == Cloudlet.PAUSED || status == Cloudlet.CREATED)) {
-			sendNow(cloudlet.getParent().getUserId(), CloudSimTags.CLOUDLET_RESUME, cloudlet.getParent());
+		//int status = cloudlet.getParent().getStatus();
+		
+		//TODO only do it if cloudlet is paused
+		if(cloudlet.getParent() != null) {
+			Log.printLine("Resuming old Cloudlet" + CloudSim.clock());
+			DatacenterAffinityBroker parentBroker = (DatacenterAffinityBroker) CloudSim.getEntity(cloudlet.getParent().getUserId());
+			sendNow(parentBroker.dcAffinity.get(0), CloudSimTags.CLOUDLET_RESUME, cloudlet.getParent());
 		}
 
 		getCloudletReceivedList().add(cloudlet);
