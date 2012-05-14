@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.CloudletSchedulerTimeShared;
@@ -17,9 +18,11 @@ import org.cloudbus.cloudsim.Pe;
 import org.cloudbus.cloudsim.Storage;
 import org.cloudbus.cloudsim.UtilizationModel;
 import org.cloudbus.cloudsim.UtilizationModelFull;
+import org.cloudbus.cloudsim.UtilizationModelStochastic;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.VmAllocationPolicySimple;
 import org.cloudbus.cloudsim.VmSchedulerTimeShared;
+import org.cloudbus.cloudsim.VmStateHistoryEntry;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
@@ -104,14 +107,15 @@ public class MultiTierExample {
                     cloudletList = new ArrayList<Cloudlet>();
                     cloudletList2 = new ArrayList<Cloudlet>();
                     MultiTierCloudlet cloudlet;
-                    for(int i=0;i < 500;i++) {
+                    
+                    for(int i=0;i < 100;i++) {
                     	
-                        long length = 400000;
-                        long fileSize = 300;
-                        long outputSize = 300;
+                        long length =  new Random().nextLong();
+                        long fileSize = new Random().nextLong();
+                        long outputSize = new Random().nextLong();
                         UtilizationModel utilizationModel = new UtilizationModelFull();
 
-                        cloudlet = new MultiTierCloudlet(i, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
+                        cloudlet = new MultiTierCloudlet(i, length, pesNumber, fileSize, outputSize, new UtilizationModelStochastic(), new UtilizationModelStochastic(), new UtilizationModelStochastic());
                         cloudlet.setUserId(brokerId);
 
                         // add the cloudlet to the list
@@ -148,6 +152,7 @@ public class MultiTierExample {
                     // Print the debt of each user to each datacenter
                     datacenter0.printDebts();
                     datacenter1.printDebts();
+
 
                     Log.printLine("CloudSimExample1 finished!");
             } catch (Exception e) {
