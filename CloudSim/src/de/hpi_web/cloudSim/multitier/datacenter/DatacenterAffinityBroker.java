@@ -204,8 +204,8 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 			// if user didn't bind this cloudlet and it has not been executed yet
 			if (cloudlet.getVmId() == -1) {
 				//TODO Load Balancer HERE. He determines what vm to use.
-				vm = loadBalancer.getNextVm();
-				//vm = getVmsCreatedList().get(vmIndex);
+				//vm = loadBalancer.getNextVm();
+				vm = getVmsCreatedList().get(vmIndex);
 			} else { // submit to the specific vm
 				vm = VmList.getById(getVmsCreatedList(), cloudlet.getVmId());
 				if (vm == null) { // vm was not created
