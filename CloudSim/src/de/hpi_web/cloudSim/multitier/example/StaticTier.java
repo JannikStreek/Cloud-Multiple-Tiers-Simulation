@@ -17,6 +17,7 @@ import de.hpi_web.cloudSim.multitier.datacenter.DatacenterAffinityBroker;
 import de.hpi_web.cloudSim.multitier.staticTier.CloudletFactory;
 import de.hpi_web.cloudSim.multitier.staticTier.DatacenterFactory;
 import de.hpi_web.cloudSim.multitier.staticTier.VmFactory;
+import de.hpi_web.cloudSim.multitier.workload.SpikeWorkloadGenerator;
 import de.hpi_web.cloudSim.utils.OutputWriter;
 
 public class StaticTier {
@@ -65,8 +66,9 @@ public class StaticTier {
 		wsBroker.submitCloudletList(wsCloudlets);
 		//appBroker.submitCloudletList(appCloudlets);
 		//dbBroker.submitCloudletList(dbCloudlets);
-
-		
+		SpikeWorkloadGenerator workloadGen = new SpikeWorkloadGenerator();
+		workloadGen.scheduleWorkloadForBroker(wsBroker, 1000.0);
+		System.exit(0);
 		CloudSim.startSimulation();
 		CloudSim.stopSimulation();
 

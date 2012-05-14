@@ -45,6 +45,7 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 		super(name);
 		this.tier = tier;
 		this.dcAffinity = new ArrayList<Integer>();
+		this.loadBalancer = new FirstAvailableLoadBalancer(this);
 	}
 	
 	@Override
