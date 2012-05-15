@@ -48,10 +48,10 @@ public class SpikeWorkloadGenerator extends WorkloadGenerator {
 				cl = CloudletFactory.createCloudlets(startId, workload, brokerId);
 				for (MultiTierCloudlet c : cl) {
 					// TODO: fix this so that the workload is taken and executed
-					List<MultiTierCloudlet> children = new ArrayList<MultiTierCloudlet>();
-					children.add((MultiTierCloudlet)CloudletFactory.createCloudlet(brokerId));
-					c.setChildren(children);
-					initBroker.schedule(brokerId, t, CloudSimTags.CLOUDLET_SUBMIT, c);
+//					List<MultiTierCloudlet> children = new ArrayList<MultiTierCloudlet>();
+//					children.add((MultiTierCloudlet)CloudletFactory.createCloudlet(brokerId));
+//					c.setChildren(children);
+					broker.schedule(brokerId, t, MultiTierCloudTags.REQUEST_TAG, c);
 				}
 	
 				startId += workload;

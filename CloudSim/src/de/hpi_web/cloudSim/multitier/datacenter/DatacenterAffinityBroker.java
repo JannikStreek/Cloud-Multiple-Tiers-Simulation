@@ -57,16 +57,16 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 			case MultiTierCloudTags.REQUEST_TAG:
 				processRequestTag(ev);
 				break;
-			case CloudSimTags.CLOUDLET_SUBMIT:
-				processNewCloudlet(ev);
-				break;
+//			case CloudSimTags.CLOUDLET_SUBMIT:
+//				processRequestTag(ev);
+//				break;
 		}
 		
 		//TODO process new events like request/response
 		
 
 	}
-	
+
 	private void processRequestTag(SimEvent ev) {
 		// gets the Cloudlet object
 		MultiTierCloudlet cl = (MultiTierCloudlet) ev.getData();
@@ -102,8 +102,10 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 			Log.printLine("Halting Cloudlet" + CloudSim.clock());
 			sendNow(getDcAffinityList().get(0), CloudSimTags.CLOUDLET_PAUSE, parent);
 			*/
-	        for (MultiTierCloudlet child : parent.getChildren())
+	        for (MultiTierCloudlet child : parent.getChildren()) {
 				CloudSim.send(getId(), this.successor.getId(), 0, MultiTierCloudTags.REQUEST_TAG, child);
+				sendNow(getDcAffinityList().get(0), CloudSimTags.CLOUDLET_PAUSE, parent);
+	        }
 		}
 	}
 

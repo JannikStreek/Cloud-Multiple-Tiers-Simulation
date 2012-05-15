@@ -17,6 +17,24 @@ import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
 
 public class DatacenterFactory {
 	
+	/* DC Characteristics */
+	public static final double  DEFAULT_COST  =       	3.0;		// cost for processing
+	public static final double  DEFAULT_COST_MEM  =   	0.05;		// cost for main memory
+	public static final double  DEFAULT_COST_STORAGE =	0.001;		// cost for storage
+	public static final double  DEFAULT_COST_BW =	    0.0;		// cost for bandwith
+	public static final double  DEFAULT_TIMEZONE =     10.0;		// time zone of this resource
+
+	public static final String ARCH = "x86";				// systen architecture
+	public static final String OS = "Linux";				// operating system
+	public static final String VMM = "Xen";					// virtual machine manager (hypervisor)
+	
+	/* Host Configuration */
+	public static final int  DEFAULT_PES  =       4;		// number of CPUS
+	public static final int  DEFAULT_MIPS =    1200;		// MIPS per CPU
+	public static final int  DEFAULT_RAM  =    4096;  		// vm memory (MB)
+	public static final long DEFAULT_STORAGE = 1600000; 	// image size (MB)
+	public static final long DEFAULT_BW   =   10000;		// total bandwith available, 10GBit/s
+
 	/**
 	 * Creates the datacenter.
 	 *
@@ -41,11 +59,8 @@ public class DatacenterFactory {
 		List<Host> hostList = new ArrayList<Host>();
 		List<Pe> peList = new ArrayList<Pe>();
 
-		int mips = 1200;
-		peList.add(new Pe(0, new PeProvisionerSimple(mips)));
-		peList.add(new Pe(1, new PeProvisionerSimple(mips)));
-		peList.add(new Pe(2, new PeProvisionerSimple(mips)));
-		peList.add(new Pe(3, new PeProvisionerSimple(mips)));
+		for (int i = 0; i < DEFAULT_PES; i++)
+			peList.add(new Pe(i, new PeProvisionerSimple(DEFAULT_MIPS)));
 
 		for(int hostId = startId; hostId < startId + hosts; hostId++) {
 			hostList.add(defaultHost(hostId, peList));
@@ -66,30 +81,17 @@ public class DatacenterFactory {
 	}
 	
 	private static DatacenterCharacteristics defaultCharacteristics(List<Host> hostList) {
-		String arch = "x86"; // system architecture
-		String os = "Linux"; // operating system
-		String vmm = "Xen";
-		double time_zone = 10.0; // time zone this resource located
-		double cost = 3.0; // the cost of using processing in this resource
-		double costPerMem = 0.05; // the cost of using memory in this resource
-		double costPerStorage = 0.001; // the cost of using storage in this
-										// resource
-		double costPerBw = 0.0; // the cost of using bw in this resource
-
 		return new DatacenterCharacteristics(
-				arch, os, vmm, hostList, time_zone, cost, costPerMem,
-				costPerStorage, costPerBw);
+				ARCH, OS, VMM, hostList, DEFAULT_TIMEZONE, DEFAULT_COST, DEFAULT_COST_MEM,
+				DEFAULT_COST_STORAGE, DEFAULT_COST_BW);
 	}
 	
 	private static Host defaultHost(int hostId, List<Pe> peList) {
-		int ram = 2048;
-		long storage = 1000000;
-		int bw = 10000;
 		return new Host(
 				hostId,
-				new RamProvisionerSimple(ram),
-				new BwProvisionerSimple(bw),
-				storage,
+				new RamProvisionerSimple(DEFAULT_RAM),
+				new BwProvisionerSimple(DEFAULT_BW),
+				DEFAULT_STORAGE,
 				peList,
 				new VmSchedulerTimeShared(peList)
 			);
