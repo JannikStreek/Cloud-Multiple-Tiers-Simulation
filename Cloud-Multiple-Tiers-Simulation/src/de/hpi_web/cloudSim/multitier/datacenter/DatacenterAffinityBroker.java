@@ -127,8 +127,14 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 		if(cloudlet.getParent() != null) {
 			Log.printLine("Resuming old Cloudlet" + CloudSim.clock());
 			DatacenterAffinityBroker parentBroker = (DatacenterAffinityBroker) CloudSim.getEntity(cloudlet.getParent().getUserId());
-			int parentDatacenterId = parentBroker.getVmsToDatacentersMap().get(cloudlet.getParent().getVmId());
-			sendNow(parentDatacenterId, CloudSimTags.CLOUDLET_RESUME, cloudlet.getParent());
+			
+			// If the cloudlet created multiple children, wait until all are finished, then continue
+			cloudlet.getParent().incrementReturnedChildren();
+			if(cloudlet.getParent().areAllChildrenReturned()) {
+				int parentDatacenterId = parentBroker.getVmsToDatacentersMap().get(cloudlet.getParent().getVmId());
+				sendNow(parentDatacenterId, CloudSimTags.CLOUDLET_RESUME, cloudlet.getParent());
+			}
+
 		}
 
 		getCloudletReceivedList().add(cloudlet);

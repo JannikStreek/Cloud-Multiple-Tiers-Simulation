@@ -24,6 +24,8 @@ public class MultiTierCloudlet extends Cloudlet {
 	public static int TIER_DB = 2;
 	public static int TIER_APP = 1;
 	public static int TIER_SERVER = 0;
+
+	private int returnedChildren = 0;
 	
 	private double finishTime;
 
@@ -63,6 +65,22 @@ public class MultiTierCloudlet extends Cloudlet {
 	
 	public void setParent(MultiTierCloudlet parent) {
 		this.parent = parent;
+	}
+	
+	public int getReturnedChildren() {
+		return returnedChildren;
+	}
+
+	public void setReturnedChildren(int returnedChildren) {
+		this.returnedChildren = returnedChildren;
+	}
+	
+	public void incrementReturnedChildren() {
+		this.returnedChildren++;
+	}
+	
+	public boolean areAllChildrenReturned() {
+		return this.returnedChildren == children.size();
 	}
 	
 	@Override
