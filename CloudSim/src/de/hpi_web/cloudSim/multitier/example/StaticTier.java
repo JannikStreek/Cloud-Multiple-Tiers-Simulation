@@ -60,15 +60,15 @@ public class StaticTier {
 		dbBroker.submitVmList(dbVms);
 
 		List<MultiTierCloudlet> wsCloudlets = CloudletFactory.createCloudlets(0, 50, wsBroker.getId());
-		List<MultiTierCloudlet> appCloudlets = CloudletFactory.createCloudlets(10, 5, appBroker.getId());
-		List<MultiTierCloudlet> dbCloudlets = CloudletFactory.createCloudlets(20, 2, dbBroker.getId());
+		//List<MultiTierCloudlet> appCloudlets = CloudletFactory.createCloudlets(10, 5, appBroker.getId());
+		//List<MultiTierCloudlet> dbCloudlets = CloudletFactory.createCloudlets(20, 2, dbBroker.getId());
 
 		wsBroker.submitCloudletList(wsCloudlets);
 		//appBroker.submitCloudletList(appCloudlets);
 		//dbBroker.submitCloudletList(dbCloudlets);
 		SpikeWorkloadGenerator workloadGen = new SpikeWorkloadGenerator();
 		workloadGen.scheduleWorkloadForBroker(wsBroker, 1000.0);
-		System.exit(0);
+		//System.exit(0);
 		CloudSim.startSimulation();
 		CloudSim.stopSimulation();
 

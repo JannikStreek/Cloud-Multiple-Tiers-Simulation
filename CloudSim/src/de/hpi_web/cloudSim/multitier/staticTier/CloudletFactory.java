@@ -11,9 +11,9 @@ import de.hpi_web.cloudSim.multitier.MultiTierCloudlet;
 
 public class CloudletFactory {
 	public static final int DEFAULT_PES = 1;
-	public static final int DEFAULT_LENGTH = 250400000;
-	public static final int DEFAULT_FILESIZE = 300;
-	public static final int DEFAULT_OUTPUTSIZE = 300;
+	public static final int DEFAULT_LENGTH = 30;//250400000;
+	public static final int DEFAULT_FILESIZE = 1;//300;
+	public static final int DEFAULT_OUTPUTSIZE = 1;//300;
 	public static Cloudlet createCloudlet(int brokerId) {
 		
 		return createDefaultCloudlet(0, brokerId);

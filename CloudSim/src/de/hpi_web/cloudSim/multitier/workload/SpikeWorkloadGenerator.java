@@ -13,8 +13,9 @@ import de.hpi_web.cloudSim.multitier.staticTier.CloudletFactory;
 
 public class SpikeWorkloadGenerator extends WorkloadGenerator {
 	public static final int INTERVALL = 500;
-	public static final int SPIKE_TIMEFRAME = 50;
-	public static final double STEP_TIME = 5;
+	public static final int SPIKE_TIMEFRAME = 80;			// TODO: set this in correlation with exponentFactor
+	public static final double EXPONENT_FACTOR = -0.001;	// defines how steep the curve is
+	public static final double STEP_TIME = 5;				// how often new items are scheduled
 
 	@Override
 	public void scheduleWorkloadForBroker(DatacenterBroker broker, double timeLimit) {
@@ -26,6 +27,7 @@ public class SpikeWorkloadGenerator extends WorkloadGenerator {
 		for (double t = 0.0; t <= timeLimit; t+= STEP_TIME) {
 			if (t > timeLimit)
 				break;
+			
 			// schedule min load until we reach the intervall-timeframe/2 when we start increasing the workload
 			workload = LOAD_MIN;
 			double modT = t % INTERVALL;
@@ -34,23 +36,22 @@ public class SpikeWorkloadGenerator extends WorkloadGenerator {
 				workload = LOAD_MIN + extraLoad(modT - INTERVALL);
 			else if (modT < SPIKE_TIMEFRAME/2 && modT >= 0.0)
 				workload = LOAD_MIN + extraLoad(modT);
-				//for (int x = -(SPIKE_TIMEFRAME/2); x <= (SPIKE_TIMEFRAME/2); x++) {
-				//	workload = LOAD_MIN + extraLoad(x);
-				//}
-
+			
+			// make sure we don't exceed maximum workload
+			workload = Math.min(LOAD_MAX, workload);
 			cl = CloudletFactory.createCloudlets(startId, workload, brokerId);
 			for (MultiTierCloudlet c : cl)
 				broker.schedule(brokerId, t, MultiTierCloudTags.REQUEST_TAG, c);
 
 			startId += workload;
-			Log.printLine("Scheduled " + workload + "items at time:" + t);
+			Log.printLine("Scheduled " + workload + " items at time: " + t);
 		}
 	}
 
 	private int extraLoad(double x) {
 		int extraLoad = 0;
-		// Gauss Math.floor()
-		extraLoad = (int) Math.round((100.0*(1.0/Math.sqrt(2.0*Math.PI))*Math.pow(Math.E, (-0.5*(Math.pow(x, 2))))));
+		// Application of Gaussian distribution
+		extraLoad = (int) Math.round((100.0*(1.0/Math.sqrt(2.0*Math.PI))*Math.pow(Math.E, (EXPONENT_FACTOR*(Math.pow(x, 2))))));
 		return extraLoad;
 	}
 
