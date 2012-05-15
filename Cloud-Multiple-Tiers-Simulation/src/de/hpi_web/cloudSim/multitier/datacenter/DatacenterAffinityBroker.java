@@ -76,7 +76,7 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 		processFurtherLoad(cl);
 		
 	}
-	
+
 	public DatacenterAffinityBroker getSuccessor() {
 		return successor;
 	}
@@ -87,25 +87,11 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 
 	private void processFurtherLoad(MultiTierCloudlet parent) {
 		if(this.successor != null) {
-			/*
-	        int id3 = 1001;
-	        long length = 400000;
-	        long fileSize = 3000;
-	        long outputSize = 3000;
-	        int pesNumber = 1;
-	        UtilizationModel utilizationModel = new UtilizationModelFull();
-	        MultiTierCloudlet cloudlet3 = new MultiTierCloudlet(id3, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
-	        cloudlet3.setParent(parent);
-	        cloudlet3.setUserId(this.successor.getId());
-			CloudSim.send(getId(), this.successor.getId(), 0, MultiTierCloudTags.REQUEST_TAG, cloudlet3);
-			
-			Log.printLine("Halting Cloudlet" + CloudSim.clock());
-			sendNow(getDcAffinityList().get(0), CloudSimTags.CLOUDLET_PAUSE, parent);
-			*/
 	        for (MultiTierCloudlet child : parent.getChildren()) {
 				CloudSim.send(getId(), this.successor.getId(), 0, MultiTierCloudTags.REQUEST_TAG, child);
-				sendNow(getDcAffinityList().get(0), CloudSimTags.CLOUDLET_PAUSE, parent);
 	        }
+			int parentDatacenterId = vmsToDatacentersMap.get(parent.getVmId());
+	        sendNow(parentDatacenterId, CloudSimTags.CLOUDLET_PAUSE, parent);
 		}
 	}
 
@@ -131,9 +117,6 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 	protected void processCloudletReturn(SimEvent ev) {
 		Log.printLine("Returning Cloudlet " + CloudSim.clock());
 		MultiTierCloudlet cloudlet = (MultiTierCloudlet) ev.getData();
-		
-		//TODO Resume the parent of the cloudlet, if there is one
-		//int status = cloudlet.getParent().getStatus();
 		
 		//TODO only do it if cloudlet is paused
 		if(cloudlet.getParent() != null) {
@@ -171,7 +154,7 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 	}
 	
 ////////////////////////////////////////////////////////////////////////////////////
-///Methods which have to be overridden to realize a Broker 1:1 datacenter Mapping///
+///Methods which have to be overridden to realize a Broker 1:x datacenter Mapping///
 ////////////////////////////////////////////////////////////////////////////////////
 
 	@Override
@@ -231,12 +214,17 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 					+ cloudlet.getCloudletId() + " to VM #" + vm.getId());
 			cloudlet.setVmId(vm.getId());
 
-			// TODO: take correct datacenter
 			if(!dcAffinity.isEmpty()) {
-				sendNow(dcAffinity.get(0), CloudSimTags.CLOUDLET_SUBMIT, cloudlet);	
-			} else {
-				sendNow(datacenterIdsList.get(0), CloudSimTags.CLOUDLET_SUBMIT, cloudlet);
+				int datacenterId;
+				try {
+					datacenterId = vmsToDatacentersMap.get(cloudlet.getVmId());
+				} catch (Exception e) {
+					Log.printLine("No datacenters in broker.");
+					break;
+				}
+				sendNow(datacenterId, CloudSimTags.CLOUDLET_SUBMIT, cloudlet);	
 			}
+			
 			cloudletsSubmitted++;
 			
 			vmIndex = (vmIndex + 1) % getVmsCreatedList().size();
@@ -261,12 +249,13 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 	 */
 	@Override
 	protected void clearDatacenters() {
-		for (Vm vm : getVmsCreatedList()) {
-			Log.printLine(CloudSim.clock() + ": " + getName() + ": Destroying VM #" + vm.getId());
-			// TODO: get correct datacenter
-			//sendNow(datacenterIdsList.get(0), CloudSimTags.VM_DESTROY, vm);
-			sendNow(dcAffinity.get(0), CloudSimTags.VM_DESTROY, vm);
+		for(int datacenterId : dcAffinity) {
+			for (Vm vm : getVmsCreatedList()) {
+				Log.printLine(CloudSim.clock() + ": " + getName() + ": Destroying VM #" + vm.getId());
+				sendNow(datacenterId, CloudSimTags.VM_DESTROY, vm);
+			}
 		}
+
 
 		getVmsCreatedList().clear();
 	}
@@ -286,8 +275,10 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 	 */
 	@Override
 	protected void createVmsInDatacenter(int datacenterId) {
-		if(!dcAffinity.isEmpty())
-			datacenterId = dcAffinity.get(0);
+		if(!dcAffinity.contains(datacenterId)) {
+			Log.printLine("Warning: Datacenter not found.");
+			return;
+		}
 		// send as much vms as possible for this datacenter before trying the next one
 		int requestedVms = 0;
 		// TODO: when (hard) affinity is provided and the DCs are full, throw an exception

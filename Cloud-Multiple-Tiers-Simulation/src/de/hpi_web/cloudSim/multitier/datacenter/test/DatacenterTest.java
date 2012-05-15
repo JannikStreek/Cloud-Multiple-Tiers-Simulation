@@ -15,6 +15,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.hpi_web.cloudSim.multitier.MultiTierCloudlet;
 import de.hpi_web.cloudSim.multitier.datacenter.DatacenterAffinityBroker;
 import de.hpi_web.cloudSim.multitier.example.MultiTierExample;
 import de.hpi_web.cloudSim.multitier.staticTier.CloudletFactory;
@@ -63,9 +64,9 @@ public class DatacenterTest {
 		appBroker.submitVmList(appVms);
 		dbBroker.submitVmList(dbVms);
 
-		List<Cloudlet> wsCloudlets = CloudletFactory.createCloudlets(0, 2, wsBroker.getId());
-		List<Cloudlet> appCloudlets = CloudletFactory.createCloudlets(10, 5, appBroker.getId());
-		List<Cloudlet> dbCloudlets = CloudletFactory.createCloudlets(20, 2, dbBroker.getId());
+		List<MultiTierCloudlet> wsCloudlets = CloudletFactory.createCloudlets(0, 2, wsBroker.getId());
+		List<MultiTierCloudlet> appCloudlets = CloudletFactory.createCloudlets(10, 5, appBroker.getId());
+		List<MultiTierCloudlet> dbCloudlets = CloudletFactory.createCloudlets(20, 2, dbBroker.getId());
 
 		wsBroker.submitCloudletList(wsCloudlets);
 	}
