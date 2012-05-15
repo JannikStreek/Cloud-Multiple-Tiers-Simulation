@@ -63,7 +63,7 @@ public class StaticTier {
 		//List<MultiTierCloudlet> appCloudlets = CloudletFactory.createCloudlets(10, 5, appBroker.getId());
 		//List<MultiTierCloudlet> dbCloudlets = CloudletFactory.createCloudlets(20, 2, dbBroker.getId());
 
-		wsBroker.submitCloudletList(wsCloudlets);
+		//wsBroker.submitCloudletList(wsCloudlets);
 		//appBroker.submitCloudletList(appCloudlets);
 		//dbBroker.submitCloudletList(dbCloudlets);
 		SpikeWorkloadGenerator workloadGen = new SpikeWorkloadGenerator();

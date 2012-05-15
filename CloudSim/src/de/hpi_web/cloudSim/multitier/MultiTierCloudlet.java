@@ -17,6 +17,7 @@ public class MultiTierCloudlet extends Cloudlet {
 	private List<CloudController> listeners = new ArrayList<CloudController>();
 	private int tier;
 	private MultiTierCloudlet parent;
+	private List<MultiTierCloudlet> children;
 
 	private DatacenterAffinityBroker originator;
 	
@@ -35,6 +36,7 @@ public class MultiTierCloudlet extends Cloudlet {
 		super(cloudletId, cloudletLength, pesNumber, cloudletFileSize,
 				cloudletOutputSize, utilizationModelCpu, utilizationModelRam,
 				utilizationModelBw);
+		children = new ArrayList<MultiTierCloudlet>();
 	}
 	
 	public void setOriginator(DatacenterAffinityBroker originator) {
@@ -47,6 +49,7 @@ public class MultiTierCloudlet extends Cloudlet {
 				cloudlet.getUtilizationModelBw());
 		setVmId(cloudlet.getVmId());
 		setUserId(cloudlet.getUserId());
+		children = new ArrayList<MultiTierCloudlet>();
 		
 	}
 	
@@ -85,6 +88,14 @@ public class MultiTierCloudlet extends Cloudlet {
 
 	public DatacenterAffinityBroker getOriginator() {
 		return originator;
+	}
+
+	public List<MultiTierCloudlet> getChildren() {
+		return children;
+	}
+
+	public void setChildren(List<MultiTierCloudlet> children) {
+		this.children = children;
 	}
 	
 
