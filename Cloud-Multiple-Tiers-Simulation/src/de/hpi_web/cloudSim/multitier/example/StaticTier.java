@@ -66,8 +66,8 @@ public class StaticTier {
 		//wsBroker.submitCloudletList(wsCloudlets);
 		//appBroker.submitCloudletList(appCloudlets);
 		//dbBroker.submitCloudletList(dbCloudlets);
-		SpikeWorkloadGenerator workloadGen = new SpikeWorkloadGenerator();
-		workloadGen.scheduleWorkloadForBroker(wsBroker, 1000.0);
+		SpikeWorkloadGenerator workloadGen = new SpikeWorkloadGenerator("WorkloadGenerator", wsBroker, 100.0);
+		
 		//System.exit(0);
 		CloudSim.startSimulation();
 		CloudSim.stopSimulation();
