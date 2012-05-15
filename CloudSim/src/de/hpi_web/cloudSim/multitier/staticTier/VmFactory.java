@@ -7,6 +7,18 @@ import org.cloudbus.cloudsim.CloudletSchedulerTimeShared;
 import org.cloudbus.cloudsim.Vm;
 
 public class VmFactory {
+	// default values taken from http://aws.amazon.com/ec2/instance-types/
+	// => Standard instance (small) as of May 2012
+	public static final int  DEFAULT_PES  =       1;		// number of CPUS
+	public static final int  DEFAULT_MIPS =    1200;		// MIPS per CPU
+	public static final int  DEFAULT_RAM  =    1700;  		// vm memory (MB)
+	public static final long DEFAULT_SIZE =  160000; 		// image size (MB)
+	public static final long DEFAULT_BW   =    1000;		// total bandwith available
+	
+	public static final String VMM = "Xen";					// virtual memory manager
+	//public static final String DEFAULT_NAME = "EC2-Standard(Small)";
+	
+	
 	public static Vm createVm(int brokerId) {
 		return defaultVm(0, brokerId);
 	}
@@ -19,13 +31,18 @@ public class VmFactory {
 	}
 	
 	private static Vm defaultVm(int vmid, int brokerId) {
-		int mips = 1000;
-		long size = 10000; // image size (MB)
-		int ram = 512; // vm memory (MB)
-		long bw = 1000;
-		int pesNumber = 1; // number of cpus
-		String vmm = "Xen"; // VMM name
-		
-		return new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
+		return new Vm(vmid, brokerId, DEFAULT_MIPS, DEFAULT_PES, DEFAULT_RAM, DEFAULT_BW, DEFAULT_SIZE, VMM, new CloudletSchedulerTimeShared());
+	}
+	
+	public static Vm customVm(
+			String vmm, 
+			int vmId, 
+			int pesNumber, 
+			int mips, 
+			long size, 
+			int ram, 
+			long bw, 
+			int brokerId) {
+		return new Vm(vmId, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
 	}
 }

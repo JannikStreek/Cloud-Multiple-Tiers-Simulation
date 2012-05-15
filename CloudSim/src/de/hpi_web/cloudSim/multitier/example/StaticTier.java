@@ -11,10 +11,13 @@ import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
 
+import de.hpi_web.cloudSim.multitier.MultiTierCloudTags;
+import de.hpi_web.cloudSim.multitier.MultiTierCloudlet;
 import de.hpi_web.cloudSim.multitier.datacenter.DatacenterAffinityBroker;
 import de.hpi_web.cloudSim.multitier.staticTier.CloudletFactory;
 import de.hpi_web.cloudSim.multitier.staticTier.DatacenterFactory;
 import de.hpi_web.cloudSim.multitier.staticTier.VmFactory;
+import de.hpi_web.cloudSim.multitier.workload.SpikeWorkloadGenerator;
 import de.hpi_web.cloudSim.utils.OutputWriter;
 
 public class StaticTier {
@@ -33,8 +36,8 @@ public class StaticTier {
 		DatacenterAffinityBroker appBroker = createBroker("appBroker");
 		DatacenterAffinityBroker dbBroker = createBroker("dbBroker");
 		
-		wsBroker.setSuccessor(appBroker);
-		appBroker.setSuccessor(dbBroker);
+		//wsBroker.setSuccessor(appBroker);
+		//appBroker.setSuccessor(dbBroker);
 		
 		List<Vm> wsVms = VmFactory.createVms(0, 3, wsBroker.getId());
 		List<Vm> appVms = VmFactory.createVms(3, 3, appBroker.getId());
@@ -56,14 +59,16 @@ public class StaticTier {
 		appBroker.submitVmList(appVms);
 		dbBroker.submitVmList(dbVms);
 
-		List<Cloudlet> wsCloudlets = CloudletFactory.createCloudlets(0, 2, wsBroker.getId());
-		List<Cloudlet> appCloudlets = CloudletFactory.createCloudlets(10, 5, appBroker.getId());
-		List<Cloudlet> dbCloudlets = CloudletFactory.createCloudlets(20, 2, dbBroker.getId());
+		List<MultiTierCloudlet> wsCloudlets = CloudletFactory.createCloudlets(0, 50, wsBroker.getId());
+		//List<MultiTierCloudlet> appCloudlets = CloudletFactory.createCloudlets(10, 5, appBroker.getId());
+		//List<MultiTierCloudlet> dbCloudlets = CloudletFactory.createCloudlets(20, 2, dbBroker.getId());
 
 		wsBroker.submitCloudletList(wsCloudlets);
-		appBroker.submitCloudletList(appCloudlets);
-		dbBroker.submitCloudletList(dbCloudlets);
-
+		//appBroker.submitCloudletList(appCloudlets);
+		//dbBroker.submitCloudletList(dbCloudlets);
+		SpikeWorkloadGenerator workloadGen = new SpikeWorkloadGenerator();
+		workloadGen.scheduleWorkloadForBroker(wsBroker, 1000.0);
+		//System.exit(0);
 		CloudSim.startSimulation();
 		CloudSim.stopSimulation();
 

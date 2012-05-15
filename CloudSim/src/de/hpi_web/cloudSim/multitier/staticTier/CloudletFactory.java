@@ -7,7 +7,13 @@ import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.UtilizationModel;
 import org.cloudbus.cloudsim.UtilizationModelFull;
 
+import de.hpi_web.cloudSim.multitier.MultiTierCloudlet;
+
 public class CloudletFactory {
+	public static final int DEFAULT_PES = 1;
+	public static final int DEFAULT_LENGTH = 30;//250400000;
+	public static final int DEFAULT_FILESIZE = 1;//300;
+	public static final int DEFAULT_OUTPUTSIZE = 1;//300;
 	public static Cloudlet createCloudlet(int brokerId) {
 		
 		return createDefaultCloudlet(0, brokerId);
@@ -23,37 +29,29 @@ public class CloudletFactory {
 	 * @pre startId >= 0
 	 * @post $none
 	 */
-	public static List<Cloudlet> createCloudlets(int startId, int count, int brokerId) {
-		List<Cloudlet> cloudlets = new ArrayList<Cloudlet>();
+	public static List<MultiTierCloudlet> createCloudlets(int startId, int count, int brokerId) {
+		List<MultiTierCloudlet> cloudlets = new ArrayList<MultiTierCloudlet>();
 		for (int i = startId; i < startId + count; i++) {
 			cloudlets.add(createDefaultCloudlet(i, brokerId));
 		}
 		return cloudlets;
 	}
-	public static Cloudlet createCloudlet(int brokerId, int vmId) {
+	public static MultiTierCloudlet createCloudlet(int brokerId, int vmId) {
 		
 		return createDefaultCloudlet(0, brokerId, vmId);
 	}
-	private static Cloudlet createDefaultCloudlet(int cloudletId, int brokerId, int vmId) {
-		// Cloudlet properties
-		long length = 250400000;
-		long fileSize = 300;
-		long outputSize = 300;
+	private static MultiTierCloudlet createDefaultCloudlet(int cloudletId, int brokerId, int vmId) {
 		UtilizationModel utilizationModel = new UtilizationModelFull();
 
-		Cloudlet cloudlet = new Cloudlet(cloudletId, length, /*pesNumber*/1, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
+		MultiTierCloudlet cloudlet = new MultiTierCloudlet(cloudletId, DEFAULT_LENGTH, /*pesNumber*/DEFAULT_PES, DEFAULT_FILESIZE, DEFAULT_OUTPUTSIZE, utilizationModel, utilizationModel, utilizationModel);
 		cloudlet.setUserId(brokerId);
 		cloudlet.setVmId(vmId);
 		return cloudlet;
 	}
-	private static Cloudlet createDefaultCloudlet(int cloudletId, int brokerId) {
-		// Cloudlet properties
-		long length = 250400000;
-		long fileSize = 300;
-		long outputSize = 300;
+	private static MultiTierCloudlet createDefaultCloudlet(int cloudletId, int brokerId) {
 		UtilizationModel utilizationModel = new UtilizationModelFull();
 
-		Cloudlet cloudlet = new Cloudlet(cloudletId, length, /*pesNumber*/1, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
+		MultiTierCloudlet cloudlet = new MultiTierCloudlet(cloudletId, DEFAULT_LENGTH, /*pesNumber*/DEFAULT_PES, DEFAULT_FILESIZE, DEFAULT_OUTPUTSIZE, utilizationModel, utilizationModel, utilizationModel);
 		cloudlet.setUserId(brokerId);
 		return cloudlet;
 	}

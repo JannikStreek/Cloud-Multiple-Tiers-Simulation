@@ -41,8 +41,11 @@ public class DatacenterFactory {
 		List<Host> hostList = new ArrayList<Host>();
 		List<Pe> peList = new ArrayList<Pe>();
 
-		int mips = 1000;
+		int mips = 1200;
 		peList.add(new Pe(0, new PeProvisionerSimple(mips)));
+		peList.add(new Pe(1, new PeProvisionerSimple(mips)));
+		peList.add(new Pe(2, new PeProvisionerSimple(mips)));
+		peList.add(new Pe(3, new PeProvisionerSimple(mips)));
 
 		for(int hostId = startId; hostId < startId + hosts; hostId++) {
 			hostList.add(defaultHost(hostId, peList));
