@@ -93,6 +93,10 @@ public class MultiTierCloudlet extends Cloudlet {
 	public List<MultiTierCloudlet> getChildren() {
 		return children;
 	}
+	
+	public void addChild(MultiTierCloudlet child) {
+		children.add(child);
+	}
 
 	public void setChildren(List<MultiTierCloudlet> children) {
 		this.children = children;

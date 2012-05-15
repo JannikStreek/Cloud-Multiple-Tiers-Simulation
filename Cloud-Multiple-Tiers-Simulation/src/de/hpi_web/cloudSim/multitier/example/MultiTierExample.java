@@ -108,6 +108,7 @@ public class MultiTierExample {
                     cloudletList2 = new ArrayList<Cloudlet>();
                     MultiTierCloudlet cloudlet;
                     
+                    
                     for(int i=0;i < 100;i++) {
                     	
                         long length =  new Random().nextLong();
@@ -117,6 +118,12 @@ public class MultiTierExample {
 
                         cloudlet = new MultiTierCloudlet(i, length, pesNumber, fileSize, outputSize, new UtilizationModelStochastic(), new UtilizationModelStochastic(), new UtilizationModelStochastic());
                         cloudlet.setUserId(brokerId);
+                        
+                        int id2 = 100+i;
+                        MultiTierCloudlet cloudlet2 = new MultiTierCloudlet(id2, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
+                        cloudlet2.setUserId(broker2Id);
+                        cloudlet.addChild(cloudlet2);
+                        
 
                         // add the cloudlet to the list
                         cloudletList.add(cloudlet);
@@ -135,10 +142,7 @@ public class MultiTierExample {
                     
                     //During simulation add a new Cloudlet
                     // Cloudlet3 properties
-//                    int id3 = 3;
-//                    Cloudlet cloudlet3 = new Cloudlet(id3, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
-//                    cloudlet3.setUserId(broker2Id);
-//                    cloudlet3.setVmId(vm2id);
+
 
                     CloudSim.stopSimulation();
 

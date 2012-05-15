@@ -235,8 +235,6 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 			
 			vmIndex = (vmIndex + 1) % getVmsCreatedList().size();
 			getCloudletSubmittedList().add(cloudlet);
-			
-			processFurtherLoad(new MultiTierCloudlet(cloudlet));
 		}
 
 		// remove submitted cloudlets from waiting list
