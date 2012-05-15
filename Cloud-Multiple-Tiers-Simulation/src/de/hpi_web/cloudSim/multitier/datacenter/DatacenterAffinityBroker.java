@@ -87,11 +87,16 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 
 	private void processFurtherLoad(MultiTierCloudlet parent) {
 		if(this.successor != null) {
+			boolean pauseParent = true;
 	        for (MultiTierCloudlet child : parent.getChildren()) {
+	        	if(pauseParent) {
+	    			int parentDatacenterId = vmsToDatacentersMap.get(parent.getVmId());
+	    	        sendNow(parentDatacenterId, CloudSimTags.CLOUDLET_PAUSE, parent);
+	    	        pauseParent = false;
+	        	}
 				CloudSim.send(getId(), this.successor.getId(), 0, MultiTierCloudTags.REQUEST_TAG, child);
 	        }
-			int parentDatacenterId = vmsToDatacentersMap.get(parent.getVmId());
-	        sendNow(parentDatacenterId, CloudSimTags.CLOUDLET_PAUSE, parent);
+
 		}
 	}
 
@@ -122,7 +127,8 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 		if(cloudlet.getParent() != null) {
 			Log.printLine("Resuming old Cloudlet" + CloudSim.clock());
 			DatacenterAffinityBroker parentBroker = (DatacenterAffinityBroker) CloudSim.getEntity(cloudlet.getParent().getUserId());
-			sendNow(parentBroker.dcAffinity.get(0), CloudSimTags.CLOUDLET_RESUME, cloudlet.getParent());
+			int parentDatacenterId = parentBroker.getVmsToDatacentersMap().get(cloudlet.getParent().getVmId());
+			sendNow(parentDatacenterId, CloudSimTags.CLOUDLET_RESUME, cloudlet.getParent());
 		}
 
 		getCloudletReceivedList().add(cloudlet);
