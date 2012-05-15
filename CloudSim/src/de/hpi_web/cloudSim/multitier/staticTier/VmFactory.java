@@ -15,7 +15,7 @@ public class VmFactory {
 	public static final long DEFAULT_SIZE =  160000; 		// image size (MB)
 	public static final long DEFAULT_BW   =    1000;		// total bandwith available
 	
-	public static final String VMM = "Xen";					// virtual memory manager
+	public static final String VMM = "Xen";					// virtual machine manager (hypervisor)
 	//public static final String DEFAULT_NAME = "EC2-Standard(Small)";
 	
 	
