@@ -8,6 +8,7 @@ import org.cloudbus.cloudsim.DatacenterBroker;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
+import org.cloudbus.cloudsim.core.SimEvent;
 
 import de.hpi_web.cloudSim.multitier.MultiTierCloudTags;
 import de.hpi_web.cloudSim.multitier.MultiTierCloudlet;
@@ -15,11 +16,15 @@ import de.hpi_web.cloudSim.multitier.datacenter.DatacenterAffinityBroker;
 import de.hpi_web.cloudSim.multitier.staticTier.CloudletFactory;
 
 public class SpikeWorkloadGenerator extends WorkloadGenerator {
+
 	public static final int INTERVALL = 500;
 	public static final int SPIKE_TIMEFRAME = 80;			// TODO: set this in correlation with exponentFactor
 	public static final double EXPONENT_FACTOR = -0.001;	// defines how steep the curve is
 	public static final double STEP_TIME = 5;				// how often new items are scheduled
 
+	public SpikeWorkloadGenerator(String name, DatacenterAffinityBroker targetBroker, double timeLimit) {
+		super(name, targetBroker, timeLimit);
+	}
 	@Override
 	public void scheduleWorkloadForBroker(DatacenterAffinityBroker broker, double timeLimit) {
 		int brokerId = broker.getId();
@@ -51,7 +56,7 @@ public class SpikeWorkloadGenerator extends WorkloadGenerator {
 //					List<MultiTierCloudlet> children = new ArrayList<MultiTierCloudlet>();
 //					children.add((MultiTierCloudlet)CloudletFactory.createCloudlet(brokerId));
 //					c.setChildren(children);
-					broker.schedule(brokerId, t, MultiTierCloudTags.REQUEST_TAG, c);
+					schedule(brokerId, t, MultiTierCloudTags.REQUEST_TAG, c);
 				}
 	
 				startId += workload;
@@ -69,6 +74,4 @@ public class SpikeWorkloadGenerator extends WorkloadGenerator {
 		extraLoad = (int) Math.round((100.0*(1.0/Math.sqrt(2.0*Math.PI))*Math.pow(Math.E, (EXPONENT_FACTOR*(Math.pow(x, 2))))));
 		return extraLoad;
 	}
-
-
 }

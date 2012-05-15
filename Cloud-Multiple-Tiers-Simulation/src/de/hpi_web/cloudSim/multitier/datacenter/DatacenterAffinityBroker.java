@@ -1,16 +1,13 @@
 package de.hpi_web.cloudSim.multitier.datacenter;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.DatacenterBroker;
 import org.cloudbus.cloudsim.DatacenterCharacteristics;
 import org.cloudbus.cloudsim.Log;
-import org.cloudbus.cloudsim.UtilizationModel;
-import org.cloudbus.cloudsim.UtilizationModelFull;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
@@ -31,7 +28,6 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 	private DatacenterAffinityBroker successor;
 	private LoadBalancer loadBalancer;
 	
-	//TODO how to disallow multiple datacenters?
 
 	public DatacenterAffinityBroker(String name, int tier, int datacenterId) throws Exception {
 		super(name);
@@ -57,9 +53,6 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 			case MultiTierCloudTags.REQUEST_TAG:
 				processRequestTag(ev);
 				break;
-//			case CloudSimTags.CLOUDLET_SUBMIT:
-//				processRequestTag(ev);
-//				break;
 		}
 		
 		//TODO process new events like request/response
