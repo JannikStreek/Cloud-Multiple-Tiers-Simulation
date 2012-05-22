@@ -12,13 +12,15 @@ import org.cloudbus.cloudsim.core.SimEvent;
 
 import de.hpi_web.cloudSim.multitier.MultiTierCloudTags;
 import de.hpi_web.cloudSim.multitier.MultiTierCloudlet;
+import de.hpi_web.cloudSim.multitier.cloudlet.ExponentialGrowth;
+import de.hpi_web.cloudSim.multitier.cloudlet.MultiTierWorkload;
 import de.hpi_web.cloudSim.multitier.datacenter.DatacenterAffinityBroker;
 import de.hpi_web.cloudSim.multitier.staticTier.CloudletFactory;
 
 public class SpikeWorkloadGenerator extends WorkloadGenerator {
 
 	public static final int INTERVALL = 500;
-	public static final int SPIKE_TIMEFRAME = 80;			// TODO: set this in correlation with exponentFactor
+	public static final int SPIKE_TIMEFRAME = 120;			// TODO: set this in correlation with exponentFactor
 	public static final double EXPONENT_FACTOR = -0.001;	// defines how steep the curve is
 	public static final double STEP_TIME = 5;				// how often new items are scheduled
 
@@ -34,9 +36,9 @@ public class SpikeWorkloadGenerator extends WorkloadGenerator {
 			DatacenterAffinityBroker initBroker = new DatacenterAffinityBroker("WorkloadGenerator", 0, 0); 
 			initBroker.setSuccessor(broker);
 		
-			List<MultiTierCloudlet> cl;// = CloudletFactory.createCloudlets(0, 300, brokerId);
+			List<MultiTierCloudlet> cl;
 			
-			for (double t = 0.0; t <= timeLimit; t+= STEP_TIME) {
+			for (double t = 0.0; t <= timeLimit - STEP_TIME; t+= STEP_TIME) {
 				if (t > timeLimit)
 					break;
 				
@@ -50,12 +52,11 @@ public class SpikeWorkloadGenerator extends WorkloadGenerator {
 				
 				// make sure we don't exceed maximum workload
 				workload = Math.min(LOAD_MAX, workload);
-				cl = CloudletFactory.createCloudlets(startId, workload, brokerId);
+				// TODO: find the right distribution of different cloudlet-types (db intensive etc).
+				MultiTierWorkload expGrowth = new ExponentialGrowth();
+				//cl = CloudletFactory.createCloudletsForWorkload(0, broker, expGrowth, 1);
+				cl = CloudletFactory.createCloudlets(startId, workload, broker);
 				for (MultiTierCloudlet c : cl) {
-					// TODO: fix this so that the workload is taken and executed
-//					List<MultiTierCloudlet> children = new ArrayList<MultiTierCloudlet>();
-//					children.add((MultiTierCloudlet)CloudletFactory.createCloudlet(brokerId));
-//					c.setChildren(children);
 					schedule(brokerId, t, MultiTierCloudTags.REQUEST_TAG, c);
 				}
 	

@@ -113,12 +113,12 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 	 */
 	@Override
 	protected void processCloudletReturn(SimEvent ev) {
-		Log.printLine("Returning Cloudlet " + CloudSim.clock());
+		//Log.printLine("Returning Cloudlet " + CloudSim.clock());
 		MultiTierCloudlet cloudlet = (MultiTierCloudlet) ev.getData();
 		
 		//TODO only do it if cloudlet is paused
 		if(cloudlet.getParent() != null) {
-			Log.printLine("Resuming old Cloudlet" + CloudSim.clock());
+			//Log.printLine("Resuming old Cloudlet" + CloudSim.clock());
 			DatacenterAffinityBroker parentBroker = (DatacenterAffinityBroker) CloudSim.getEntity(cloudlet.getParent().getUserId());
 			
 			// If the cloudlet created multiple children, wait until all are finished, then continue
@@ -180,20 +180,6 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 			}
 		}
 	}
-	/*
-	@Override
-	protected void processResourceCharacteristicsRequest(SimEvent ev) {
-		//dont get all datacenters, just take the the one which is passed by the conctructor
-		setDatacenterIdsList(CloudSim.getCloudResourceList());  
-		setDatacenterCharacteristicsList(new HashMap<Integer, DatacenterCharacteristics>());
-
-		Log.printLine(CloudSim.clock() + ": " + getName() + ": Cloud Resource List received with "
-				+ getDatacenterIdsList().size() + " resource(s)");
-
-		for (Integer datacenterId : getDatacenterIdsList()) {
-			sendNow(datacenterId, CloudSimTags.RESOURCE_CHARACTERISTICS, getId());
-		}
-	}*/
 	
 	@Override
 	protected void submitCloudlets() {
@@ -209,14 +195,14 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 			} else { // submit to the specific vm
 				vm = VmList.getById(getVmsCreatedList(), cloudlet.getVmId());
 				if (vm == null) { // vm was not created
-					Log.printLine(CloudSim.clock() + ": " + getName() + ": Postponing execution of cloudlet "
-							+ cloudlet.getCloudletId() + ": bount VM not available");
+					//Log.printLine(CloudSim.clock() + ": " + getName() + ": Postponing execution of cloudlet "
+					//		+ cloudlet.getCloudletId() + ": bount VM not available");
 					continue;
 				}
 			}
 
-			Log.printLine(CloudSim.clock() + ": " + getName() + ": Sending cloudlet "
-					+ cloudlet.getCloudletId() + " to VM #" + vm.getId());
+			//Log.printLine(CloudSim.clock() + ": " + getName() + ": Sending cloudlet "
+			//		+ cloudlet.getCloudletId() + " to VM #" + vm.getId());
 			cloudlet.setVmId(vm.getId());
 
 			if(!dcAffinity.isEmpty()) {
@@ -261,12 +247,6 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 
 
 		getVmsCreatedList().clear();
-	}
-	
-	@Override
-	protected Map<Integer, Integer> getVmsToDatacentersMap() {
-		//throw new NotImplementedException();
-		return super.getVmsToDatacentersMap();
 	}
 	
 	/**
