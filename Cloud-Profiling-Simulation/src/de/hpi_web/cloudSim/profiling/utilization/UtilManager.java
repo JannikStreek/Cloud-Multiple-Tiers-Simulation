@@ -73,13 +73,12 @@ public class UtilManager extends SimEntity{
 		//schedule ...
 		
 		//TODO calc new util
-		
-		sendNow(brokerId, UtilManager.CLOUDLET_UPDATE, cpu);
+		schedule(brokerId,1, UtilManager.CLOUDLET_UPDATE, cpu);
 		
 		if(counter < cpuUtil.size()) {
-			schedule(getId(), 1, RUN);
+			schedule(getId(), 2, RUN);
 		} else {
-			schedule(brokerId, 1, UTIL_SIM_FINISHED);
+			schedule(brokerId, 2, UTIL_SIM_FINISHED);
 		}
 		
 	}

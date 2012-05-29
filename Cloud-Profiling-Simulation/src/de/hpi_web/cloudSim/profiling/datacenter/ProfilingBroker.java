@@ -77,7 +77,7 @@ public class ProfilingBroker extends DatacenterBroker{
 	  // Cloudlet properties
 	  int id = 0;
 	  int pesNumber = 1;
-	  long length = 400000; //TODO calc it
+	  long length = 40000; //TODO calc it
 	  double utilizationPerVm = ((double)cpuUtil/(double)cloudletsSubmitted)/100;	// util = 1 means 100% utilization
 
 	  long fileSize = 300;
