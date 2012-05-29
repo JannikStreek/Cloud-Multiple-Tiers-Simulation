@@ -17,6 +17,7 @@ public class UtilManager extends SimEntity{
 	public static final int RUN = 7000;
 	public static final int CLOUDLET_UPDATE = 7001;
 	public static final int ROUND_COMPLETED = 7002;
+	public static final int UTIL_SIM_FINISHED = 7003;
 	private int brokerId;
 
 
@@ -77,7 +78,7 @@ public class UtilManager extends SimEntity{
 		if(counter < cpuUtil.size()) {
 			schedule(getId(), 0, RUN);
 		} else {
-			//TODO end all cloudlets @ scheduler
+			sendNow(brokerId, UtilManager.UTIL_SIM_FINISHED, null);
 		}
 		
 	}
