@@ -12,6 +12,7 @@ import org.cloudbus.cloudsim.VmAllocationPolicySimple;
 import de.hpi_web.cloudSim.multitier.staticTier.DatacenterFactory;
 
 public class DatacenterBuilder extends DatacenterFactory {
+
 	public static Datacenter createDatacenter(String name, DatacenterCharacteristics chars, List<Host> hostList) {
 
 		LinkedList<Storage> storageList = new LinkedList<Storage>(); // we are not adding SAN
