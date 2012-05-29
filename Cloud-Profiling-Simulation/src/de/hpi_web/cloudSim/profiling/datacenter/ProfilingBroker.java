@@ -78,7 +78,7 @@ public class ProfilingBroker extends DatacenterBroker{
 	  int id = 0;
 	  int pesNumber = 1;
 	  long length = 40000; //TODO calc it
-	  double utilizationPerVm = ((double)cpuUtil/(double)cloudletsSubmitted)/100;	// util = 1 means 100% utilization
+	  double utilizationPerVm = ((double)cpuUtil/(double)getVmsCreatedList().size())/100;	// util = 1 means 100% utilization
 
 	  long fileSize = 300;
 	  long outputSize = 300;
