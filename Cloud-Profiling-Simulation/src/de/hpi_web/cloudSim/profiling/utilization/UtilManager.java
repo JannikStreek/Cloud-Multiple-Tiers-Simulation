@@ -25,14 +25,23 @@ public class UtilManager extends SimEntity{
 
 	@Override
 	public void startEntity() {
-		// send the registration to GIS
-		sendNow("utilManager", CloudSimTags.REGISTER_RESOURCE, getId());
+		//sendNow("utilManager", CloudSimTags.REGISTER_RESOURCE, getId());
 		schedule(getId(), 0, RUN);
 		
 	}
 
 	@Override
 	public void processEvent(SimEvent ev) {
+
+		switch (ev.getTag()) {
+			case CloudSimTags.CLOUDLET_SUBMIT_ACK:
+				processRun(ev);
+				break;
+		}
+				
+	}
+
+	private void processRun(SimEvent ev) {
 		// TODO Auto-generated method stub
 		
 	}
