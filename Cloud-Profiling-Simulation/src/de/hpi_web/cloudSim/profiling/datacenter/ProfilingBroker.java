@@ -39,15 +39,16 @@ public class ProfilingBroker extends DatacenterBroker{
 	}
 	
 	private void processUtilFinished(SimEvent ev) {
+		Log.printLine(CloudSim.clock() + ": " + getName() + ": Finishing ");
 		for (int datacenter : getDatacenterIdsList()) {
-			sendNow(datacenter, UtilManager.ROUND_COMPLETED, null);
+			sendNow(datacenter, UtilManager.UTIL_SIM_FINISHED, null);
 		}
 		
 	}
 
 	private void processCloudletUpdate(SimEvent ev) {
 		Log.printLine(CloudSim.clock() + ": " + getName() + ": Updating Cloudlets for next round ");
-		int cpuUtil = Integer.parseInt(ev.getData().toString());
+		double cpuUtil = Double.parseDouble(ev.getData().toString());
 		if(cloudletsSubmitted == 0) {
 			
 			List<Vm> vms = getVmsCreatedList();
@@ -66,19 +67,27 @@ public class ProfilingBroker extends DatacenterBroker{
 			
 		} else {
 			for (Cloudlet cloudlet : cloudlets) {
-				cloudlet.setUtilizationModelCpu(new UtilizationModelFixed(cpuUtil)); //TODO value...
+				cloudlet.setUtilizationModelCpu(new UtilizationModelFixed(cpuUtil/(double)cloudletsSubmitted)); //TODO value...
 			}
 		}
+		
+		for(Cloudlet cloudlet : cloudletSubmittedList) {
+			Log.printLine(CloudSim.clock() + ": " + getName() + ": cloudlet at CPU util  "+ cloudlet.getUtilizationOfCpu(0));
+		}
+		
 
 	  sendNow(ev.getSource(), UtilManager.ROUND_COMPLETED, null);
 	}
 
-	private Cloudlet createCloudlet(Vm vm, int cpuUtil) {
+	private Cloudlet createCloudlet(Vm vm, double cpuUtil) {
+		Log.printLine(CloudSim.clock() + ": " + getName() + ": Creating Cloudlet ");
 	  // Cloudlet properties
+		
 	  int id = 0;
 	  int pesNumber = 1;
-	  long length = 40000; //TODO calc it
+	  long length = 100000000; //TODO calc it
 	  double utilizationPerVm = ((double)cpuUtil/(double)getVmsCreatedList().size())/100;	// util = 1 means 100% utilization
+	  Log.printLine(CloudSim.clock() + ": " + getName() + ": creating the cloudlet with util:"+utilizationPerVm);
 
 	  long fileSize = 300;
 	  long outputSize = 300;

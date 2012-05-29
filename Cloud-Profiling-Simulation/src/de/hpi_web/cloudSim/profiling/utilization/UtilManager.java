@@ -22,15 +22,15 @@ public class UtilManager extends SimEntity{
 
 
 	//TODO first test with fixed values
-    List<Integer> cpuUtil = new ArrayList<Integer>();
+    List<Double> cpuUtil = new ArrayList<Double>();
     private int counter;
     
 
 	public UtilManager(String name) {
 		super(name);
-		cpuUtil.add(30);
-		cpuUtil.add(70);
-		cpuUtil.add(130);
+		cpuUtil.add(0.3);
+		cpuUtil.add(0.7);
+		cpuUtil.add(0.7);
 		counter = 0;
 		// TODO Auto-generated constructor stub
 	}
@@ -66,7 +66,7 @@ public class UtilManager extends SimEntity{
 
 	private void processRun(SimEvent ev) {
 		Log.printLine(CloudSim.clock() + ": " + getName() + ": UtilManager is running... ");
-		int cpu = Integer.parseInt(cpuUtil.remove(counter).toString());
+		double cpu = Double.parseDouble(cpuUtil.remove(counter).toString());
 		counter++;
 		
 		//TODO check if enough vms are present / too much vms present and handle this event

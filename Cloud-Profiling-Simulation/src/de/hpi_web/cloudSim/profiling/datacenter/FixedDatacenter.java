@@ -59,6 +59,7 @@ public class FixedDatacenter extends Datacenter{
 
 			// New Cloudlet arrives
 			case CloudSimTags.CLOUDLET_SUBMIT:
+				Log.printLine(CloudSim.clock() + ": " + getName() + ": Processing CLoudlet Submit ");
 				processCloudletSubmit(ev, false);
 				break;
 
@@ -294,9 +295,11 @@ public class FixedDatacenter extends Datacenter{
 
 	@Override
 	public void processOtherEvent(SimEvent ev) {
+
 		switch (ev.getTag()) {
 		// Resource characteristics inquiry
 			case UtilManager.UTIL_SIM_FINISHED:
+				Log.printLine(CloudSim.clock() + ": " + getName() + ": Finishing Cloudlets ");
 				updateCloudletProcessing();
 		}
 		
