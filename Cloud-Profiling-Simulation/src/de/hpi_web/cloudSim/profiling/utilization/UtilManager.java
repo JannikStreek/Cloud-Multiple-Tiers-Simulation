@@ -65,6 +65,7 @@ public class UtilManager extends SimEntity{
 	}
 
 	private void processRun(SimEvent ev) {
+		Log.printLine(CloudSim.clock() + ": " + getName() + ": UtilManager is running... ");
 		int cpu = Integer.parseInt(cpuUtil.remove(counter).toString());
 		counter++;
 		
@@ -76,9 +77,9 @@ public class UtilManager extends SimEntity{
 		sendNow(brokerId, UtilManager.CLOUDLET_UPDATE, cpu);
 		
 		if(counter < cpuUtil.size()) {
-			schedule(getId(), 0, RUN);
+			schedule(getId(), 1, RUN);
 		} else {
-			sendNow(brokerId, UtilManager.UTIL_SIM_FINISHED, null);
+			schedule(brokerId, 1, UTIL_SIM_FINISHED);
 		}
 		
 	}

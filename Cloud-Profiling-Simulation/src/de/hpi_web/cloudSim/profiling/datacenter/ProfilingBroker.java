@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.DatacenterBroker;
+import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.UtilizationModel;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
@@ -45,7 +46,7 @@ public class ProfilingBroker extends DatacenterBroker{
 	}
 
 	private void processCloudletUpdate(SimEvent ev) {
-		
+		Log.printLine(CloudSim.clock() + ": " + getName() + ": Updating Cloudlets for next round ");
 		int cpuUtil = Integer.parseInt(ev.getData().toString());
 		if(cloudletsSubmitted == 0) {
 			
