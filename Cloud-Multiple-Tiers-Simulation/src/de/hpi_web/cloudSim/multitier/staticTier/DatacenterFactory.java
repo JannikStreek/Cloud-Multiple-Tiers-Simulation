@@ -80,13 +80,13 @@ public class DatacenterFactory {
 		return datacenter;
 	}
 	
-	private static DatacenterCharacteristics defaultCharacteristics(List<Host> hostList) {
+	protected static DatacenterCharacteristics defaultCharacteristics(List<Host> hostList) {
 		return new DatacenterCharacteristics(
 				ARCH, OS, VMM, hostList, DEFAULT_TIMEZONE, DEFAULT_COST, DEFAULT_COST_MEM,
 				DEFAULT_COST_STORAGE, DEFAULT_COST_BW);
 	}
 	
-	private static Host defaultHost(int hostId, List<Pe> peList) {
+	protected static Host defaultHost(int hostId, List<Pe> peList) {
 		return new Host(
 				hostId,
 				new RamProvisionerSimple(DEFAULT_RAM),
