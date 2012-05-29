@@ -27,7 +27,7 @@ public class SimpleExample {
 		
 		ProfilingBroker wsBroker = createBroker("wsBroker");
 		
-		List<Vm> wsVms = VmFactory.createVms(0, 1, wsBroker.getId());
+		List<Vm> wsVms = VmFactory.createVms(0, 4, wsBroker.getId());
 		
 		// submit vm lists to the brokers
 		wsBroker.submitVmList(wsVms);
