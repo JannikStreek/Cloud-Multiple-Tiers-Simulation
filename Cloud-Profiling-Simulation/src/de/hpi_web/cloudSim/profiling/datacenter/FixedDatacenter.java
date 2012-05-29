@@ -15,6 +15,8 @@ import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.SimEvent;
 
+import de.hpi_web.cloudSim.profiling.utilization.UtilManager;
+
 public class FixedDatacenter extends Datacenter{
 
 	public FixedDatacenter(String name,
@@ -288,12 +290,17 @@ public class FixedDatacenter extends Datacenter{
 			e.printStackTrace();
 		}
 
-		checkCloudletCompletion();
 	}
-	
+
 	@Override
-	protected void checkCloudletCompletion(){
+	public void processOtherEvent(SimEvent ev) {
+		switch (ev.getTag()) {
+		// Resource characteristics inquiry
+			case UtilManager.UTIL_SIM_FINISHED:
+				updateCloudletProcessing();
+		}
 		
 	}
+	
 
 }

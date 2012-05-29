@@ -7,6 +7,7 @@ import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.DatacenterBroker;
 import org.cloudbus.cloudsim.UtilizationModel;
 import org.cloudbus.cloudsim.Vm;
+import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.SimEvent;
 
@@ -29,16 +30,22 @@ public class ProfilingBroker extends DatacenterBroker{
 			case UtilManager.CLOUDLET_UPDATE:
 				processCloudletUpdate(ev);
 				break;
+			case UtilManager.UTIL_SIM_FINISHED:
+				processUtilFinished(ev);
+				break;
+				
 		}
 	}
 	
+	private void processUtilFinished(SimEvent ev) {
+		for (int datacenter : getDatacenterIdsList()) {
+			sendNow(datacenter, UtilManager.ROUND_COMPLETED, null);
+		}
+		
+	}
+
 	private void processCloudletUpdate(SimEvent ev) {
 		
-		//Finish old cloudlets
-//		for (Cloudlet cloudlet : cloudlets) {
-//			vmList.get(cloudlet.getVmId()).getCloudletScheduler().setCloudletStatus(Cloudlet.SUCCESS);
-//			
-//		}
 		int cpuUtil = Integer.parseInt(ev.getData().toString());
 		if(cloudletsSubmitted == 0) {
 			
