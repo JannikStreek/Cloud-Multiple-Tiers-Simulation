@@ -6,12 +6,12 @@ import java.util.List;
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.DatacenterBroker;
 import org.cloudbus.cloudsim.UtilizationModel;
-import org.cloudbus.cloudsim.UtilizationModelFull;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.SimEvent;
 
 import de.hpi_web.cloudSim.profiling.utilization.UtilManager;
+import de.hpi_web.cloudSim.profiling.utilization.UtilizationModelFixed;
 
 public class ProfilingBroker extends DatacenterBroker{
 	
@@ -26,48 +26,62 @@ public class ProfilingBroker extends DatacenterBroker{
 	public void processOtherEvent(SimEvent ev) {
 		switch (ev.getTag()) {
 		// Resource characteristics request
-			case UtilManager.CLOUDLET_CREATION:
-				processCloudletCreation(ev);
+			case UtilManager.CLOUDLET_UPDATE:
+				processCloudletUpdate(ev);
 				break;
 		}
 	}
 	
-	private void processCloudletCreation(SimEvent ev) {
+	private void processCloudletUpdate(SimEvent ev) {
 		
 		//Finish old cloudlets
 //		for (Cloudlet cloudlet : cloudlets) {
 //			vmList.get(cloudlet.getVmId()).getCloudletScheduler().setCloudletStatus(Cloudlet.SUCCESS);
 //			
 //		}
-
-		List<Vm> vms = getVmsCreatedList();
-		for (Vm vm : vms) {
-		    Cloudlet cloudlet = createCloudlet();
-			cloudlet.setVmId(vm.getId());
-			sendNow(getVmsToDatacentersMap().get(vm.getId()), CloudSimTags.CLOUDLET_SUBMIT, cloudlet);
-			cloudlets.add(cloudlet);
-			cloudletsSubmitted++;
-			getCloudletSubmittedList().add(cloudlet);
-			// remove submitted cloudlets from waiting list
-			for (Cloudlet c : getCloudletSubmittedList()) {
-				getCloudletList().remove(c);
+		int cpuUtil = Integer.parseInt(ev.getData().toString());
+		if(cloudletsSubmitted == 0) {
+			
+			List<Vm> vms = getVmsCreatedList();
+			for (Vm vm : vms) {
+			    Cloudlet cloudlet = createCloudlet(vm, cpuUtil);
+				cloudlet.setVmId(vm.getId());
+				sendNow(getVmsToDatacentersMap().get(vm.getId()), CloudSimTags.CLOUDLET_SUBMIT, cloudlet);
+				cloudlets.add(cloudlet);
+				cloudletsSubmitted++;
+				getCloudletSubmittedList().add(cloudlet);
+				// remove submitted cloudlets from waiting list
+				for (Cloudlet submittedCloudlet : getCloudletSubmittedList()) {
+					getCloudletList().remove(submittedCloudlet);
+				}
+			}
+			
+		} else {
+			for (Cloudlet cloudlet : cloudlets) {
+				cloudlet.setUtilizationModelCpu(new UtilizationModelFixed(cpuUtil)); //TODO value...
 			}
 		}
 
 	  sendNow(ev.getSource(), UtilManager.ROUND_COMPLETED, null);
 	}
 
-	private Cloudlet createCloudlet() {
-		  // Cloudlet properties
-		  int id = 0;
-		  int pesNumber = 1;
-		  long length = 400000;
-		  long fileSize = 300;
-		  long outputSize = 300;
-		  UtilizationModel utilizationModel = new UtilizationModelFull();
-		  Cloudlet cloudlet = new Cloudlet(id, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
-		  cloudlet.setUserId(getId());
-		return null;
+	private Cloudlet createCloudlet(Vm vm, int cpuUtil) {
+	  // Cloudlet properties
+	  int id = 0;
+	  int pesNumber = 1;
+	  long length = 400000; //TODO calc it
+	  /*
+	   * CloudSim has MIPS concept for describing the CPU throughput! What we are interested in is CPU utilization,
+	   * so make an assumption about the VM capacity (e.g., 1000 MIPS),
+	   * then calculate the throughput at each moment from the CPU utilization calculated by models.
+	   * For instance if CPU utilization is 50%, then the MIPS for this instance at this time is 500.
+	   */
+	  long fileSize = 300;
+	  long outputSize = 300;
+	  UtilizationModel utilizationModel = new UtilizationModelFixed(2);
+	  Cloudlet cloudlet = new Cloudlet(id, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
+	  cloudlet.setUserId(getId());
+	  return cloudlet;
 	}
 
 }

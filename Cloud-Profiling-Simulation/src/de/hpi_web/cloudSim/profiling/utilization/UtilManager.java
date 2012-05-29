@@ -15,7 +15,7 @@ import org.cloudbus.cloudsim.core.SimEvent;
 public class UtilManager extends SimEntity{
 	
 	public static final int RUN = 7000;
-	public static final int CLOUDLET_CREATION = 7001;
+	public static final int CLOUDLET_UPDATE = 7001;
 	public static final int ROUND_COMPLETED = 7002;
 	private int brokerId;
 
@@ -70,10 +70,14 @@ public class UtilManager extends SimEntity{
 		//TODO check if enough vms are present / too much vms present and handle this event
 		//schedule ...
 		
-		sendNow(brokerId, UtilManager.CLOUDLET_CREATION, cpu);
+		//TODO calc new util
+		
+		sendNow(brokerId, UtilManager.CLOUDLET_UPDATE, cpu);
 		
 		if(counter < cpuUtil.size()) {
 			schedule(getId(), 0, RUN);
+		} else {
+			//TODO end all cloudlets @ scheduler
 		}
 		
 	}
