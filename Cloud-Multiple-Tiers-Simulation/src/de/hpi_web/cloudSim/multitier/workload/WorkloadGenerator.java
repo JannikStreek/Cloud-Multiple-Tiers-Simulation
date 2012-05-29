@@ -1,6 +1,7 @@
 package de.hpi_web.cloudSim.multitier.workload;
 
 import org.cloudbus.cloudsim.Log;
+import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.SimEntity;
 import org.cloudbus.cloudsim.core.SimEvent;
@@ -9,7 +10,7 @@ import de.hpi_web.cloudSim.multitier.datacenter.DatacenterAffinityBroker;
 
 
 public abstract class WorkloadGenerator extends SimEntity {
-	public static final int START_WORKLOAD_SCHEDULING = 1001;
+	public static final int START_WORKLOAD_SCHEDULING = 2001;
 	private DatacenterAffinityBroker targetBroker;
 	private double timeLimit; 
 	
@@ -32,7 +33,6 @@ public abstract class WorkloadGenerator extends SimEntity {
 	public void processEvent(SimEvent ev) {
 
 		switch (ev.getTag()) {
-//		// Resource characteristics request
 			case START_WORKLOAD_SCHEDULING:
 				scheduleWorkloadForBroker(targetBroker, timeLimit);
 				break;
@@ -40,10 +40,8 @@ public abstract class WorkloadGenerator extends SimEntity {
 			case CloudSimTags.END_OF_SIMULATION:
 				shutdownEntity();
 				break;
-//			// other unknown tags are processed by this method
-//			default:
-//				processOtherEvent(ev);
-//				break;
+			default:
+				break;
 		}
 	}
 	@Override

@@ -20,10 +20,6 @@ public class MultiTierCloudlet extends Cloudlet {
 	private List<MultiTierCloudlet> children;
 
 	private DatacenterAffinityBroker originator;
-	
-	public static int TIER_DB = 2;
-	public static int TIER_APP = 1;
-	public static int TIER_SERVER = 0;
 
 	private int returnedChildren = 0;
 	
@@ -85,7 +81,7 @@ public class MultiTierCloudlet extends Cloudlet {
 	
 	@Override
 	public void setCloudletStatus(int newStatus) throws Exception {
-		Log.printLine("Status of Cloudet " + Cloudlet.getStatusString(newStatus) + " changed at time " + CloudSim.clock());
+		//Log.printLine("Status of Cloudet " + Cloudlet.getStatusString(newStatus) + " changed at time " + CloudSim.clock());
 		notifyListeners();
 		super.setCloudletStatus(newStatus);
 	}

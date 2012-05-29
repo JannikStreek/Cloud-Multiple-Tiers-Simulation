@@ -13,6 +13,8 @@ import org.cloudbus.cloudsim.core.CloudSim;
 
 import de.hpi_web.cloudSim.multitier.MultiTierCloudTags;
 import de.hpi_web.cloudSim.multitier.MultiTierCloudlet;
+import de.hpi_web.cloudSim.multitier.cloudlet.ExponentialGrowth;
+import de.hpi_web.cloudSim.multitier.cloudlet.MultiTierWorkload;
 import de.hpi_web.cloudSim.multitier.datacenter.DatacenterAffinityBroker;
 import de.hpi_web.cloudSim.multitier.staticTier.CloudletFactory;
 import de.hpi_web.cloudSim.multitier.staticTier.DatacenterFactory;
@@ -26,7 +28,7 @@ public class StaticTier {
 
 		Log.printLine("Starting StaticTier...");
 		initializeCloudSim();
-		Datacenter wsDatacenter = DatacenterFactory.createDatacenter("WebserverCenter", 0, 3);
+		Datacenter wsDatacenter = DatacenterFactory.createDatacenter("WebserverCenter", 0, 1);
 		Datacenter appDatacenter = DatacenterFactory.createDatacenter("ApplicationCenter", 3, 3);
 		Datacenter dbDatacenter = DatacenterFactory.createDatacenter("DatabaseCenter", 6, 3);
 //		DatacenterBroker wsBroker = createBroker("wsBroker");
@@ -36,10 +38,10 @@ public class StaticTier {
 		DatacenterAffinityBroker appBroker = createBroker("appBroker");
 		DatacenterAffinityBroker dbBroker = createBroker("dbBroker");
 		
-		//wsBroker.setSuccessor(appBroker);
-		//appBroker.setSuccessor(dbBroker);
+		wsBroker.setSuccessor(appBroker);
+		appBroker.setSuccessor(dbBroker);
 		
-		List<Vm> wsVms = VmFactory.createVms(0, 3, wsBroker.getId());
+		List<Vm> wsVms = VmFactory.createVms(0, 1, wsBroker.getId());
 		List<Vm> appVms = VmFactory.createVms(3, 3, appBroker.getId());
 		List<Vm> dbVms = VmFactory.createVms(6, 3, dbBroker.getId());
 		
@@ -59,14 +61,14 @@ public class StaticTier {
 		appBroker.submitVmList(appVms);
 		dbBroker.submitVmList(dbVms);
 
-		List<MultiTierCloudlet> wsCloudlets = CloudletFactory.createCloudlets(0, 50, wsBroker.getId());
-		//List<MultiTierCloudlet> appCloudlets = CloudletFactory.createCloudlets(10, 5, appBroker.getId());
-		//List<MultiTierCloudlet> dbCloudlets = CloudletFactory.createCloudlets(20, 2, dbBroker.getId());
+		List<MultiTierCloudlet> wsCloudlets = CloudletFactory.createCloudlets(0, 10, wsBroker);
+		//List<MultiTierCloudlet> appCloudlets = CloudletFactory.createCloudlets(10, 5, appBroker);
+		//List<MultiTierCloudlet> dbCloudlets = CloudletFactory.createCloudlets(20, 2, dbBroker);
 
 		//wsBroker.submitCloudletList(wsCloudlets);
 		//appBroker.submitCloudletList(appCloudlets);
 		//dbBroker.submitCloudletList(dbCloudlets);
-		SpikeWorkloadGenerator workloadGen = new SpikeWorkloadGenerator("WorkloadGenerator", wsBroker, 100.0);
+		SpikeWorkloadGenerator workloadGen = new SpikeWorkloadGenerator("WorkloadGenerator", wsBroker, 50.0);
 		
 		//System.exit(0);
 		CloudSim.startSimulation();
