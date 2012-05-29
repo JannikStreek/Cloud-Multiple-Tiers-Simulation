@@ -39,6 +39,7 @@ public class ProfilingBroker extends DatacenterBroker{
 	}
 	
 	private void processUtilFinished(SimEvent ev) {
+		Log.printLine(CloudSim.clock() + ": " + getName() + ": Finishing ");
 		for (int datacenter : getDatacenterIdsList()) {
 			sendNow(datacenter, UtilManager.ROUND_COMPLETED, null);
 		}
@@ -77,7 +78,7 @@ public class ProfilingBroker extends DatacenterBroker{
 	  // Cloudlet properties
 	  int id = 0;
 	  int pesNumber = 1;
-	  long length = 40000; //TODO calc it
+	  long length = 10000; //TODO calc it
 	  double utilizationPerVm = ((double)cpuUtil/(double)cloudletsSubmitted)/100;	// util = 1 means 100% utilization
 
 	  long fileSize = 300;
