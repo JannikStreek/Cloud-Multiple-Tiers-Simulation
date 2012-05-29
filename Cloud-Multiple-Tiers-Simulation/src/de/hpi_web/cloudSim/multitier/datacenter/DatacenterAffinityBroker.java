@@ -1,10 +1,12 @@
 package de.hpi_web.cloudSim.multitier.datacenter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.cloudbus.cloudsim.Cloudlet;
+import org.cloudbus.cloudsim.Datacenter;
 import org.cloudbus.cloudsim.DatacenterBroker;
 import org.cloudbus.cloudsim.DatacenterCharacteristics;
 import org.cloudbus.cloudsim.Log;
@@ -16,6 +18,7 @@ import org.cloudbus.cloudsim.lists.VmList;
 
 import de.hpi_web.cloudSim.multitier.MultiTierCloudTags;
 import de.hpi_web.cloudSim.multitier.MultiTierCloudlet;
+
 /*
  * DataCenterController
  * Override default behavior and limit the datacenter => vm mapping to only one possible datacenter.
@@ -118,12 +121,13 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 		
 		//TODO only do it if cloudlet is paused
 		if(cloudlet.getParent() != null) {
-			Log.printLine("Resuming old Cloudlet" + CloudSim.clock());
-			DatacenterAffinityBroker parentBroker = (DatacenterAffinityBroker) CloudSim.getEntity(cloudlet.getParent().getUserId());
 			
+			DatacenterAffinityBroker parentBroker = (DatacenterAffinityBroker) CloudSim.getEntity(cloudlet.getParent().getUserId());
+
 			// If the cloudlet created multiple children, wait until all are finished, then continue
 			cloudlet.getParent().incrementReturnedChildren();
 			if(cloudlet.getParent().areAllChildrenReturned()) {
+				Log.printLine("Resuming old Cloudlet " + CloudSim.clock());
 				int parentDatacenterId = parentBroker.getVmsToDatacentersMap().get(cloudlet.getParent().getVmId());
 				sendNow(parentDatacenterId, CloudSimTags.CLOUDLET_RESUME, cloudlet.getParent());
 			}
@@ -157,6 +161,28 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 		clearDatacenters();
 		finishExecution();
 	}
+	
+//	public Map<Integer, Integer> getVmsToDatacentersMap() {
+//		Map<Integer, List<MultiTierCloudlet>> dcMapping = new HashMap<Integer, List<MultiTierCloudlet>>();
+//		List<MultiTierCloudlet> cloudlets = getCloudletReceivedList();
+//		List <Integer> datacenterIdList = getDcAffinityList();
+//	
+//		for(int datacenterId : datacenterIdList) {
+//			dcMapping.put(datacenterId, new ArrayList<MultiTierCloudlet>());
+//		}
+//		//Mapping erstellen
+//		for(MultiTierCloudlet cloudlet : cloudlets) {
+//			cloudlet.getVmId()
+//		}
+//
+//		for(int key : dcMapping.keySet()) {
+//			getVmsToDatacentersMap().get
+//		}	
+//
+//		return super.getVmsToDatacentersMap();
+//		
+//	}
+	
 	
 ////////////////////////////////////////////////////////////////////////////////////
 ///Methods which have to be overridden to realize a Broker 1:x datacenter Mapping///
