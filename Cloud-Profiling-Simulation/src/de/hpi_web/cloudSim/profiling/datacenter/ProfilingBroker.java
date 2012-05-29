@@ -72,7 +72,7 @@ public class ProfilingBroker extends DatacenterBroker{
 		}
 		
 		for(Cloudlet cloudlet : cloudletSubmittedList) {
-			Log.printLine(CloudSim.clock() + ": " + getName() + ": cloudlet at CPU util  "+ cloudlet.getUtilizationOfCpu(0));
+			Log.printLine(CloudSim.clock() + ": " + getName() + ": cloudlet at CPU util  "+ cloudlet.getUtilizationOfCpu(CloudSim.clock()));
 		}
 		
 
@@ -86,7 +86,7 @@ public class ProfilingBroker extends DatacenterBroker{
 	  int id = 0;
 	  int pesNumber = 1;
 	  long length = 100000000; //TODO calc it
-	  double utilizationPerVm = ((double)cpuUtil/(double)getVmsCreatedList().size())/100;	// util = 1 means 100% utilization
+	  double utilizationPerVm = (cpuUtil/(double)getVmsCreatedList().size());	// util = 1 means 100% utilization
 	  Log.printLine(CloudSim.clock() + ": " + getName() + ": creating the cloudlet with util:"+utilizationPerVm);
 
 	  long fileSize = 300;
