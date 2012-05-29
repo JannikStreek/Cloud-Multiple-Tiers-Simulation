@@ -28,9 +28,9 @@ public class UtilManager extends SimEntity{
 
 	public UtilManager(String name) {
 		super(name);
-		cpuUtil.add(0.3);
-		cpuUtil.add(0.7);
-		cpuUtil.add(0.7);
+		cpuUtil.add(0.4);
+		cpuUtil.add(0.8);
+		cpuUtil.add(0.1);
 		counter = 0;
 		// TODO Auto-generated constructor stub
 	}
@@ -67,7 +67,7 @@ public class UtilManager extends SimEntity{
 	private void processRun(SimEvent ev) {
 		Log.printLine(CloudSim.clock() + ": " + getName() + ": UtilManager is running... ");
 		double cpu = Double.parseDouble(cpuUtil.remove(counter).toString());
-		counter++;
+		
 		
 		//TODO check if enough vms are present / too much vms present and handle this event
 		//schedule ...
@@ -80,7 +80,7 @@ public class UtilManager extends SimEntity{
 		} else {
 			schedule(brokerId, 2, UTIL_SIM_FINISHED);
 		}
-		
+		counter++;
 	}
 	
 
