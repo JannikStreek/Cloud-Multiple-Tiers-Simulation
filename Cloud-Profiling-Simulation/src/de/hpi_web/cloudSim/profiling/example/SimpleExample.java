@@ -73,7 +73,7 @@ public class SimpleExample {
 		appDatacenter.printDebts();
 		dbDatacenter.printDebts();
 
-		Log.printLine("StaticTier Simulation finished!");
+		Log.printLine("Simulation finished!");
 		
 	}
 	
