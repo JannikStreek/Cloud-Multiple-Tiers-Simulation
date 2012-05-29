@@ -49,8 +49,8 @@ public class ProfilingBroker extends DatacenterBroker{
 			cloudletsSubmitted++;
 			getCloudletSubmittedList().add(cloudlet);
 			// remove submitted cloudlets from waiting list
-			for (Cloudlet cloudlet : getCloudletSubmittedList()) {
-				getCloudletList().remove(cloudlet);
+			for (Cloudlet c : getCloudletSubmittedList()) {
+				getCloudletList().remove(c);
 			}
 		}
 
