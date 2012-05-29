@@ -28,7 +28,7 @@ public class StaticTier {
 
 		Log.printLine("Starting StaticTier...");
 		initializeCloudSim();
-		Datacenter wsDatacenter = DatacenterFactory.createDatacenter("WebserverCenter", 0, 1);
+		Datacenter wsDatacenter = DatacenterFactory.createDatacenter("WebserverCenter", 0, 3);
 		Datacenter appDatacenter = DatacenterFactory.createDatacenter("ApplicationCenter", 3, 3);
 		Datacenter dbDatacenter = DatacenterFactory.createDatacenter("DatabaseCenter", 6, 3);
 //		DatacenterBroker wsBroker = createBroker("wsBroker");

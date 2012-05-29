@@ -32,9 +32,7 @@ public class SpikeWorkloadGenerator extends WorkloadGenerator {
 		int brokerId = broker.getId();
 		int workload = LOAD_MIN;
 		int startId = 0;
-		try { 
-			DatacenterAffinityBroker initBroker = new DatacenterAffinityBroker("WorkloadGenerator", 0, 0); 
-			initBroker.setSuccessor(broker);
+		try {
 		
 			List<MultiTierCloudlet> cl;
 			
