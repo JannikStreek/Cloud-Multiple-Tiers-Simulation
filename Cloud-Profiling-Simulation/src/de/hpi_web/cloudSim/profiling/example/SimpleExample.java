@@ -14,6 +14,7 @@ import de.hpi_web.cloudSim.multitier.staticTier.CloudletFactory;
 import de.hpi_web.cloudSim.multitier.staticTier.VmFactory;
 import de.hpi_web.cloudSim.profiling.datacenter.DatacenterBuilder;
 import de.hpi_web.cloudSim.profiling.datacenter.ProfilingBroker;
+import de.hpi_web.cloudSim.profiling.utilization.UtilManager;
 
 public class SimpleExample {
 	
@@ -30,12 +31,12 @@ public class SimpleExample {
 		
 		// submit vm lists to the brokers
 		wsBroker.submitVmList(wsVms);
+		UtilManager utilManager = new UtilManager("UtilManager");
 
-		List<MultiTierCloudlet> wsCloudlets = CloudletFactory.createCloudlets(0, 10, wsBroker);
+		//List<MultiTierCloudlet> wsCloudlets = CloudletFactory.createCloudlets(0, 10, wsBroker);
 
-		wsBroker.submitCloudletList(wsCloudlets);
+		//wsBroker.submitCloudletList(wsCloudlets);
 		
-		//System.exit(0);
 		CloudSim.startSimulation();
 		CloudSim.stopSimulation();
 

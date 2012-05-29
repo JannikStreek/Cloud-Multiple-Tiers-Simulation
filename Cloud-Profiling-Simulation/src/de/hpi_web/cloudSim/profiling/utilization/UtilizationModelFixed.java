@@ -9,9 +9,9 @@ public class UtilizationModelFixed implements UtilizationModel{
 	 * @see cloudsim.power.UtilizationModel#getUtilization(double)
 	 */
 	
-	int util = 1;
+	double util = 0;
 	
-	public UtilizationModelFixed(int util) {
+	public UtilizationModelFixed(double util) {
 		util = util;
 	}
 	

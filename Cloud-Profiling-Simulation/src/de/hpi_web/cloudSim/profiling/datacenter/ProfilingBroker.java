@@ -47,9 +47,9 @@ public class ProfilingBroker extends DatacenterBroker{
 			    Cloudlet cloudlet = createCloudlet(vm, cpuUtil);
 				cloudlet.setVmId(vm.getId());
 				sendNow(getVmsToDatacentersMap().get(vm.getId()), CloudSimTags.CLOUDLET_SUBMIT, cloudlet);
-				cloudlets.add(cloudlet);
-				cloudletsSubmitted++;
+				//cloudlets.add(cloudlet);
 				getCloudletSubmittedList().add(cloudlet);
+				cloudletsSubmitted++;
 				// remove submitted cloudlets from waiting list
 				for (Cloudlet submittedCloudlet : getCloudletSubmittedList()) {
 					getCloudletList().remove(submittedCloudlet);
@@ -70,15 +70,11 @@ public class ProfilingBroker extends DatacenterBroker{
 	  int id = 0;
 	  int pesNumber = 1;
 	  long length = 400000; //TODO calc it
-	  /*
-	   * CloudSim has MIPS concept for describing the CPU throughput! What we are interested in is CPU utilization,
-	   * so make an assumption about the VM capacity (e.g., 1000 MIPS),
-	   * then calculate the throughput at each moment from the CPU utilization calculated by models.
-	   * For instance if CPU utilization is 50%, then the MIPS for this instance at this time is 500.
-	   */
+	  double utilizationPerVm = ((double)cpuUtil/(double)cloudletsSubmitted)/100;	// util = 1 means 100% utilization
+
 	  long fileSize = 300;
 	  long outputSize = 300;
-	  UtilizationModel utilizationModel = new UtilizationModelFixed(2);
+	  UtilizationModel utilizationModel = new UtilizationModelFixed(utilizationPerVm);
 	  Cloudlet cloudlet = new Cloudlet(id, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
 	  cloudlet.setUserId(getId());
 	  return cloudlet;

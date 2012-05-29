@@ -21,7 +21,7 @@ public class UtilManager extends SimEntity{
 
 
 	//TODO first test with fixed values
-    List cpuUtil = new ArrayList<Integer>();
+    List<Integer> cpuUtil = new ArrayList<Integer>();
     private int counter;
     
 
