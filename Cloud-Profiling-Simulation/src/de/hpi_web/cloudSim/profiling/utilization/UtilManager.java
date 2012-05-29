@@ -1,7 +1,9 @@
 package de.hpi_web.cloudSim.profiling.utilization;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.Log;
@@ -22,15 +24,15 @@ public class UtilManager extends SimEntity{
 
 
 	//TODO first test with fixed values
-    List<Double> cpuUtil = new ArrayList<Double>();
+    Queue<Double> cpuUtil = new LinkedList<Double>();
     private int counter;
     
 
 	public UtilManager(String name) {
 		super(name);
-		cpuUtil.add(0.4);
+		cpuUtil.add(0.9);
 		cpuUtil.add(0.8);
-		cpuUtil.add(0.1);
+		cpuUtil.add(5.0);
 		counter = 0;
 		// TODO Auto-generated constructor stub
 	}
@@ -66,8 +68,7 @@ public class UtilManager extends SimEntity{
 
 	private void processRun(SimEvent ev) {
 		Log.printLine(CloudSim.clock() + ": " + getName() + ": UtilManager is running... ");
-		double cpu = Double.parseDouble(cpuUtil.remove(counter).toString());
-		
+		double cpu = Double.parseDouble(cpuUtil.poll().toString());
 		
 		//TODO check if enough vms are present / too much vms present and handle this event
 		//schedule ...
@@ -75,12 +76,11 @@ public class UtilManager extends SimEntity{
 		//TODO calc new util
 		schedule(brokerId,1, UtilManager.CLOUDLET_UPDATE, cpu);
 		
-		if(counter < cpuUtil.size()) {
+		if(0 < cpuUtil.size()) {
 			schedule(getId(), 2, RUN);
 		} else {
 			schedule(brokerId, 2, UTIL_SIM_FINISHED);
 		}
-		counter++;
 	}
 	
 
