@@ -2,5 +2,14 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/home/christoph/workspace/Cloud-Multiple-Tiers-Simulation/dependencies/cloudsim-3.0.jar" sourcepath="/home/christoph/workspace/Cloud-Multiple-Tiers-Simulation/dependencies/cloudsim-3.0-sources.jar"/>
+	<classpathentry kind="lib" path="/home/christoph/workspace/Cloud-Multiple-Tiers-Simulation/dependencies/cloudsim-3.0-sources.jar"/>
+	<classpathentry kind="lib" path="/home/christoph/workspace/Cloud-Multiple-Tiers-Simulation/dependencies/cloudsim-examples-3.0.jar"/>
+	<classpathentry kind="lib" path="/home/christoph/workspace/Cloud-Multiple-Tiers-Simulation/dependencies/cloudsim-examples-3.0-sources.jar"/>
+	<classpathentry kind="lib" path="/home/christoph/workspace/Cloud-Multiple-Tiers-Simulation/dependencies/junit-4.10.jar"/>
+	<classpathentry kind="lib" path="/home/christoph/workspace/Cloud-Multiple-Tiers-Simulation/dependencies/junit-4.10-src.jar"/>
+	<classpathentry kind="lib" path="/home/christoph/workspace/Cloud-Multiple-Tiers-Simulation/dependencies/junit-dep-4.10.jar"/>
+	<classpathentry kind="lib" path="/home/christoph/workspace/Cloud-Multiple-Tiers-Simulation/dependencies/mockito-all-1.9.0.jar"/>
+	<classpathentry kind="lib" path="/home/christoph/workspace/Cloud-Multiple-Tiers-Simulation/Cloud-Multiple-Tiers-Simulation/bin" sourcepath="/CloudSim/src"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
