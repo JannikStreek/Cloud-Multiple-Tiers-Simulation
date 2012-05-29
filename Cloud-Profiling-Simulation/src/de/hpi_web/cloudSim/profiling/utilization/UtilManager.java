@@ -9,10 +9,11 @@ import org.cloudbus.cloudsim.core.SimEvent;
 
 public class UtilManager extends SimEntity{
 	
-	private static int RUN = 7000;
+	private static final int RUN = 7000;
 	
 	//TODO first test with fixed values
     List cpuUtil = new ArrayList<Integer>();
+    private int counter;
     
 
 	public UtilManager(String name) {
@@ -20,6 +21,7 @@ public class UtilManager extends SimEntity{
 		cpuUtil.add(30);
 		cpuUtil.add(70);
 		cpuUtil.add(130);
+		counter = 0;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -34,7 +36,7 @@ public class UtilManager extends SimEntity{
 	public void processEvent(SimEvent ev) {
 
 		switch (ev.getTag()) {
-			case CloudSimTags.CLOUDLET_SUBMIT_ACK:
+			case UtilManager.RUN:
 				processRun(ev);
 				break;
 		}
@@ -42,7 +44,17 @@ public class UtilManager extends SimEntity{
 	}
 
 	private void processRun(SimEvent ev) {
-		// TODO Auto-generated method stub
+		int cpu = Integer.parseInt(cpuUtil.remove(counter).toString());
+		counter++;
+		
+		//TODO check if enough vms are present / too much vms present and handle this event
+		//schedule ...
+		//TODO create cloudlets for these vms
+		//schedule ...
+		
+		if(counter < cpuUtil.size()) {
+			schedule(getId(), 0, RUN);
+		}
 		
 	}
 
