@@ -9,6 +9,8 @@ import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
 
+import arx.ARX;
+
 import de.hpi_web.cloudSim.multitier.MultiTierCloudlet;
 import de.hpi_web.cloudSim.multitier.staticTier.CloudletFactory;
 import de.hpi_web.cloudSim.multitier.staticTier.VmFactory;
@@ -37,6 +39,7 @@ public class SimpleExample {
 		//List<MultiTierCloudlet> wsCloudlets = CloudletFactory.createCloudlets(0, 10, wsBroker);
 
 		//wsBroker.submitCloudletList(wsCloudlets);
+		List<Double> cpuValues = ARX.predictCPUUsage("training.csv", "running.csv");
 		
 		CloudSim.startSimulation();
 		CloudSim.stopSimulation();
