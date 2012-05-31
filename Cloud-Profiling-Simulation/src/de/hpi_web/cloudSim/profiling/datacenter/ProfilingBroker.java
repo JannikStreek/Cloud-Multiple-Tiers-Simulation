@@ -66,8 +66,8 @@ public class ProfilingBroker extends DatacenterBroker{
 			}
 			
 		} else {
-			for (Cloudlet cloudlet : cloudletSubmittedList) {
-				cloudlet.setUtilizationModelCpu(new UtilizationModelFixed(cpuUtil/(double)cloudletsSubmitted)); //TODO value...
+			for (Cloudlet cloudlet : getCloudletSubmittedList()) {
+				cloudlet.setUtilizationModelCpu(new UtilizationModelFixed(cpuUtil/(double)cloudletsSubmitted));
 			}
 		}
 		
