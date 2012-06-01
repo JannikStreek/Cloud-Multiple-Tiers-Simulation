@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
+import java.awt.event.ActionListener;
 import java.util.Calendar;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import javax.swing.JLabel;
 
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.Datacenter;
+import org.cloudbus.cloudsim.DatacenterBroker;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
@@ -26,6 +28,7 @@ import de.hpi_web.cloudSim.profiling.datacenter.ProfilingBroker;
 import de.hpi_web.cloudSim.profiling.observer.Observable;
 import de.hpi_web.cloudSim.profiling.observer.Observer;
 import de.hpi_web.cloudSim.profiling.utilization.UtilManager;
+import javax.swing.JTextArea;
 
 
 public class Gui implements Observer {
@@ -34,6 +37,8 @@ public class Gui implements Observer {
 	private JTextField textField;
 	private JTextField textField_1;
 	private JPanel panel;
+	private JTextArea textArea;
+	private ActionListener start;
 
 	/**
 	 * Launch the application.
@@ -54,8 +59,8 @@ public class Gui implements Observer {
 	 * Create the application.
 	 */
 	public Gui() {
+		start = new StartAction(this);
 		initialize();
-		start(this);
 	}
 
 	/**
@@ -85,30 +90,30 @@ public class Gui implements Observer {
 		JLabel lblCpuvmMixTreshold = new JLabel("CPU/VM MIN threshold");
 		
 		JButton btnStart = new JButton("Start");
+		btnStart.addActionListener(this.start);
 		
 		JButton btnStop = new JButton("Stop");
 		GroupLayout groupLayout = new GroupLayout(frame.getContentPane());
 		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
+			groupLayout.createParallelGroup(Alignment.TRAILING)
+				.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
 					.addGap(64)
 					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
 						.addComponent(btnStart)
 						.addComponent(btnStop, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE))
-					.addGap(18)
-					.addComponent(panel, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)
-					.addGap(18)
-					.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)
-					.addGap(18)
-					.addComponent(panel_2, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(129, Short.MAX_VALUE))
-				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-					.addContainerGap(163, Short.MAX_VALUE)
-					.addGroup(groupLayout.createSequentialGroup()
-						.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-							.addComponent(lblCpuvmMixTreshold)
-							.addComponent(lblCpuvmMaxTreshold))
-						.addGap(4))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(panel, GroupLayout.PREFERRED_SIZE, 147, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(panel_1, GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(panel_2, GroupLayout.PREFERRED_SIZE, 145, GroupLayout.PREFERRED_SIZE)
+					.addGap(21))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addContainerGap(115, Short.MAX_VALUE)
+					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+						.addComponent(lblCpuvmMixTreshold)
+						.addComponent(lblCpuvmMaxTreshold))
+					.addGap(4)
 					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(textField_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -124,13 +129,13 @@ public class Gui implements Observer {
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(22)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(panel, GroupLayout.PREFERRED_SIZE, 239, GroupLayout.PREFERRED_SIZE)
-						.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 239, GroupLayout.PREFERRED_SIZE)
-						.addComponent(panel_2, GroupLayout.PREFERRED_SIZE, 239, GroupLayout.PREFERRED_SIZE)
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(btnStart)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(btnStop)))
+							.addComponent(btnStop))
+						.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 239, GroupLayout.PREFERRED_SIZE)
+						.addComponent(panel, GroupLayout.PREFERRED_SIZE, 239, GroupLayout.PREFERRED_SIZE)
+						.addComponent(panel_2, GroupLayout.PREFERRED_SIZE, 239, GroupLayout.PREFERRED_SIZE))
 					.addGap(45)
 					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
 						.addGroup(groupLayout.createSequentialGroup()
@@ -144,69 +149,43 @@ public class Gui implements Observer {
 						.addComponent(btnNewButton))
 					.addContainerGap(48, Short.MAX_VALUE))
 		);
+		
+		JTextArea textArea_2 = new JTextArea();
+		textArea_2.setRows(10);
+		textArea_2.setEditable(false);
+		textArea_2.setColumns(13);
+		panel_2.add(textArea_2);
+		
+		JTextArea textArea_1 = new JTextArea();
+		textArea_1.setRows(10);
+		textArea_1.setEditable(false);
+		textArea_1.setColumns(13);
+		panel_1.add(textArea_1);
+		
+		textArea = new JTextArea();
+		textArea.setColumns(13);
+		textArea.setEditable(false);
+		textArea.setRows(10);
+		panel.add(textArea);
 		frame.getContentPane().setLayout(groupLayout);
 	}
 
 	@Override
 	public void refreshData(Observable subject) {
-		JLabel test = new JLabel("test");
-		panel.add(test);
-		
-	}
-	
-	private static void start(Gui window) {
-		
-		Log.printLine("Starting...");
-		initializeCloudSim();
-		
-		Datacenter wsDatacenter = DatacenterBuilder.createDatacenter("WebserverCenter", 0, 3);
-		
-		ProfilingBroker wsBroker = createBroker("wsBroker");
-		wsBroker.register(window);
-		
-		List<Vm> wsVms = VmFactory.createVms(0, 4, wsBroker.getId());
-		
-		// submit vm lists to the brokers
-		wsBroker.submitVmList(wsVms);
-		UtilManager utilManager = new UtilManager("UtilManager");
-		utilManager.setBrokerId(wsBroker.getId());
-
-		//List<MultiTierCloudlet> wsCloudlets = CloudletFactory.createCloudlets(0, 10, wsBroker);
-
-		//wsBroker.submitCloudletList(wsCloudlets);
-		
-		CloudSim.startSimulation();
-		CloudSim.stopSimulation();
-
-		//Print results
-		List<Cloudlet> wsList = wsBroker.getCloudletReceivedList();
-		Log.printLine("Simulation finished!");
-		
-	}
-	
-	public static void initializeCloudSim() {
-		int num_user = 1; // number of cloud users
-		Calendar calendar = Calendar.getInstance();
-		boolean trace_flag = false; // mean trace events
-		
-		// Initialize the CloudSim library
-		CloudSim.init(num_user, calendar, trace_flag);
-	}
-
-	/**
-	 * Creates the broker.
-	 *
-	 * @return the datacenter broker
-	 */
-	private static ProfilingBroker createBroker(String brokerId) {
-		ProfilingBroker broker = null;
-		try {
-			broker = new ProfilingBroker(brokerId);
-			//broker = new DatacenterBroker(brokerId);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
+		ProfilingBroker broker = (ProfilingBroker) subject;
+		String newText = "";
+		for(Cloudlet cloudlet :broker.getCloudletSubmittedList()) {
+			double util = cloudlet.getUtilizationModelCpu().getUtilization(CloudSim.clock());
+			int vm = cloudlet.getVmId();
+			newText += "VM: " + vm + "\r\n";
+			newText += "-----------\r\n";
+			newText += "CPU util at " + util + "\r\n\r\n";
+			
 		}
-		return broker;
+		textArea.setText(newText);
+		
+		
 	}
+	
+	
 }
