@@ -38,7 +38,10 @@ public class Gui implements Observer {
 	private JTextField textField_1;
 	private JPanel panel;
 	private JTextArea textArea;
-	private ActionListener start;
+	private StartAction start;
+	private JTextField textField_2;
+
+
 
 	/**
 	 * Launch the application.
@@ -78,6 +81,7 @@ public class Gui implements Observer {
 		JPanel panel_2 = new JPanel();
 		
 		JButton btnNewButton = new JButton("Set new values");
+		btnNewButton.addActionListener(new SetValuesAction(this.start, this));
 		
 		textField = new JTextField();
 		textField.setColumns(10);
@@ -93,10 +97,16 @@ public class Gui implements Observer {
 		btnStart.addActionListener(this.start);
 		
 		JButton btnStop = new JButton("Stop");
+		
+		textField_2 = new JTextField();
+		textField_2.setText("1");
+		textField_2.setColumns(10);
+		
+		JLabel lblDelayAfterEach = new JLabel("Delay after each step [s]");
 		GroupLayout groupLayout = new GroupLayout(frame.getContentPane());
 		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.TRAILING)
-				.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(64)
 					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
 						.addComponent(btnStart)
@@ -109,19 +119,21 @@ public class Gui implements Observer {
 					.addComponent(panel_2, GroupLayout.PREFERRED_SIZE, 145, GroupLayout.PREFERRED_SIZE)
 					.addGap(21))
 				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap(115, Short.MAX_VALUE)
+					.addContainerGap(96, Short.MAX_VALUE)
 					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
 						.addComponent(lblCpuvmMixTreshold)
-						.addComponent(lblCpuvmMaxTreshold))
+						.addComponent(lblCpuvmMaxTreshold)
+						.addComponent(lblDelayAfterEach))
 					.addGap(4)
-					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(textField_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(textField_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
 							.addComponent(btnNewButton))
+						.addComponent(textField_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(textField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addGap(156)))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(textField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
 					.addGap(77))
 		);
 		groupLayout.setVerticalGroup(
@@ -140,14 +152,18 @@ public class Gui implements Observer {
 					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
 						.addGroup(groupLayout.createSequentialGroup()
 							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-								.addComponent(textField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(lblCpuvmMaxTreshold))
+								.addComponent(lblCpuvmMaxTreshold)
+								.addComponent(textField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 							.addGap(12)
 							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 								.addComponent(lblCpuvmMixTreshold)
-								.addComponent(textField_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+								.addComponent(textField_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblDelayAfterEach)
+								.addComponent(textField_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
 						.addComponent(btnNewButton))
-					.addContainerGap(48, Short.MAX_VALUE))
+					.addContainerGap(23, Short.MAX_VALUE))
 		);
 		
 		JTextArea textArea_2 = new JTextArea();
@@ -169,6 +185,10 @@ public class Gui implements Observer {
 		panel.add(textArea);
 		frame.getContentPane().setLayout(groupLayout);
 	}
+	
+	public JTextField getTextField_2() {
+		return textField_2;
+	}
 
 	@Override
 	public void refreshData(Observable subject) {
@@ -186,6 +206,4 @@ public class Gui implements Observer {
 		
 		
 	}
-	
-	
 }

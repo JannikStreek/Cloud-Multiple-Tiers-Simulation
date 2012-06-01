@@ -27,10 +27,13 @@ public class UtilManager extends SimEntity {
 	//TODO first test with fixed values
     Queue<Double> cpuUtil = new LinkedList<Double>();
     private int counter;
+    private int delay; //seconds
     
 
-	public UtilManager(String name) {
+	public UtilManager(String name, int delay) {
 		super(name);
+		this.delay = delay;
+		
 		cpuUtil.add(0.9);
 		cpuUtil.add(0.8);
 		cpuUtil.add(5.0);
@@ -63,6 +66,13 @@ public class UtilManager extends SimEntity {
 	}
 
 	private void processCompleted(SimEvent ev) {
+		
+		try {
+			Thread.sleep(delay*1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		Log.printLine(CloudSim.clock() + ": " + getName() + ": Completed Round ");
 		
 	}
