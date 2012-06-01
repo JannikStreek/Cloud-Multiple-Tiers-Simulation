@@ -3,6 +3,7 @@ package de.hpi_web.cloudSim.profiling.utilization;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Observable;
 import java.util.Queue;
 
 import org.cloudbus.cloudsim.Cloudlet;
@@ -14,7 +15,7 @@ import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.SimEntity;
 import org.cloudbus.cloudsim.core.SimEvent;
 
-public class UtilManager extends SimEntity{
+public class UtilManager extends SimEntity {
 	
 	public static final int RUN = 7000;
 	public static final int CLOUDLET_UPDATE = 7001;

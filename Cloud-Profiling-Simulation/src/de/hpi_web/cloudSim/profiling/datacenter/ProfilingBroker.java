@@ -12,15 +12,19 @@ import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.SimEvent;
 
+import de.hpi_web.cloudSim.profiling.observer.Observable;
+import de.hpi_web.cloudSim.profiling.observer.Observer;
 import de.hpi_web.cloudSim.profiling.utilization.UtilManager;
 import de.hpi_web.cloudSim.profiling.utilization.UtilizationModelFixed;
 
-public class ProfilingBroker extends DatacenterBroker{
+public class ProfilingBroker extends DatacenterBroker implements Observable{
 	
 	private List<Cloudlet> cloudlets;
+	private List<Observer> observers;
 
 	public ProfilingBroker(String name) throws Exception {
 		super(name);
+		observers = new ArrayList<Observer>();
 		cloudlets = new ArrayList<Cloudlet>();
 		// TODO Auto-generated constructor stub
 	}
@@ -75,8 +79,9 @@ public class ProfilingBroker extends DatacenterBroker{
 			Log.printLine(CloudSim.clock() + ": " + getName() + ": cloudlet at CPU util  "+ cloudlet.getUtilizationOfCpu(CloudSim.clock()));
 		}
 		
+		notifyObservers();
 
-	  sendNow(ev.getSource(), UtilManager.ROUND_COMPLETED, null);
+	    sendNow(ev.getSource(), UtilManager.ROUND_COMPLETED, null);
 	}
 
 	private Cloudlet createCloudlet(Vm vm, double cpuUtil) {
@@ -94,6 +99,26 @@ public class ProfilingBroker extends DatacenterBroker{
 	  Cloudlet cloudlet = new Cloudlet(id, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
 	  cloudlet.setUserId(getId());
 	  return cloudlet;
+	}
+
+	@Override
+	public void notifyObservers() {
+		for(Observer obs : this.observers) {
+			obs.refreshData(this);
+		}
+		
+	}
+
+	@Override
+	public void register(Observer obs) {
+		observers.add(obs);
+		
+	}
+
+	@Override
+	public void unRegister(Observer obs) {
+		observers.remove(obs);
+		
 	}
 
 }
