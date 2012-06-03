@@ -189,6 +189,14 @@ public class Gui implements Observer {
 	public JTextField getTextField_2() {
 		return textField_2;
 	}
+	
+	public JTextField getTextField_1() {
+		return textField_1;
+	}
+	
+	public JTextField getTextField() {
+		return textField;
+	}
 
 	@Override
 	public void refreshData(Observable subject) {

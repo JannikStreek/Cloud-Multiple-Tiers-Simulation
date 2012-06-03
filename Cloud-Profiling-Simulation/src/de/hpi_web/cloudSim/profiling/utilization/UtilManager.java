@@ -22,6 +22,8 @@ public class UtilManager extends SimEntity {
 	public static final int ROUND_COMPLETED = 7002;
 	public static final int UTIL_SIM_FINISHED = 7003;
 	private int brokerId;
+	private int upperThreshold;
+	private int lowerThreshold;
 
 
 	//TODO first test with fixed values
@@ -30,10 +32,11 @@ public class UtilManager extends SimEntity {
     private int delay; //seconds
     
 
-	public UtilManager(String name, int delay) {
+	public UtilManager(String name, int delay, int upperThreshold, int lowerThreshold) {
 		super(name);
 		this.delay = delay;
-		
+		this.upperThreshold = upperThreshold;
+		this.lowerThreshold = lowerThreshold;
 		cpuUtil.add(0.9);
 		cpuUtil.add(0.8);
 		cpuUtil.add(5.0);

@@ -17,6 +17,8 @@ public class SetValuesAction implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		start.setDelay(Integer.parseInt(parent.getTextField_2().getText()));
+		start.setUpperThreshold(Integer.parseInt(parent.getTextField().getText()));
+		start.setLowerThreshold(Integer.parseInt(parent.getTextField_1().getText()));
 	}
 
 }

@@ -21,6 +21,8 @@ public class StartAction implements ActionListener{
 	
 	private Observer observer;
 	private int delay;
+	private int upperThreshold;
+	private int lowerThreshold;
 
 	public StartAction(Observer observer) {
 		super();
@@ -35,7 +37,7 @@ public class StartAction implements ActionListener{
 
 			@Override
 			public void run() {
-				SimulationStart.start(observer, delay);
+				SimulationStart.start(observer, delay, upperThreshold, lowerThreshold);
 				
 			}
 			
@@ -55,9 +57,25 @@ public class StartAction implements ActionListener{
 		this.delay = delay;
 	}
 	
+	public int getUpperThreshold() {
+		return upperThreshold;
+	}
+
+	public void setUpperThreshold(int upperThreshold) {
+		this.upperThreshold = upperThreshold;
+	}
+
+	public int getLowerThreshold() {
+		return lowerThreshold;
+	}
+
+	public void setLowerThreshold(int lowerThreshold) {
+		this.lowerThreshold = lowerThreshold;
+	}
+	
 	static class SimulationStart {
 		
-		private static void start(Observer observer, int delay) {
+		private static void start(Observer observer, int delay, int upperThreshold, int lowerThreshold) {
 			
 			Log.printLine("Starting...");
 			initializeCloudSim();
@@ -71,7 +89,7 @@ public class StartAction implements ActionListener{
 			
 			// submit vm lists to the brokers
 			wsBroker.submitVmList(wsVms);
-			UtilManager utilManager = new UtilManager("UtilManager", delay);
+			UtilManager utilManager = new UtilManager("UtilManager", delay, upperThreshold, lowerThreshold);
 			utilManager.setBrokerId(wsBroker.getId());
 
 			//List<MultiTierCloudlet> wsCloudlets = CloudletFactory.createCloudlets(0, 10, wsBroker);
