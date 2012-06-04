@@ -33,7 +33,7 @@ public class SimpleExample {
 		
 		// submit vm lists to the brokers
 		wsBroker.submitVmList(wsVms);
-		UtilManager utilManager = new UtilManager("UtilManager", 0);
+		UtilManager utilManager = new UtilManager("UtilManager", 0, 0, 0);
 		utilManager.setBrokerId(wsBroker.getId());
 
 		//List<MultiTierCloudlet> wsCloudlets = CloudletFactory.createCloudlets(0, 10, wsBroker);

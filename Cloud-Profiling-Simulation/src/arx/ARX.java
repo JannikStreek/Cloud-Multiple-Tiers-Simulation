@@ -106,25 +106,8 @@ public class ARX {
     }
     
     public static List<Double> predictCPUUsage(String trainFile, String runFile) {
-
-        //The location of the training file
-        CSVFileReader training = new CSVFileReader(trainFile);
-        training.ReadFile();
-        //The location of the validation file
-        CSVFileReader running = new CSVFileReader(runFile);
-        running.ReadFile();
-        
-        
-        //We ignore first column in the csv file which shows the sampling time
-        Matrix Ms = new Matrix(training.getRowsNum(),training.getColsNum()-1);
-        for(int row=0;row<training.getRowsNum();row++)
-            for(int col=0;col<training.getColsNum()-1;col++)
-                Ms.set(row, col, training.getValue(row, col+1));
-        
-        Matrix Mv = new Matrix(running.getRowsNum(),running.getColsNum()-1);
-        for(int row=0; row < running.getRowsNum(); row++)
-            for(int col=0; col< running.getColsNum()-1; col++)
-                Mv.set(row, col, running.getValue(row, col+1));
+    	Matrix Ms = buildMatrix(trainFile);
+    	Matrix Mv = buildMatrix(runFile);
         
         //Select the metric that is going to be modeled
         //modeledMetricIndex determines its index in training file, at this example we use CPU utilization!
@@ -203,4 +186,15 @@ public class ARX {
         //double rnorm = Residual.normInf();
         //System.out.println("Normalized residulas: "+rnorm);
     }
+
+	private static Matrix buildMatrix(String file) {
+        CSVFileReader reader = new CSVFileReader(file);
+        reader.ReadFile();
+        //We ignore first column in the csv file which shows the sampling time
+        Matrix M = new Matrix(reader.getRowsNum(),reader.getColsNum()-1);
+        for(int row=0;row<reader.getRowsNum();row++)
+            for(int col=0;col<reader.getColsNum()-1;col++)
+                M.set(row, col, reader.getValue(row, col+1));
+        return M;
+	}
 }
