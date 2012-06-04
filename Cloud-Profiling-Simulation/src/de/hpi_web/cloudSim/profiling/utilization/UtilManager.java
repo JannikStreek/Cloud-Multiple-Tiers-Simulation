@@ -18,6 +18,8 @@ import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.SimEntity;
 import org.cloudbus.cloudsim.core.SimEvent;
 
+import arx.ARX;
+
 public class UtilManager extends SimEntity {
 	
 	public static final int RUN = 7000;
@@ -37,25 +39,25 @@ public class UtilManager extends SimEntity {
     private int delay; //seconds
     
 
-	public UtilManager(String name, int delay, int upperThreshold, int lowerThreshold, List<DatacenterBroker> layers) {
+	public UtilManager(String name, int delay, int upperThreshold, int lowerThreshold, HashMap<DatacenterBroker, List<Double>> layers) {
 		super(name);
 		
-		this.layers = new HashMap<DatacenterBroker, List<Double>>();
+		this.layers = layers;
 		
 		this.delay = delay;
 		this.upperThreshold = upperThreshold;
 		this.lowerThreshold = lowerThreshold;
 		
-		//TODO only for testing has to be exchanged soon
-		List<Double> cpuUtils = new ArrayList<Double>();
-		cpuUtils.add(0.9);
-		cpuUtils.add(0.8);
-		cpuUtils.add(5.0);
-		
-		
-		for (DatacenterBroker tier : layers) {
-			this.layers.put(tier, cpuUtils);
-		}
+//		//TODO only for testing has to be exchanged soon
+//		List<Double> cpuUtils = new ArrayList<Double>();
+//		cpuUtils.add(0.9);
+//		cpuUtils.add(0.8);
+//		cpuUtils.add(5.0);
+//		
+//		
+//		for (DatacenterBroker tier : layers) {
+//			this.layers.put(tier, cpuUtils);
+//		}
 	}
 	
 

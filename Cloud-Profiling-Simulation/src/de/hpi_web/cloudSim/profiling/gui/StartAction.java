@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 import org.cloudbus.cloudsim.Cloudlet;
@@ -12,6 +13,8 @@ import org.cloudbus.cloudsim.DatacenterBroker;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
+
+import arx.ARX;
 
 import de.hpi_web.cloudSim.multitier.staticTier.VmFactory;
 import de.hpi_web.cloudSim.profiling.datacenter.DatacenterBuilder;
@@ -93,7 +96,15 @@ public class StartAction implements ActionListener{
 			wsBroker.submitVmList(wsVms);
 			List<DatacenterBroker> brokers = new ArrayList<DatacenterBroker>();
 			brokers.add(wsBroker);
-			UtilManager utilManager = new UtilManager("UtilManager", delay, upperThreshold, lowerThreshold, brokers);
+			
+			// create a map where for each broker the CPU usage is recorded
+			List<List<Double>> cpuValues = ARX.predictCPUUsage("training.csv", "running.csv");
+			HashMap<DatacenterBroker, List<Double>> layers = new HashMap<DatacenterBroker, List<Double>>();
+			int index = 1;			// we dont start at 0, this is the LoadBalancer which we do not track atm
+			for (DatacenterBroker broker : brokers) {
+				layers.put(broker, cpuValues.get(index));
+			}
+			UtilManager utilManager = new UtilManager("UtilManager", delay, upperThreshold, lowerThreshold, layers);
 
 			//List<MultiTierCloudlet> wsCloudlets = CloudletFactory.createCloudlets(0, 10, wsBroker);
 
