@@ -105,7 +105,8 @@ public class ARX {
         
     }
     
-    public static List<Double> predictCPUUsage(String trainFile, String runFile) {
+    public static List<List<Double>> predictCPUUsage(String trainFile, String runFile) {
+        List<List<Double>> output = new ArrayList<List<Double>>();
     	Matrix Ms = buildMatrix(trainFile);
     	Matrix Mv = buildMatrix(runFile);
         
@@ -113,78 +114,79 @@ public class ARX {
         //modeledMetricIndex determines its index in training file, at this example we use CPU utilization!
         //Other metrics will be added later
         //18-load balancer, 19-web server, 20-app server, 21-db server, and 22-95th response time
-        int modeledMetricIndex = 19;
-        int modeledOut[] = {modeledMetricIndex};
-        
-        //Determine part of the training file to be considered
-        //We ignore samples afterwor 120 because the system shows a saturation
-        int numberOfSamples = 120;
-        Matrix ys = Ms.getMatrix(0,numberOfSamples,modeledOut);
-        
-        //List the inputs you are going to consider for modeling
-        //Note: We have 18 type of requets in our case
-        int modeledInput[] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17};
-        Matrix us = Ms.getMatrix(0, numberOfSamples, modeledInput);
-        
-        //Generate the matrix that will be solved
-        Matrix R = new Matrix(ys.getRowDimension(),us.getColumnDimension()+1);
-        for(int i=0;i<R.getRowDimension()-1;i++)
-            R.set(i+1, 0, ys.get(i, 0));
-        
-        R.setMatrix(0, us.getRowDimension()-1, 1, us.getColumnDimension(), us);
-        
-        //Prepare some samples for validation
-        //In your simulator you should expect a continues stream of these samples. It is the only input to the simulator!
-        //These samples will be used to describe the CPU utilization of each VM instance in multi-tier system
-        int samplingOut[] = {modeledMetricIndex};
-        int numberOfValidationSamples = 370;
-        Matrix yv = Mv.getMatrix(0, numberOfValidationSamples, samplingOut);
-        
-        int validationInput[] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17};
-        Matrix uv = Mv.getMatrix(0, numberOfValidationSamples, validationInput);
-        
-    
-        Matrix Rv = new Matrix(yv.getRowDimension(),uv.getColumnDimension()+1);
-        for(int i=0;i<Rv.getRowDimension()-1;i++)
-            Rv.set(i+1, 0, yv.get(i, 0));
-        
-        
-        //you can scale the samples rate according to number of replicas
-        //For instance if we have two replicas (e.g., two web servers) then replace uv by uv.times(0.5)
-        Rv.setMatrix(0, uv.getRowDimension()-1, 1, uv.getColumnDimension(), uv);
+        //int modeledMetricIndex = 19;
+        int modeledMetricIndices[] = {18, 19, 20, 21};
+	    for (int modeledMetrixIndex : modeledMetricIndices) {
+	        int modeledOut[] = {modeledMetrixIndex};
+	        
+	        //Determine part of the training file to be considered
+	        //We ignore samples afterwor 120 because the system shows a saturation
+	        int numberOfSamples = 120;
+	        Matrix ys = Ms.getMatrix(0,numberOfSamples,modeledOut);
+	        
+	        //List the inputs you are going to consider for modeling
+	        //Note: We have 18 type of requets in our case
+	        int modeledInput[] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17};
+	        Matrix us = Ms.getMatrix(0, numberOfSamples, modeledInput);
+	        
+	        //Generate the matrix that will be solved
+	        Matrix R = new Matrix(ys.getRowDimension(),us.getColumnDimension()+1);
+	        for(int i=0;i<R.getRowDimension()-1;i++)
+	            R.set(i+1, 0, ys.get(i, 0));
+	        
+	        R.setMatrix(0, us.getRowDimension()-1, 1, us.getColumnDimension(), us);
+	        
+	        //Prepare some samples for validation
+	        //In your simulator you should expect a continues stream of these samples. It is the only input to the simulator!
+	        //These samples will be used to describe the CPU utilization of each VM instance in multi-tier system
+	        int samplingOut[] = {modeledMetrixIndex};
+	        int numberOfValidationSamples = 370;
+	        Matrix yv = Mv.getMatrix(0, numberOfValidationSamples, samplingOut);
+	        
+	        int validationInput[] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17};
+	        Matrix uv = Mv.getMatrix(0, numberOfValidationSamples, validationInput);
+	        
+	    
+	        Matrix Rv = new Matrix(yv.getRowDimension(),uv.getColumnDimension()+1);
+	        for(int i=0;i<Rv.getRowDimension()-1;i++)
+	            Rv.set(i+1, 0, yv.get(i, 0));
+	        
+	        
+	        //you can scale the samples rate according to number of replicas
+	        //For instance if we have two replicas (e.g., two web servers) then replace uv by uv.times(0.5)
+	        Rv.setMatrix(0, uv.getRowDimension()-1, 1, uv.getColumnDimension(), uv);
+	
+	        
+	        //The following simple example solves a 3x3 linear system Ax=b and computes the norm of the residual. 
+	        //double[][] array = {{1.,2.,3.},{4.,5.,6.},{7.,8.,10.}};
+	        //Matrix A = new Matrix(array);
+	        //Matrix b = Matrix.random(3,1);
+	        //Matrix x = A.solve(b);
+	        //Matrix Residual = A.times(x).minus(b);
+	        //double rnorm = Residual.normInf();
+	        //x array is theta at equation 13
+	        Matrix x = R.solve(ys);
+	        //System.out.println("System parameters: ");
+	        //x.print(2, 4);
+	
+	        //Calculate predicted yk (see equation 8 at the paper)
+	        //Each row of Rv is considered as phi_k at equation 14 
+	        Matrix y_predicted = Rv.times(x);
+	        //System.out.println("Predicted cpu utilization: ");
+	        //y_predicted.print(2, 4);
+	        double[][] array = y_predicted.getArray();
+	        List<Double> cpuUtil = new ArrayList<Double>();
+	        for (double[] element : array)
+	        	cpuUtil.add(element[0]);
 
-        
-        //The following simple example solves a 3x3 linear system Ax=b and computes the norm of the residual. 
-        //double[][] array = {{1.,2.,3.},{4.,5.,6.},{7.,8.,10.}};
-        //Matrix A = new Matrix(array);
-        //Matrix b = Matrix.random(3,1);
-        //Matrix x = A.solve(b);
-        //Matrix Residual = A.times(x).minus(b);
-        //double rnorm = Residual.normInf();
-        //x array is theta at equation 13
-        Matrix x = R.solve(ys);
-        System.out.println("System parameters: ");
-        x.print(2, 4);
-
-        //Calculate predicted yk (see equation 8 at the paper)
-        //Each row of Rv is considered as phi_k at equation 14 
-        Matrix y_predicted = Rv.times(x);
-        System.out.println("Predicted cpu utilization: ");
-        y_predicted.print(2, 4);
-        double[][] array = y_predicted.getArray();
-        List<Double> output = new ArrayList<Double>();
-        for (double[] element : array)
-        	output.add(element[0]);
-        double[] outputArray = array[0];
-        System.out.println(array[0][0]);
-        System.out.println(array[1][0]);
+        	output.add(cpuUtil);
+	        //Calculate the errors (i.e., the difference between the modeled and the measured values)
+	        //Matrix Residual = Rv.times(x).minus(yv);
+	        //Residual.print(2, 4);
+	        //double rnorm = Residual.normInf();
+	        //System.out.println("Normalized residulas: "+rnorm);
+	    }
         return output;
-        
-        //Calculate the errors (i.e., the difference between the modeled and the measured values)
-        //Matrix Residual = Rv.times(x).minus(yv);
-        //Residual.print(2, 4);
-        //double rnorm = Residual.normInf();
-        //System.out.println("Normalized residulas: "+rnorm);
     }
 
 	private static Matrix buildMatrix(String file) {

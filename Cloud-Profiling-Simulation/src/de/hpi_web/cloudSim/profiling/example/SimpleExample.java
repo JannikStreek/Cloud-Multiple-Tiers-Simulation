@@ -39,7 +39,7 @@ public class SimpleExample {
 		//List<MultiTierCloudlet> wsCloudlets = CloudletFactory.createCloudlets(0, 10, wsBroker);
 
 		//wsBroker.submitCloudletList(wsCloudlets);
-		List<Double> cpuValues = ARX.predictCPUUsage("training.csv", "running.csv");
+		List<List<Double>> cpuValues = ARX.predictCPUUsage("training.csv", "running.csv");
 		
 		CloudSim.startSimulation();
 		CloudSim.stopSimulation();
