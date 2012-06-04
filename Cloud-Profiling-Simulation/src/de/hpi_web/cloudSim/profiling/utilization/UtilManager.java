@@ -1,12 +1,15 @@
 package de.hpi_web.cloudSim.profiling.utilization;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Queue;
 
 import org.cloudbus.cloudsim.Cloudlet;
+import org.cloudbus.cloudsim.DatacenterBroker;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.UtilizationModel;
 import org.cloudbus.cloudsim.UtilizationModelFull;
@@ -21,28 +24,41 @@ public class UtilManager extends SimEntity {
 	public static final int CLOUDLET_UPDATE = 7001;
 	public static final int ROUND_COMPLETED = 7002;
 	public static final int UTIL_SIM_FINISHED = 7003;
-	private int brokerId;
+	
+	private int i = 0;
+	//private int brokerId;
 	private int upperThreshold;
 	private int lowerThreshold;
+	private Map<DatacenterBroker,List<Double>> layers;
 
 
 	//TODO first test with fixed values
-    Queue<Double> cpuUtil = new LinkedList<Double>();
-    private int counter;
+    
     private int delay; //seconds
     
 
-	public UtilManager(String name, int delay, int upperThreshold, int lowerThreshold) {
+	public UtilManager(String name, int delay, int upperThreshold, int lowerThreshold, List<DatacenterBroker> layers) {
 		super(name);
+		
+		this.layers = new HashMap<DatacenterBroker, List<Double>>();
+		
 		this.delay = delay;
 		this.upperThreshold = upperThreshold;
 		this.lowerThreshold = lowerThreshold;
-		cpuUtil.add(0.9);
-		cpuUtil.add(0.8);
-		cpuUtil.add(5.0);
-		counter = 0;
-		// TODO Auto-generated constructor stub
+		
+		//TODO only for testing has to be exchanged soon
+		List<Double> cpuUtils = new ArrayList<Double>();
+		cpuUtils.add(0.9);
+		cpuUtils.add(0.8);
+		cpuUtils.add(5.0);
+		
+		
+		for (DatacenterBroker tier : layers) {
+			this.layers.put(tier, cpuUtils);
+		}
 	}
+	
+
 
 	@Override
 	public void startEntity() {
@@ -82,19 +98,29 @@ public class UtilManager extends SimEntity {
 
 	private void processRun(SimEvent ev) {
 		Log.printLine(CloudSim.clock() + ": " + getName() + ": UtilManager is running... ");
-		double cpu = Double.parseDouble(cpuUtil.poll().toString());
 		
-		//TODO check if enough vms are present / too much vms present and handle this event
-		//schedule ...
-		
-		//TODO calc new util
-		schedule(brokerId,1, UtilManager.CLOUDLET_UPDATE, cpu);
-		
-		if(0 < cpuUtil.size()) {
-			schedule(getId(), 2, RUN);
-		} else {
-			schedule(brokerId, 2, UTIL_SIM_FINISHED);
+		//for each tier
+		for(DatacenterBroker tier : layers.keySet()) {
+			List<Double> cpuUtils = layers.get(tier);
+			
+			
+			//TODO check if enough vms are present / too much vms present and handle this event => regarding threshold
+			//schedule ...
+			
+			//TODO calc new util
+			schedule(tier.getId(),1, UtilManager.CLOUDLET_UPDATE, cpuUtils.get(i));
+			
+			this.i++;
+			
+			if(i < cpuUtils.size()) {
+				schedule(getId(), 2, RUN);
+			} else {
+				schedule(tier.getId(), 2, UTIL_SIM_FINISHED);
+			}
+
 		}
+		
+
 	}
 	
 
@@ -105,12 +131,12 @@ public class UtilManager extends SimEntity {
 		
 	}
 	
-	public int getBrokerId() {
-		return brokerId;
-	}
-
-	public void setBrokerId(int brokerId) {
-		this.brokerId = brokerId;
-	}
+//	public int getBrokerId() {
+//		return brokerId;
+//	}
+//
+//	public void setBrokerId(int brokerId) {
+//		this.brokerId = brokerId;
+//	}
 
 }

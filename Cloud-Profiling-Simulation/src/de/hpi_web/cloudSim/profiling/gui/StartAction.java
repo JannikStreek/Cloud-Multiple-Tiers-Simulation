@@ -2,11 +2,13 @@ package de.hpi_web.cloudSim.profiling.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.Datacenter;
+import org.cloudbus.cloudsim.DatacenterBroker;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
@@ -89,8 +91,9 @@ public class StartAction implements ActionListener{
 			
 			// submit vm lists to the brokers
 			wsBroker.submitVmList(wsVms);
-			UtilManager utilManager = new UtilManager("UtilManager", delay, upperThreshold, lowerThreshold);
-			utilManager.setBrokerId(wsBroker.getId());
+			List<DatacenterBroker> brokers = new ArrayList<DatacenterBroker>();
+			brokers.add(wsBroker);
+			UtilManager utilManager = new UtilManager("UtilManager", delay, upperThreshold, lowerThreshold, brokers);
 
 			//List<MultiTierCloudlet> wsCloudlets = CloudletFactory.createCloudlets(0, 10, wsBroker);
 
