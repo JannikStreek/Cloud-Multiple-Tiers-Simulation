@@ -89,7 +89,7 @@ public class StartAction implements ActionListener{
 			ProfilingBroker wsBroker = createBroker("wsBroker");
 			wsBroker.register(observer);
 			
-			List<Vm> wsVms = VmFactory.createVms(0, 4, wsBroker.getId());
+			List<Vm> wsVms = VmFactory.createVms(0, 2, wsBroker.getId());
 			
 			// submit vm lists to the brokers
 			wsBroker.submitVmList(wsVms);
