@@ -273,7 +273,6 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 			}
 		}
 
-
 		getVmsCreatedList().clear();
 	}
 	

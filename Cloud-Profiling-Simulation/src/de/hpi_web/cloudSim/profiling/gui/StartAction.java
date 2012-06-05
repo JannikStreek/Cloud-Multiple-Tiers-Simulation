@@ -84,7 +84,6 @@ public class StartAction implements ActionListener{
 			
 			Log.printLine("Starting...");
 			initializeCloudSim();
-			
 			Datacenter wsDatacenter = DatacenterBuilder.createDatacenter("WebserverCenter", 0, 3);
 			
 			ProfilingBroker wsBroker = createBroker("wsBroker");

@@ -42,7 +42,6 @@ public class Gui implements Observer {
 	private JTextField textField_2;
 
 
-
 	/**
 	 * Launch the application.
 	 */
