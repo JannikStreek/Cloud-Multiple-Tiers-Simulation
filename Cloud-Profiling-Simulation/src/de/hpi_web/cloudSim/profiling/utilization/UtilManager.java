@@ -69,7 +69,7 @@ public class UtilManager extends SimEntity {
 	@Override
 	public void startEntity() {
 		//sendNow("utilManager", CloudSimTags.REGISTER_RESOURCE, getId());
-		schedule(getId(), 0, RUN);
+		schedule(getId(), 10, RUN);
 		
 	}
 
