@@ -9,14 +9,18 @@ import java.util.Observable;
 import java.util.Queue;
 
 import org.cloudbus.cloudsim.Cloudlet;
+import org.cloudbus.cloudsim.Datacenter;
 import org.cloudbus.cloudsim.DatacenterBroker;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.UtilizationModel;
 import org.cloudbus.cloudsim.UtilizationModelFull;
+import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.SimEntity;
 import org.cloudbus.cloudsim.core.SimEvent;
+
+import de.hpi_web.cloudSim.multitier.staticTier.VmFactory;
 
 import arx.ARX;
 
@@ -106,9 +110,21 @@ public class UtilManager extends SimEntity {
 			List<Double> cpuUtils = layers.get(tier);
 			
 			
-			//TODO check if enough vms are present / too much vms present and handle this event => regarding threshold
-			//schedule ...
-			
+			// check if enough vms are present / too much vms present and handle this event => regarding threshold
+			int runningVms = tier.getCloudletSubmittedList().size();
+			if (cpuUtils.get(i) > this.upperThreshold) {
+				// create new vm
+				Vm v = VmFactory.createVm(tier.getId());
+				//List<Vm> vmList  = new ArrayList<Vm>();
+				//vmList.add(v);
+				//tier.submitVmList(vmList);
+				//schedule(DATACENTER, 0, CloudSimTags.VM_CREATE, v);
+				schedule(tier.getId(), 0, CloudSimTags.VM_CREATE, v);
+			}
+			else if (cpuUtils.get(i) < this.lowerThreshold && runningVms > 1) {
+				// destroy vm
+				//schedule(tier.getId(), 0, CloudSimTags.VM_DESTROY);
+			}
 			//TODO calc new util
 			schedule(tier.getId(),1, UtilManager.CLOUDLET_UPDATE, cpuUtils.get(i));
 			

@@ -38,10 +38,40 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 			case UtilManager.UTIL_SIM_FINISHED:
 				processUtilFinished(ev);
 				break;
-				
+			case CloudSimTags.VM_CREATE:
+				processNewVm(ev);
+			case CloudSimTags.VM_DESTROY:
+				processDestroyVm(ev);
 		}
 	}
 	
+	private void processDestroyVm(SimEvent ev) {
+		// pick one VM and destroy it. Doesnt matter which one
+		Vm vm = getVmsCreatedList().get(0);
+		Log.printLine(CloudSim.clock() + ": " + getName() + ": Destroying VM #" + vm.getId());
+		sendNow(getVmsToDatacentersMap().get(vm.getId()), CloudSimTags.VM_DESTROY, vm);
+
+		getVmsCreatedList().remove(0);
+	}
+
+	private void processNewVm(SimEvent ev) {
+		Vm vm = (Vm) ev.getData();
+		// TODO choose datacenter here
+		int datacenterId = getDatacenterIdsList().get(0);
+		
+		String datacenterName = CloudSim.getEntityName(datacenterId);
+		if (!getVmsToDatacentersMap().containsKey(vm.getId())) {
+			Log.printLine(CloudSim.clock() + ": " + getName() + ": Trying to Create VM #" + vm.getId()
+					+ " in " + datacenterName);
+			sendNow(datacenterId, CloudSimTags.VM_CREATE_ACK, vm);
+		}
+
+		getDatacenterRequestedIdsList().add(datacenterId);
+		
+		setVmsRequested(getVmsRequested()+1);
+		setVmsAcks(getVmsAcks()+1);
+	}
+
 	private void processUtilFinished(SimEvent ev) {
 		Log.printLine(CloudSim.clock() + ": " + getName() + ": Finishing ");
 		for (int datacenter : getDatacenterIdsList()) {
@@ -54,7 +84,6 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 		Log.printLine(CloudSim.clock() + ": " + getName() + ": Updating Cloudlets for next round ");
 		double cpuUtil = Double.parseDouble(ev.getData().toString());
 		if(cloudletsSubmitted == 0) {
-			
 			List<Vm> vms = getVmsCreatedList();
 			for (Vm vm : vms) {
 			    Cloudlet cloudlet = createCloudlet(vm, cpuUtil);
