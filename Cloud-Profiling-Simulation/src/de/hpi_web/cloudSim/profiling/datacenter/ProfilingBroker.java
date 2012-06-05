@@ -40,8 +40,10 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 				break;
 			case CloudSimTags.VM_CREATE:
 				processNewVm(ev);
+				break;
 			case CloudSimTags.VM_DESTROY:
 				processDestroyVm(ev);
+				break;
 		}
 	}
 	

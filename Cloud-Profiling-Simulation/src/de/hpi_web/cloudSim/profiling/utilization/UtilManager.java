@@ -115,17 +115,13 @@ public class UtilManager extends SimEntity {
 			double utilizationPerVm = (cpuUtils.get(i)/(double)runningVms);
 			if (utilizationPerVm > this.upperThreshold) {
 				// create new vm
-				Vm v = VmFactory.createVm(tier.getId());
-				//List<Vm> vmList  = new ArrayList<Vm>();
-				//vmList.add(v);
-				//tier.submitVmList(vmList);
-				//schedule(DATACENTER, 0, CloudSimTags.VM_CREATE, v);
-				schedule(tier.getId(), 0, CloudSimTags.VM_CREATE, v);
+				Vm v = VmFactory.createVm(tier.getId(), i);
+				schedule(tier.getId(), 1, CloudSimTags.VM_CREATE, v);
 			}
 			else if (utilizationPerVm < this.lowerThreshold && runningVms > 1) {
 				// destroy vm
 				Log.printLine("Too many Vms... destroying");
-				//schedule(tier.getId(), 0, CloudSimTags.VM_DESTROY);
+				//schedule(tier.getId(), 1, CloudSimTags.VM_DESTROY);
 			}
 			//TODO calc new util
 			schedule(tier.getId(),1, UtilManager.CLOUDLET_UPDATE, cpuUtils.get(i));

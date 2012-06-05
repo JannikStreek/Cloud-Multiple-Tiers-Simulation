@@ -22,7 +22,11 @@ public class VmFactory {
 	public static Vm createVm(int brokerId) {
 		return defaultVm(0, brokerId);
 	}
-
+	
+	public static Vm createVm(int brokerId, int vmId) {
+		return defaultVm(vmId, brokerId);
+	}
+	
 	public static List<Vm> createVms(int startId, int count, int brokerId) {
 		List<Vm> vms = new ArrayList<Vm>();
 		for (int i = startId; i < startId + count; i++)
