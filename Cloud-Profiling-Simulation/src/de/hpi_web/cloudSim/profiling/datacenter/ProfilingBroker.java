@@ -47,6 +47,7 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 	
 	private void processDestroyVm(SimEvent ev) {
 		// pick one VM and destroy it. Doesnt matter which one
+		// TODO could pick VM through cloudlet list... getCloudletSubmittedList().get(0).getVmId()
 		Vm vm = getVmsCreatedList().get(0);
 		Log.printLine(CloudSim.clock() + ": " + getName() + ": Destroying VM #" + vm.getId());
 		sendNow(getVmsToDatacentersMap().get(vm.getId()), CloudSimTags.VM_DESTROY, vm);
