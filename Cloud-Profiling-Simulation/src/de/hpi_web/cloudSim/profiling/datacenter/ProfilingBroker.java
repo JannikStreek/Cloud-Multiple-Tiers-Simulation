@@ -89,9 +89,11 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 	private void processCloudletUpdate(SimEvent ev) {
 		Log.printLine(CloudSim.clock() + ": " + getName() + ": Updating Cloudlets for next round ");
 		double cpuUtil = Double.parseDouble(ev.getData().toString());
-		if(cloudletsSubmitted == 0) {
+		if(cloudletsSubmitted < getVmsCreatedList().size()) {
+			List<Integer> vmsWithCloudletIds = getVmsWithCloudletIds();
 			List<Vm> vms = getVmsCreatedList();
-			for (Vm vm : vms) {
+			List<Vm> missingCloudletVms = getMissingCloudletVms(vmsWithCloudletIds, vms);
+			for (Vm vm : missingCloudletVms) {
 			    Cloudlet cloudlet = createCloudlet(vm, cpuUtil);
 				cloudlet.setVmId(vm.getId());
 				sendNow(getVmsToDatacentersMap().get(vm.getId()), CloudSimTags.CLOUDLET_SUBMIT, cloudlet);
@@ -117,6 +119,35 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 		notifyObservers();
 
 	    sendNow(ev.getSource(), UtilManager.ROUND_COMPLETED, null);
+	}
+
+	private List<Vm> getMissingCloudletVms(List<Integer> vmsWithCloudletIds,
+			List<Vm> vms) {
+		List<Vm> vmsWithoutCloudlet = new ArrayList<Vm>();
+		//check every vm for a cloudlet
+		for (Vm vm : vms) {
+			//does the vm have a cloudlet?
+			boolean toAdd = true;
+			for (int vmId :  vmsWithCloudletIds) {
+				if(vmId == vm.getId()) {
+					toAdd = false;
+					break;
+				}
+			}
+			
+			//vm has no cloudlet yet, so save it
+			if(toAdd)
+			  vmsWithoutCloudlet.add(vm);
+		}
+		return vmsWithoutCloudlet;
+	}
+
+	private List<Integer> getVmsWithCloudletIds() {
+		List<Integer> vmIds = new ArrayList<Integer>();
+		for (Cloudlet cloudlet : getCloudletSubmittedList()) {
+			vmIds.add(cloudlet.getVmId());
+		}
+		return vmIds;
 	}
 
 	private Cloudlet createCloudlet(Vm vm, double cpuUtil) {
