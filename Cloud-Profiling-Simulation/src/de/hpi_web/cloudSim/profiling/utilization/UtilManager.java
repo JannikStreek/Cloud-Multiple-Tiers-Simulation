@@ -40,10 +40,10 @@ public class UtilManager extends SimEntity {
 
 	//TODO first test with fixed values
     
-    private int delay; //seconds
+    private double delay; //seconds
     
 
-	public UtilManager(String name, int delay, int upperThreshold, int lowerThreshold, HashMap<DatacenterBroker, List<Double>> layers) {
+	public UtilManager(String name, double delay, int upperThreshold, int lowerThreshold, HashMap<DatacenterBroker, List<Double>> layers) {
 		super(name);
 		
 		this.layers = layers;
@@ -52,8 +52,6 @@ public class UtilManager extends SimEntity {
 		this.upperThreshold = upperThreshold;
 		this.lowerThreshold = lowerThreshold;
 
-		this.upperThreshold = 10;
-		this.lowerThreshold = 5;
 //		//TODO only for testing has to be exchanged soon
 //		List<Double> cpuUtils = new ArrayList<Double>();
 //		cpuUtils.add(0.9);
@@ -95,7 +93,7 @@ public class UtilManager extends SimEntity {
 	private void processCompleted(SimEvent ev) {
 		
 		try {
-			Thread.sleep(delay*1000);
+			Thread.sleep(new Double(delay*1000).intValue());
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
