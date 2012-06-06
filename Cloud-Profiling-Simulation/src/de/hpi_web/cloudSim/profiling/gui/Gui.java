@@ -37,7 +37,9 @@ public class Gui implements Observer {
 	private JTextField textField;
 	private JTextField textField_1;
 	private JPanel panel;
-	private JTextArea textArea;
+	private JTextArea textArea_0;
+	private JTextArea textArea_1;
+	private JTextArea textArea_2;
 	private StartAction start;
 	private JTextField textField_2;
 
@@ -201,23 +203,23 @@ public class Gui implements Observer {
 					.addContainerGap())
 		);
 		
-		JTextArea textArea_2 = new JTextArea();
+		textArea_2 = new JTextArea();
 		textArea_2.setRows(15);
 		textArea_2.setEditable(false);
 		textArea_2.setColumns(24);
 		panel_2.add(textArea_2);
 		
-		JTextArea textArea_1 = new JTextArea();
+		textArea_1 = new JTextArea();
 		textArea_1.setRows(15);
 		textArea_1.setEditable(false);
 		textArea_1.setColumns(24);
 		panel_1.add(textArea_1);
 		
-		textArea = new JTextArea();
-		textArea.setColumns(24);
-		textArea.setEditable(false);
-		textArea.setRows(15);
-		panel.add(textArea);
+		textArea_0 = new JTextArea();
+		textArea_0.setColumns(24);
+		textArea_0.setEditable(false);
+		textArea_0.setRows(15);
+		panel.add(textArea_0);
 		frame.getContentPane().setLayout(groupLayout);
 	}
 	
@@ -245,7 +247,7 @@ public class Gui implements Observer {
 			newText += "CPU util at " + util + "\r\n\r\n";
 			
 		}
-		textArea.setText(newText);
+		textArea_0.setText(newText);
 		
 		
 	}
