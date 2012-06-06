@@ -29,7 +29,7 @@ public class DatacenterFactory {
 	public static final String VMM = "Xen";					// virtual machine manager (hypervisor)
 	
 	/* Host Configuration */
-	public static final int  DEFAULT_PES  =       1;		// number of CPUS
+	public static final int  DEFAULT_PES  =       4;		// number of CPUS
 	public static final int  DEFAULT_MIPS =    1200;		// MIPS per CPU
 	public static final int  DEFAULT_RAM  =    4096;  		// vm memory (MB)
 	public static final long DEFAULT_STORAGE = 1600000; 	// image size (MB)

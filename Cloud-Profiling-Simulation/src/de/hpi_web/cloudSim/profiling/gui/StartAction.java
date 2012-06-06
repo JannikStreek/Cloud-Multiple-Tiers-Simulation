@@ -26,8 +26,8 @@ public class StartAction implements ActionListener{
 	
 	private Observer observer;
 	private double delay = 0.5;
-	private int upperThreshold = 30;
-	private int lowerThreshold = 70;
+	private int upperThreshold = 70;
+	private int lowerThreshold = 30;
 
 	public StartAction(Observer observer) {
 		super();
