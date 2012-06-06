@@ -34,7 +34,7 @@ public class SimpleExample {
 		List<ProfilingBroker> brokers = new ArrayList<ProfilingBroker>();
 		brokers.add(wsBroker);
 		
-		List<Vm> wsVms = VmFactory.createVms(0, 4, wsBroker.getId());
+		List<Vm> wsVms = VmFactory.createVms(0, 1, wsBroker.getId());
 		
 		// submit vm lists to the brokers
 		wsBroker.submitVmList(wsVms);

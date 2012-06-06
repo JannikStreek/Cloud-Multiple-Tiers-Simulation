@@ -60,6 +60,7 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 
 	private void processNewVm(SimEvent ev) {
 		Vm vm = (Vm) ev.getData();
+		getVmList().add(vm);
 		// TODO choose datacenter here
 		int datacenterId = getDatacenterIdsList().get(0);
 		

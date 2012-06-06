@@ -51,7 +51,9 @@ public class UtilManager extends SimEntity {
 		this.delay = delay;
 		this.upperThreshold = upperThreshold;
 		this.lowerThreshold = lowerThreshold;
-		
+
+		this.upperThreshold = 10;
+		this.lowerThreshold = 5;
 //		//TODO only for testing has to be exchanged soon
 //		List<Double> cpuUtils = new ArrayList<Double>();
 //		cpuUtils.add(0.9);
@@ -108,6 +110,7 @@ public class UtilManager extends SimEntity {
 		//for each tier
 		for(DatacenterBroker tier : layers.keySet()) {
 			List<Double> cpuUtils = layers.get(tier);
+			//schedule(tier.getId(),1, UtilManager.CLOUDLET_UPDATE, cpuUtils.get(i));
 			
 			
 			// check if enough vms are present / too much vms present and handle this event => regarding threshold
