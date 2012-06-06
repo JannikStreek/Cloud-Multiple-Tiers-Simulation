@@ -42,8 +42,8 @@ public class SimpleExample {
 		
 		List<ProfilingBroker> brokers = new ArrayList<ProfilingBroker>();
 		brokers.add(wsBroker);
-		brokers.add(appBroker);
-		brokers.add(dbBroker);
+		//brokers.add(appBroker);
+		//brokers.add(dbBroker);
 		
 		List<Vm> wsVms = VmFactory.createVms(0, 1, wsBroker.getId());
 		List<Vm> appVms = VmFactory.createVms(0, 1, appBroker.getId());

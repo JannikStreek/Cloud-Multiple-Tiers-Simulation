@@ -81,7 +81,12 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 		Vm vm = (Vm) ev.getData();
 		getVmList().add(vm);
 		// TODO choose datacenter here
-		int datacenterId = getDcAffinityList().get(0);// = getDatacenterIdsList().get(0);
+		int datacenterId;
+		if (getDcAffinityList().isEmpty()) {
+			datacenterId = getDatacenterIdsList().get(0);
+		} else {
+			datacenterId = getDcAffinityList().get(0);
+		}
 		
 		String datacenterName = CloudSim.getEntityName(datacenterId);
 		if (!getVmsToDatacentersMap().containsKey(vm.getId())) {
