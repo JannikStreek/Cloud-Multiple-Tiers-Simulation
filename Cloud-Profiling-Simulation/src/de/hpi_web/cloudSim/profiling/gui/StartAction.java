@@ -85,16 +85,35 @@ public class StartAction implements ActionListener{
 			Log.printLine("Starting...");
 			initializeCloudSim();
 			Datacenter wsDatacenter = DatacenterBuilder.createDatacenter("WebserverCenter", 0, 3);
+			Datacenter appDatacenter = DatacenterBuilder.createDatacenter("ApplicationCenter", 0, 3);
+			Datacenter dbDatacenter = DatacenterBuilder.createDatacenter("DatabaseCenter", 0, 3);
 			
 			ProfilingBroker wsBroker = createBroker("wsBroker");
-			wsBroker.register(observer);
+			ProfilingBroker appBroker = createBroker("appBroker");
+			ProfilingBroker dbBroker = createBroker("dbBroker");
 			
-			List<Vm> wsVms = VmFactory.createVms(0, 2, wsBroker.getId());
+			wsBroker.addAffinity(wsDatacenter.getId());
+			appBroker.addAffinity(appDatacenter.getId());
+			dbBroker.addAffinity(dbDatacenter.getId());
+			
+			List<ProfilingBroker> brokers = new ArrayList<ProfilingBroker>();
+			brokers.add(wsBroker);
+			brokers.add(appBroker);
+			brokers.add(dbBroker);
+			
+			List<Vm> wsVms = VmFactory.createVms(0, 1, wsBroker.getId());
+			List<Vm> appVms = VmFactory.createVms(100, 1, appBroker.getId());
+			List<Vm> dbVms = VmFactory.createVms(200, 1, dbBroker.getId());
 			
 			// submit vm lists to the brokers
 			wsBroker.submitVmList(wsVms);
-			List<DatacenterBroker> brokers = new ArrayList<DatacenterBroker>();
-			brokers.add(wsBroker);
+			appBroker.submitVmList(appVms);
+			dbBroker.submitVmList(dbVms);
+			
+			// register with the observer
+			wsBroker.register(observer);
+			appBroker.register(observer);
+			dbBroker.register(observer);
 			
 			// create a map where for each broker the CPU usage is recorded
 			List<List<Double>> cpuValues = ARX.predictCPUUsage("training.csv", "running.csv");

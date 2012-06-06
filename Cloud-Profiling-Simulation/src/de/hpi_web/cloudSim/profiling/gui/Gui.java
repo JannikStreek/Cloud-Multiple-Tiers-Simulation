@@ -238,6 +238,12 @@ public class Gui implements Observer {
 	@Override
 	public void refreshData(Observable subject) {
 		ProfilingBroker broker = (ProfilingBroker) subject;
+		// TODO: we need to decide which text area to use; this is just a fixed, quick and dirty solution
+		JTextArea area = textArea_0;
+		if (broker.getName() == "appBroker")
+			area = textArea_1;
+		if (broker.getName() == "dbBroker")
+			area = textArea_2;
 		String newText = "";
 		for(Cloudlet cloudlet :broker.getCloudletSubmittedList()) {
 			double util = cloudlet.getUtilizationModelCpu().getUtilization(CloudSim.clock());
@@ -247,7 +253,7 @@ public class Gui implements Observer {
 			newText += "CPU util at " + util + "\r\n\r\n";
 			
 		}
-		textArea_0.setText(newText);
+		area.setText(newText);
 		
 		
 	}

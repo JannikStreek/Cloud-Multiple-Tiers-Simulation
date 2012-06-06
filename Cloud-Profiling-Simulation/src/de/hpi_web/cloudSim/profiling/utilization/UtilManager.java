@@ -119,7 +119,7 @@ public class UtilManager extends SimEntity {
 			double utilizationPerVm = (cpuUtils.get(i)/(double)runningVms);
 			Log.printLine("Current Util: " + utilizationPerVm);
 			Log.printLine("Running Vms: " + runningVms);
-			if (utilizationPerVm > this.upperThreshold) {
+			if (utilizationPerVm > this.upperThreshold && runningVms > 0) {
 				// create new vm
 				Log.printLine("Too few Vms... creating");
 				Vm v = VmFactory.createVm(tier.getId(), i);
