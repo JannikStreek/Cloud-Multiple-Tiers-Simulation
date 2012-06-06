@@ -106,10 +106,10 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 				}
 			}
 			
-		} else {
-			for (Cloudlet cloudlet : getCloudletSubmittedList()) {
-				cloudlet.setUtilizationModelCpu(new UtilizationModelFixed(cpuUtil/(double)cloudletsSubmitted));
-			}
+		}
+		
+		for (Cloudlet cloudlet : getCloudletSubmittedList()) {
+			cloudlet.setUtilizationModelCpu(new UtilizationModelFixed(cpuUtil/(double)cloudletsSubmitted));
 		}
 		
 		for(Cloudlet cloudlet : cloudletSubmittedList) {

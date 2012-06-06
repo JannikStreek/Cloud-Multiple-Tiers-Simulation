@@ -115,6 +115,7 @@ public class UtilManager extends SimEntity {
 			
 			// check if enough vms are present / too much vms present and handle this event => regarding threshold
 			int runningVms = tier.getCloudletSubmittedList().size();
+			Log.printLine(CloudSim.clock() + ": " + getName() + ": Vms running: " + runningVms);
 			double utilizationPerVm = (cpuUtils.get(i)/(double)runningVms);
 			Log.printLine("Current Util: " + utilizationPerVm);
 			Log.printLine("Running Vms: " + runningVms);
@@ -130,14 +131,14 @@ public class UtilManager extends SimEntity {
 				//schedule(tier.getId(), 1, CloudSimTags.VM_DESTROY);
 			}
 			//TODO calc new util
-			schedule(tier.getId(),1, UtilManager.CLOUDLET_UPDATE, cpuUtils.get(i));
+			schedule(tier.getId(),2, UtilManager.CLOUDLET_UPDATE, cpuUtils.get(i));
 			
 			this.i++;
 			
 			if(i < cpuUtils.size()) {
-				schedule(getId(), 2, RUN);
+				schedule(getId(), 3, RUN);
 			} else {
-				schedule(tier.getId(), 2, UTIL_SIM_FINISHED);
+				schedule(tier.getId(), 3, UTIL_SIM_FINISHED);
 			}
 
 		}
