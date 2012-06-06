@@ -67,7 +67,8 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 		if (!getVmsToDatacentersMap().containsKey(vm.getId())) {
 			Log.printLine(CloudSim.clock() + ": " + getName() + ": Trying to Create VM #" + vm.getId()
 					+ " in " + datacenterName);
-			sendNow(datacenterId, CloudSimTags.VM_CREATE_ACK, vm);
+			schedule(datacenterId, 0, CloudSimTags.VM_CREATE_ACK, vm);
+			//sendNow(datacenterId, CloudSimTags.VM_CREATE_ACK, vm);
 		}
 
 		getDatacenterRequestedIdsList().add(datacenterId);

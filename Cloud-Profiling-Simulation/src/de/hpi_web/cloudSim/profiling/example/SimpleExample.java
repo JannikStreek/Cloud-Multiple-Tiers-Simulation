@@ -1,10 +1,13 @@
 package de.hpi_web.cloudSim.profiling.example;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.Datacenter;
+import org.cloudbus.cloudsim.DatacenterBroker;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
@@ -28,18 +31,21 @@ public class SimpleExample {
 		Datacenter wsDatacenter = DatacenterBuilder.createDatacenter("WebserverCenter", 0, 3);
 		
 		ProfilingBroker wsBroker = createBroker("wsBroker");
+		List<ProfilingBroker> brokers = new ArrayList<ProfilingBroker>();
+		brokers.add(wsBroker);
 		
 		List<Vm> wsVms = VmFactory.createVms(0, 4, wsBroker.getId());
 		
 		// submit vm lists to the brokers
 		wsBroker.submitVmList(wsVms);
-		UtilManager utilManager = new UtilManager("UtilManager", 0, 0, 0);
-		utilManager.setBrokerId(wsBroker.getId());
 
-		//List<MultiTierCloudlet> wsCloudlets = CloudletFactory.createCloudlets(0, 10, wsBroker);
-
-		//wsBroker.submitCloudletList(wsCloudlets);
 		List<List<Double>> cpuValues = ARX.predictCPUUsage("training.csv", "running.csv");
+		HashMap<DatacenterBroker, List<Double>> layers = new HashMap<DatacenterBroker, List<Double>>();
+		int index = 1;			// we dont start at 0, this is the LoadBalancer which we do not track atm
+		for (DatacenterBroker broker : brokers) {
+			layers.put(broker, cpuValues.get(index));
+		}
+		UtilManager utilManager = new UtilManager("UtilManager", 1, 70, 30, layers);
 		
 		CloudSim.startSimulation();
 		CloudSim.stopSimulation();

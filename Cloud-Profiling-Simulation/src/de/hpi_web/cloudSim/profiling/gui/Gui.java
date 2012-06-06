@@ -83,9 +83,11 @@ public class Gui implements Observer {
 		btnNewButton.addActionListener(new SetValuesAction(this.start, this));
 		
 		textField = new JTextField();
+		textField.setText("70");
 		textField.setColumns(10);
 		
 		textField_1 = new JTextField();
+		textField_1.setText("30");
 		textField_1.setColumns(10);
 		
 		JLabel lblCpuvmMaxTreshold = new JLabel("CPU/VM MAX threshold");
