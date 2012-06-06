@@ -67,6 +67,7 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 		for (Cloudlet c : getCloudletSubmittedList()) {
 			if (c.getVmId() == vm.getId()) {
 				getCloudletSubmittedList().remove(c);
+				cloudletsSubmitted--;
 				break;
 			}
 		}
@@ -131,7 +132,7 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 		}
 		
 		for(Cloudlet cloudlet : cloudletSubmittedList) {
-			Log.printLine(CloudSim.clock() + ": " + getName() + ": cloudlet at CPU util  "+ cloudlet.getUtilizationOfCpu(CloudSim.clock()));
+			Log.printLine(CloudSim.clock() + ": " + getName() + " : at VM" + cloudlet.getVmId() + " : cloudlet at CPU util  "+ cloudlet.getUtilizationOfCpu(CloudSim.clock()));
 		}
 		
 		notifyObservers();
