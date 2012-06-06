@@ -25,13 +25,12 @@ import de.hpi_web.cloudSim.profiling.utilization.UtilManager;
 public class StartAction implements ActionListener{
 	
 	private Observer observer;
-	private int delay;
-	private int upperThreshold;
-	private int lowerThreshold;
+	private double delay = 0.5;
+	private int upperThreshold = 30;
+	private int lowerThreshold = 70;
 
 	public StartAction(Observer observer) {
 		super();
-		this.delay = 1;
 		this.observer = observer;
 	}
 
@@ -54,11 +53,11 @@ public class StartAction implements ActionListener{
 		
 	}
 	
-	public int getDelay() {
+	public double getDelay() {
 		return delay;
 	}
 
-	public void setDelay(int delay) {
+	public void setDelay(double delay) {
 		this.delay = delay;
 	}
 	
@@ -80,7 +79,7 @@ public class StartAction implements ActionListener{
 	
 	static class SimulationStart {
 		
-		private static void start(Observer observer, int delay, int upperThreshold, int lowerThreshold) {
+		private static void start(Observer observer, double delay, int upperThreshold, int lowerThreshold) {
 			
 			Log.printLine("Starting...");
 			initializeCloudSim();

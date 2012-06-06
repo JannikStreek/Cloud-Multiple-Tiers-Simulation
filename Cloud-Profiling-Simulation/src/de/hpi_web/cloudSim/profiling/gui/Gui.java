@@ -100,7 +100,7 @@ public class Gui implements Observer {
 		JButton btnStop = new JButton("Stop");
 		
 		textField_2 = new JTextField();
-		textField_2.setText("1");
+		textField_2.setText("0.5");
 		textField_2.setColumns(10);
 		
 		JLabel lblDelayAfterEach = new JLabel("Delay after each step [s]");
