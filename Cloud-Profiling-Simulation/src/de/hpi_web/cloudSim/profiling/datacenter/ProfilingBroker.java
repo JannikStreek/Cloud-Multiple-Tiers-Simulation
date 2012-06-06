@@ -55,6 +55,7 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 		for (Cloudlet c : getCloudletSubmittedList()) {
 			if (c.getVmId() == vm.getId()) {
 				getCloudletSubmittedList().remove(c);
+				cloudletsSubmitted--;
 				break;
 			}
 		}
