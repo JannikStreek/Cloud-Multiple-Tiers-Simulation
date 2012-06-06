@@ -131,7 +131,7 @@ public class UtilManager extends SimEntity {
 				schedule(tier.getId(), 1, CloudSimTags.VM_DESTROY);
 			}
 			//TODO calc new util
-			schedule(tier.getId(),2, UtilManager.CLOUDLET_UPDATE, cpuUtils.get(i));
+			schedule(tier.getId(), 2, UtilManager.CLOUDLET_UPDATE, cpuUtils.get(i));
 			
 			this.i++;
 			

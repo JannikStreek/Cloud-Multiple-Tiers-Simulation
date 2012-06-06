@@ -26,7 +26,6 @@ import de.hpi_web.cloudSim.multitier.MultiTierCloudlet;
  */
 public class DatacenterAffinityBroker extends DatacenterBroker {
 	
-	private int tier;
 	private List<Integer> dcAffinity;
 	private DatacenterAffinityBroker successor;
 	private LoadBalancer loadBalancer;
@@ -34,7 +33,6 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 
 	public DatacenterAffinityBroker(String name, int tier, int datacenterId) throws Exception {
 		super(name);
-		this.tier = tier;
 		this.dcAffinity = new ArrayList<Integer>();
 		this.loadBalancer = new FirstAvailableLoadBalancer(this);
 		addAffinity(datacenterId);
@@ -42,7 +40,6 @@ public class DatacenterAffinityBroker extends DatacenterBroker {
 	
 	public DatacenterAffinityBroker(String name, int tier) throws Exception {
 		super(name);
-		this.tier = tier;
 		this.dcAffinity = new ArrayList<Integer>();
 		this.loadBalancer = new FirstAvailableLoadBalancer(this);
 	}

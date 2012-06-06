@@ -29,15 +29,30 @@ public class SimpleExample {
 		initializeCloudSim();
 		
 		Datacenter wsDatacenter = DatacenterBuilder.createDatacenter("WebserverCenter", 0, 3);
+		Datacenter appDatacenter = DatacenterBuilder.createDatacenter("ApplicationCenter", 0, 3);
+		Datacenter dbDatacenter = DatacenterBuilder.createDatacenter("DatabaseCenter", 0, 3);
 		
 		ProfilingBroker wsBroker = createBroker("wsBroker");
+		ProfilingBroker appBroker = createBroker("appBroker");
+		ProfilingBroker dbBroker = createBroker("dbBroker");
+		
+		wsBroker.addAffinity(wsDatacenter.getId());
+		appBroker.addAffinity(appDatacenter.getId());
+		dbBroker.addAffinity(dbDatacenter.getId());
+		
 		List<ProfilingBroker> brokers = new ArrayList<ProfilingBroker>();
 		brokers.add(wsBroker);
+		brokers.add(appBroker);
+		brokers.add(dbBroker);
 		
 		List<Vm> wsVms = VmFactory.createVms(0, 1, wsBroker.getId());
+		List<Vm> appVms = VmFactory.createVms(0, 1, appBroker.getId());
+		List<Vm> dbVms = VmFactory.createVms(0, 1, dbBroker.getId());
 		
 		// submit vm lists to the brokers
 		wsBroker.submitVmList(wsVms);
+		appBroker.submitVmList(appVms);
+		dbBroker.submitVmList(dbVms);
 
 		List<List<Double>> cpuValues = ARX.predictCPUUsage("training.csv", "running.csv");
 		HashMap<DatacenterBroker, List<Double>> layers = new HashMap<DatacenterBroker, List<Double>>();

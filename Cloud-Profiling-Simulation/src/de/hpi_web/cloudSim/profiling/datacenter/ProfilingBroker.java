@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.DatacenterBroker;
+import org.cloudbus.cloudsim.DatacenterCharacteristics;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.UtilizationModel;
 import org.cloudbus.cloudsim.Vm;
@@ -22,12 +23,23 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 	
 	private List<Cloudlet> cloudlets;
 	private List<Observer> observers;
+	private List<Integer> dcAffinity;
 
 	public ProfilingBroker(String name) throws Exception {
 		super(name);
 		observers = new ArrayList<Observer>();
 		cloudlets = new ArrayList<Cloudlet>();
-		// TODO Auto-generated constructor stub
+		dcAffinity = new ArrayList<Integer>();
+	}
+	public void setDcAffinityList(List<Integer> dcAffinity) {
+		this.dcAffinity = dcAffinity;
+	}
+	public List<Integer> getDcAffinityList() {
+		return dcAffinity;
+	}
+	public void addAffinity(int datacenterId) {
+		if (!dcAffinity.contains(datacenterId))
+			dcAffinity.add(datacenterId);
 	}
 	
 	public void processOtherEvent(SimEvent ev) {
@@ -68,7 +80,7 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 		Vm vm = (Vm) ev.getData();
 		getVmList().add(vm);
 		// TODO choose datacenter here
-		int datacenterId = getDatacenterIdsList().get(0);
+		int datacenterId = getDcAffinityList().get(0);// = getDatacenterIdsList().get(0);
 		
 		String datacenterName = CloudSim.getEntityName(datacenterId);
 		if (!getVmsToDatacentersMap().containsKey(vm.getId())) {
@@ -126,7 +138,27 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 
 	    sendNow(ev.getSource(), UtilManager.ROUND_COMPLETED, null);
 	}
+	
+	@Override
+	protected void processResourceCharacteristics(SimEvent ev) {
+		DatacenterCharacteristics characteristics = (DatacenterCharacteristics) ev.getData();
+		getDatacenterCharacteristicsList().put(characteristics.getId(), characteristics);
 
+		if (getDatacenterCharacteristicsList().size() == getDatacenterIdsList().size()) {
+			setDatacenterRequestedIdsList(new ArrayList<Integer>());
+			if(dcAffinity.isEmpty())
+				createVmsInDatacenter(getDatacenterIdsList().get(0));
+			else {
+				for (int id : getDatacenterIdsList()) {
+					// TODO: maybe use another datacenter?
+					if (dcAffinity.contains(id)) {
+						createVmsInDatacenter(id);
+					}
+				}
+			}
+		}
+	}
+	
 	private List<Vm> getMissingCloudletVms(List<Integer> vmsWithCloudletIds,
 			List<Vm> vms) {
 		List<Vm> vmsWithoutCloudlet = new ArrayList<Vm>();
