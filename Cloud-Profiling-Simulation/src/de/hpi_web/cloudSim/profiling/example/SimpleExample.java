@@ -19,18 +19,18 @@ import de.hpi_web.cloudSim.multitier.staticTier.CloudletFactory;
 import de.hpi_web.cloudSim.multitier.staticTier.VmFactory;
 import de.hpi_web.cloudSim.profiling.datacenter.DatacenterBuilder;
 import de.hpi_web.cloudSim.profiling.datacenter.ProfilingBroker;
+import de.hpi_web.cloudSim.profiling.observer.Observer;
 import de.hpi_web.cloudSim.profiling.utilization.UtilManager;
 
 public class SimpleExample {
-	
-	public static void main(String[] args) {
+		
+	public static void start(Observer observer, double delay, int upperThreshold, int lowerThreshold) {
 		
 		Log.printLine("Starting...");
 		initializeCloudSim();
-		
-		Datacenter wsDatacenter = DatacenterBuilder.createDatacenter("WebserverCenter", 0, 3);
-		Datacenter appDatacenter = DatacenterBuilder.createDatacenter("ApplicationCenter", 0, 3);
-		Datacenter dbDatacenter = DatacenterBuilder.createDatacenter("DatabaseCenter", 0, 3);
+		Datacenter wsDatacenter = DatacenterBuilder.createDatacenter("WebserverCenter", 3);
+		Datacenter appDatacenter = DatacenterBuilder.createDatacenter("ApplicationCenter", 3);
+		Datacenter dbDatacenter = DatacenterBuilder.createDatacenter("DatabaseCenter", 3);
 		
 		ProfilingBroker wsBroker = createBroker("wsBroker");
 		ProfilingBroker appBroker = createBroker("appBroker");
@@ -42,25 +42,36 @@ public class SimpleExample {
 		
 		List<ProfilingBroker> brokers = new ArrayList<ProfilingBroker>();
 		brokers.add(wsBroker);
-		//brokers.add(appBroker);
-		//brokers.add(dbBroker);
+		brokers.add(appBroker);
+		brokers.add(dbBroker);
 		
-		List<Vm> wsVms = VmFactory.createVms(0, 1, wsBroker.getId());
-		List<Vm> appVms = VmFactory.createVms(0, 1, appBroker.getId());
-		List<Vm> dbVms = VmFactory.createVms(0, 1, dbBroker.getId());
+		List<Vm> wsVms = VmFactory.createVms(1, wsBroker.getId());
+		List<Vm> appVms = VmFactory.createVms(1, appBroker.getId());
+		List<Vm> dbVms = VmFactory.createVms(1, dbBroker.getId());
 		
 		// submit vm lists to the brokers
 		wsBroker.submitVmList(wsVms);
 		appBroker.submitVmList(appVms);
 		dbBroker.submitVmList(dbVms);
-
+		
+		// register with the observer
+		wsBroker.register(observer);
+		appBroker.register(observer);
+		dbBroker.register(observer);
+		
+		// create a map where for each broker the CPU usage is recorded
 		List<List<Double>> cpuValues = ARX.predictCPUUsage("training.csv", "running.csv");
 		HashMap<DatacenterBroker, List<Double>> layers = new HashMap<DatacenterBroker, List<Double>>();
 		int index = 1;			// we dont start at 0, this is the LoadBalancer which we do not track atm
 		for (DatacenterBroker broker : brokers) {
 			layers.put(broker, cpuValues.get(index));
+			index++;
 		}
-		UtilManager utilManager = new UtilManager("UtilManager", 1, 70, 30, layers);
+		UtilManager utilManager = new UtilManager("UtilManager", delay, upperThreshold, lowerThreshold, layers);
+
+		//List<MultiTierCloudlet> wsCloudlets = CloudletFactory.createCloudlets(0, 10, wsBroker);
+
+		//wsBroker.submitCloudletList(wsCloudlets);
 		
 		CloudSim.startSimulation();
 		CloudSim.stopSimulation();

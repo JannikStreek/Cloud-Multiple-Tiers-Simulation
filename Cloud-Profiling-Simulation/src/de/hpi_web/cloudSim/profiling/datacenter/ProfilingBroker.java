@@ -44,7 +44,6 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 	
 	public void processOtherEvent(SimEvent ev) {
 		switch (ev.getTag()) {
-		// Resource characteristics request
 			case UtilManager.CLOUDLET_UPDATE:
 				processCloudletUpdate(ev);
 				break;
@@ -77,6 +76,16 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 		sendNow(getVmsToDatacentersMap().get(vm.getId()), CloudSimTags.VM_DESTROY, vm);
 
 		getVmsCreatedList().remove(0);
+	}
+	
+	public Vm getVmForVmId(int vmId) {
+		for(Vm vm : getVmList()) {
+			if(vm.getId() == vmId) {
+			  return vm;
+			}
+		}
+		return null;
+		
 	}
 
 	private void processNewVm(SimEvent ev) {
@@ -142,9 +151,10 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 			Log.printLine(CloudSim.clock() + ": " + getName() + " : at VM" + cloudlet.getVmId() + " : cloudlet at CPU util  "+ cloudlet.getUtilizationOfCpu(CloudSim.clock()));
 		}
 		
+		//change gui
 		notifyObservers();
-
-		// TODO: support for more than 1 broker. Prbly send this or our id
+		
+		//proceed if all brokers have finished their execution
 	    sendNow(ev.getSource(), UtilManager.ROUND_COMPLETED, getId());
 	}
 	
@@ -199,8 +209,8 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 
 	private Cloudlet createCloudlet(Vm vm, double cpuUtil) {
 		Log.printLine(CloudSim.clock() + ": " + getName() + ": Creating Cloudlet ");
-	  // Cloudlet properties
 		
+	  // Cloudlet properties
 	  int id = 0;
 	  int pesNumber = 1;
 	  long length = 100000000; //TODO calc it

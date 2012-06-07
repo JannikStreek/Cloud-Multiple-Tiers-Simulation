@@ -28,9 +28,9 @@ public class StaticTier {
 
 		Log.printLine("Starting StaticTier...");
 		initializeCloudSim();
-		Datacenter wsDatacenter = DatacenterFactory.createDatacenter("WebserverCenter", 0, 3);
-		Datacenter appDatacenter = DatacenterFactory.createDatacenter("ApplicationCenter", 3, 3);
-		Datacenter dbDatacenter = DatacenterFactory.createDatacenter("DatabaseCenter", 6, 3);
+		Datacenter wsDatacenter = DatacenterFactory.createDatacenter("WebserverCenter", 3);
+		Datacenter appDatacenter = DatacenterFactory.createDatacenter("ApplicationCenter", 3);
+		Datacenter dbDatacenter = DatacenterFactory.createDatacenter("DatabaseCenter", 3);
 //		DatacenterBroker wsBroker = createBroker("wsBroker");
 //		DatacenterBroker appBroker = createBroker("appBroker");
 //		DatacenterBroker dbBroker = createBroker("dbBroker");
@@ -41,9 +41,9 @@ public class StaticTier {
 		wsBroker.setSuccessor(appBroker);
 		appBroker.setSuccessor(dbBroker);
 		
-		List<Vm> wsVms = VmFactory.createVms(0, 1, wsBroker.getId());
-		List<Vm> appVms = VmFactory.createVms(3, 3, appBroker.getId());
-		List<Vm> dbVms = VmFactory.createVms(6, 3, dbBroker.getId());
+		List<Vm> wsVms = VmFactory.createVms(1, wsBroker.getId());
+		List<Vm> appVms = VmFactory.createVms(3, appBroker.getId());
+		List<Vm> dbVms = VmFactory.createVms(3, dbBroker.getId());
 		
 		List<Integer> wsDcAffinity = new ArrayList<Integer>();
 		List<Integer> appDcAffinity = new ArrayList<Integer>();
@@ -61,7 +61,7 @@ public class StaticTier {
 		appBroker.submitVmList(appVms);
 		dbBroker.submitVmList(dbVms);
 
-		List<MultiTierCloudlet> wsCloudlets = CloudletFactory.createCloudlets(0, 10, wsBroker);
+		List<MultiTierCloudlet> wsCloudlets = CloudletFactory.createCloudlets(10, wsBroker);
 		//List<MultiTierCloudlet> appCloudlets = CloudletFactory.createCloudlets(10, 5, appBroker);
 		//List<MultiTierCloudlet> dbCloudlets = CloudletFactory.createCloudlets(20, 2, dbBroker);
 

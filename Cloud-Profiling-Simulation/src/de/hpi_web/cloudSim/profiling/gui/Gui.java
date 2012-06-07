@@ -114,8 +114,8 @@ public class Gui implements Observer {
 		JLabel lblTier_2 = new JLabel("Tier 3");
 		GroupLayout groupLayout = new GroupLayout(frame.getContentPane());
 		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+			groupLayout.createParallelGroup(Alignment.TRAILING)
+				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(12)
 					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
 						.addGroup(groupLayout.createSequentialGroup()
@@ -139,26 +139,24 @@ public class Gui implements Observer {
 								.addComponent(btnStart)
 								.addGroup(groupLayout.createSequentialGroup()
 									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-										.addComponent(panel, GroupLayout.PREFERRED_SIZE, 269, GroupLayout.PREFERRED_SIZE)
 										.addGroup(groupLayout.createSequentialGroup()
-											.addGap(221)
-											.addComponent(lblTier)))
-									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
-										.addGroup(groupLayout.createSequentialGroup()
-											.addPreferredGap(ComponentPlacement.RELATED)
-											.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+											.addComponent(panel, GroupLayout.PREFERRED_SIZE, 269, GroupLayout.PREFERRED_SIZE)
+											.addPreferredGap(ComponentPlacement.RELATED, 12, Short.MAX_VALUE))
 										.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-											.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+											.addComponent(lblTier)
+											.addGap(14)))
+									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+										.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+											.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+											.addGap(6))
+										.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
 											.addComponent(lblTier_1)
-											.addGap(8)))
-									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
+											.addGap(14)))
+									.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
 										.addGroup(groupLayout.createSequentialGroup()
-											.addPreferredGap(ComponentPlacement.RELATED)
-											.addComponent(panel_2, GroupLayout.PREFERRED_SIZE, 254, GroupLayout.PREFERRED_SIZE))
-										.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-											.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 											.addComponent(lblTier_2)
-											.addGap(12)))))
+											.addGap(12))
+										.addComponent(panel_2, GroupLayout.PREFERRED_SIZE, 254, GroupLayout.PREFERRED_SIZE))))
 							.addPreferredGap(ComponentPlacement.RELATED)))
 					.addGap(21))
 				.addGroup(groupLayout.createSequentialGroup()
@@ -173,19 +171,18 @@ public class Gui implements Observer {
 					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
 						.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 							.addComponent(lblTier_2)
-							.addComponent(lblTier_1))
+							.addComponent(lblTier_1)
+							.addComponent(lblTier))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(btnStart)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-								.addComponent(btnStop)
-								.addComponent(lblTier))))
+							.addComponent(btnStop)))
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(panel, GroupLayout.PREFERRED_SIZE, 239, GroupLayout.PREFERRED_SIZE)
-						.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 239, GroupLayout.PREFERRED_SIZE)
-						.addComponent(panel_2, GroupLayout.PREFERRED_SIZE, 239, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.RELATED, 116, Short.MAX_VALUE)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
+						.addComponent(panel, GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE)
+						.addComponent(panel_1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(panel_2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+					.addPreferredGap(ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
 					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
 						.addGroup(groupLayout.createSequentialGroup()
 							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
@@ -204,21 +201,21 @@ public class Gui implements Observer {
 		);
 		
 		textArea_2 = new JTextArea();
-		textArea_2.setRows(15);
+		textArea_2.setRows(22);
 		textArea_2.setEditable(false);
-		textArea_2.setColumns(24);
+		textArea_2.setColumns(22);
 		panel_2.add(textArea_2);
 		
 		textArea_1 = new JTextArea();
-		textArea_1.setRows(15);
+		textArea_1.setRows(22);
 		textArea_1.setEditable(false);
-		textArea_1.setColumns(24);
+		textArea_1.setColumns(22);
 		panel_1.add(textArea_1);
 		
 		textArea_0 = new JTextArea();
-		textArea_0.setColumns(24);
+		textArea_0.setColumns(22);
 		textArea_0.setEditable(false);
-		textArea_0.setRows(15);
+		textArea_0.setRows(22);
 		panel.add(textArea_0);
 		frame.getContentPane().setLayout(groupLayout);
 	}
@@ -244,12 +241,18 @@ public class Gui implements Observer {
 			area = textArea_1;
 		if (broker.getName() == "dbBroker")
 			area = textArea_2;
+		
 		String newText = "";
-		for(Cloudlet cloudlet :broker.getCloudletSubmittedList()) {
+		
+		for(Cloudlet cloudlet : broker.getCloudletSubmittedList()) {
 			Double util = new Double(cloudlet.getUtilizationModelCpu().getUtilization(CloudSim.clock()));
 			int shownUtil = util.intValue();
-			int vm = cloudlet.getVmId();
-			newText += "VM: " + vm + "\r\n";
+			int vmId = cloudlet.getVmId();
+			int hostId = 0;
+			
+			hostId = broker.getVmForVmId(vmId).getHost().getId();
+			
+			newText += "VM: " + vmId + " at host " + hostId + "\r\n";
 			newText += "-----------\r\n";
 			newText += "CPU util at " + shownUtil + "\r\n\r\n";
 			

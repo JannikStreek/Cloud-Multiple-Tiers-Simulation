@@ -32,13 +32,9 @@ public class UtilManager extends SimEntity {
 	public static final int UTIL_SIM_FINISHED = 7003;
 	
 	private int i = 0;
-	//private int brokerId;
 	private int upperThreshold;
 	private int lowerThreshold;
 	private Map<DatacenterBroker,List<Double>> layers;
-
-
-	//TODO first test with fixed values
     
     private double delay; //seconds
     private List<Integer> brokers;
@@ -51,6 +47,7 @@ public class UtilManager extends SimEntity {
 		this.layers = layers;
 		this.brokers = new ArrayList<Integer>();
 		this.finishedTurnBrokers = new ArrayList<Integer>();
+		
 		for (DatacenterBroker d : layers.keySet())
 			brokers.add(d.getId());
 		
@@ -58,16 +55,6 @@ public class UtilManager extends SimEntity {
 		this.upperThreshold = upperThreshold;
 		this.lowerThreshold = lowerThreshold;
 
-//		//TODO only for testing has to be exchanged soon
-//		List<Double> cpuUtils = new ArrayList<Double>();
-//		cpuUtils.add(0.9);
-//		cpuUtils.add(0.8);
-//		cpuUtils.add(5.0);
-//		
-//		
-//		for (DatacenterBroker tier : layers) {
-//			this.layers.put(tier, cpuUtils);
-//		}
 	}
 	
 
@@ -89,9 +76,6 @@ public class UtilManager extends SimEntity {
 			case UtilManager.ROUND_COMPLETED:
 				processCompleted(ev);
 				break;
-//			case UtilManager.CLOUDLET_CREATION:
-//				processCloudletCreation(ev);
-//				break;
 		}
 				
 	}
@@ -106,7 +90,6 @@ public class UtilManager extends SimEntity {
 				try {
 					Thread.sleep(new Double(delay*1000).intValue());
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				Log.printLine(CloudSim.clock() + ": " + getName() + ": Completed Round ");
@@ -128,18 +111,18 @@ public class UtilManager extends SimEntity {
 		for (DatacenterBroker tier : layers.keySet()) {
 			List<Double> cpuUtils = layers.get(tier);
 			//schedule(tier.getId(),1, UtilManager.CLOUDLET_UPDATE, cpuUtils.get(i));
-			
-			
+
 			// check if enough vms are present / too much vms present and handle this event => regarding threshold
 			int runningVms = tier.getCloudletSubmittedList().size();
 			Log.printLine(CloudSim.clock() + ": " + getName() + ": Vms running: " + runningVms);
 			double utilizationPerVm = (cpuUtils.get(i)/(double)runningVms);
 			Log.printLine("Current Util: " + utilizationPerVm);
 			Log.printLine("Running Vms: " + runningVms);
+			
 			if (utilizationPerVm > this.upperThreshold && runningVms > 0) {
 				// create new vm
 				Log.printLine("Too few Vms... creating");
-				Vm v = VmFactory.createVm(tier.getId(), i);
+				Vm v = VmFactory.createVm(tier.getId());
 				schedule(tier.getId(), 1, CloudSimTags.VM_CREATE, v);
 			}
 			else if (utilizationPerVm < this.lowerThreshold && runningVms > 1) {
@@ -147,28 +130,18 @@ public class UtilManager extends SimEntity {
 				Log.printLine("Too many Vms... destroying");
 				schedule(tier.getId(), 1, CloudSimTags.VM_DESTROY);
 			}
-			//TODO calc new util
+			//update utilization of all cloudlets
 			schedule(tier.getId(), 2, UtilManager.CLOUDLET_UPDATE, cpuUtils.get(i));
 		}
 		this.i++;
 		
-
 	}
 	
-
 
 	@Override
 	public void shutdownEntity() {
 		// TODO Auto-generated method stub
 		
 	}
-	
-//	public int getBrokerId() {
-//		return brokerId;
-//	}
-//
-//	public void setBrokerId(int brokerId) {
-//		this.brokerId = brokerId;
-//	}
 
 }

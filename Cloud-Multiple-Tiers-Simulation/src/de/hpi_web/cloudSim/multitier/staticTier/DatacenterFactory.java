@@ -34,6 +34,8 @@ public class DatacenterFactory {
 	public static final int  DEFAULT_RAM  =    4096;  		// vm memory (MB)
 	public static final long DEFAULT_STORAGE = 1600000; 	// image size (MB)
 	public static final long DEFAULT_BW   =   10000;		// total bandwith available, 10GBit/s
+	
+	private static int hostIdCounter = 0;
 
 	/**
 	 * Creates the datacenter.
@@ -43,7 +45,7 @@ public class DatacenterFactory {
 	 * @return the datacenter
 	 */
 	public static Datacenter createDatacenter(String name) {
-		return createDatacenter(name, 0, 1);
+		return createDatacenter(name, 1);
 	}
 	/**
 	 * Creates a new default Datacenter
@@ -55,15 +57,16 @@ public class DatacenterFactory {
 	 * @pre startId >= 0
 	 * @post $none
 	 */
-	public static Datacenter createDatacenter(String name, int startId, int hosts) {
+	public static Datacenter createDatacenter(String name, int hosts) {
 		List<Host> hostList = new ArrayList<Host>();
 		List<Pe> peList = new ArrayList<Pe>();
 
 		for (int i = 0; i < DEFAULT_PES; i++)
 			peList.add(new Pe(i, new PeProvisionerSimple(DEFAULT_MIPS)));
 
-		for(int hostId = startId; hostId < startId + hosts; hostId++) {
-			hostList.add(defaultHost(hostId, peList));
+		for(int i = 0; i < hosts; i++) {
+			hostList.add(defaultHost(hostIdCounter, peList));
+			hostIdCounter++;
 		}
 		return createDatacenter(name, defaultCharacteristics(hostList), hostList);
 	}

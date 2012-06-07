@@ -53,7 +53,7 @@ public class SpikeWorkloadGenerator extends WorkloadGenerator {
 				// TODO: find the right distribution of different cloudlet-types (db intensive etc).
 				MultiTierWorkload expGrowth = new ExponentialGrowth();
 				//cl = CloudletFactory.createCloudletsForWorkload(0, broker, expGrowth, 1);
-				cl = CloudletFactory.createCloudlets(startId, workload, broker);
+				cl = CloudletFactory.createCloudlets(workload, broker);
 				for (MultiTierCloudlet c : cl) {
 					schedule(brokerId, t, MultiTierCloudTags.REQUEST_TAG, c);
 				}

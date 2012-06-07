@@ -18,8 +18,8 @@ public class CloudletFactory {
 	public static final int DEFAULT_FILESIZE = 1;//300;
 	public static final int DEFAULT_OUTPUTSIZE = 1;//300;
 	
-	
-	
+	private static int cloudletIdCounter = 0;
+
 	public static Cloudlet createCloudlet(DatacenterBroker broker) {
 		
 		return createDefaultCloudlet(0, broker);
@@ -36,17 +36,18 @@ public class CloudletFactory {
 	 * @pre startId >= 0
 	 * @post $none
 	 */
-	public static List<MultiTierCloudlet> createCloudlets(int startId, int count, DatacenterBroker broker) {
+	public static List<MultiTierCloudlet> createCloudlets(int count, DatacenterBroker broker) {
 		List<MultiTierCloudlet> cloudlets = new ArrayList<MultiTierCloudlet>();
-		for (int i = startId; i < startId + count; i++) {
+		for (int i = 0; i < count; i++) {
 			cloudlets.add(createDefaultCloudlet(i, broker));
+			cloudletIdCounter++;
 		}
 		return cloudlets;
 	}
 	
 	public static MultiTierCloudlet createCloudlet(DatacenterBroker broker, int vmId) {
-		
-		return createDefaultCloudlet(0, broker, vmId);
+		cloudletIdCounter++;
+		return createDefaultCloudlet(cloudletIdCounter, broker, vmId);
 	}
 	
 	private static MultiTierCloudlet createDefaultCloudlet(int cloudletId, DatacenterBroker broker, int vmId) {
@@ -66,16 +67,14 @@ public class CloudletFactory {
 		return cloudlet;
 	}
 	
-	public static List<MultiTierCloudlet> createCloudletsForWorkload(int startId, DatacenterBroker broker, MultiTierWorkload workload, int currentTier) {
+	public static List<MultiTierCloudlet> createCloudletsForWorkload(DatacenterBroker broker, MultiTierWorkload workload, int currentTier) {
 		DatacenterAffinityBroker b = (DatacenterAffinityBroker) broker;
 		DatacenterAffinityBroker s = b.getSuccessor();
-		List<MultiTierCloudlet> cloudlets = createCloudlets(startId, workload.getWorkloadForTier(currentTier), broker);
+		List<MultiTierCloudlet> cloudlets = createCloudlets(workload.getWorkloadForTier(currentTier), broker);
 		
-		int id = startId;
 		if (s != null)
 			for (MultiTierCloudlet c : cloudlets) {
-				c.setChildren(createCloudletsForWorkload(id, s, workload, currentTier+1));
-				id += workload.getWorkloadForTier(currentTier);
+				c.setChildren(createCloudletsForWorkload(s, workload, currentTier+1));
 			}
 		
 		return cloudlets;

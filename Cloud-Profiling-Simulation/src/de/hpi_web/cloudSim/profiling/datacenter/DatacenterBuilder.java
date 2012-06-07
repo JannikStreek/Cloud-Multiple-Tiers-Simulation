@@ -14,16 +14,21 @@ import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
 
 import de.hpi_web.cloudSim.multitier.staticTier.DatacenterFactory;
 
+
+
 public class DatacenterBuilder extends DatacenterFactory {
-	public static FixedDatacenter createDatacenter(String name, int startId, int hosts) {
+	private static int hostIdCounter = 0;
+	
+	public static FixedDatacenter createDatacenter(String name, int hosts) {
 		List<Host> hostList = new ArrayList<Host>();
 		List<Pe> peList = new ArrayList<Pe>();
 
 		for (int i = 0; i < DEFAULT_PES; i++)
 			peList.add(new Pe(i, new PeProvisionerSimple(DEFAULT_MIPS)));
 
-		for(int hostId = startId; hostId < startId + hosts; hostId++) {
-			hostList.add(defaultHost(hostId, peList));
+		for(int i = 0; i < hosts;i++) {
+			hostList.add(defaultHost(hostIdCounter, peList));
+			hostIdCounter++;
 		}
 		return createDatacenter(name, defaultCharacteristics(hostList), hostList);
 	}

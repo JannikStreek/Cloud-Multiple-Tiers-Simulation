@@ -31,9 +31,9 @@ public class DatacenterTest {
 		
 		Log.printLine("Starting StaticTier...");
 		initializeCloudSim();
-		Datacenter wsDatacenter = DatacenterFactory.createDatacenter("WebserverCenter", 0, 3);
-		Datacenter appDatacenter = DatacenterFactory.createDatacenter("ApplicationCenter", 3, 3);
-		Datacenter dbDatacenter = DatacenterFactory.createDatacenter("DatabaseCenter", 6, 3);
+		Datacenter wsDatacenter = DatacenterFactory.createDatacenter("WebserverCenter", 3);
+		Datacenter appDatacenter = DatacenterFactory.createDatacenter("ApplicationCenter", 3);
+		Datacenter dbDatacenter = DatacenterFactory.createDatacenter("DatabaseCenter", 3);
 //		DatacenterBroker wsBroker = createBroker("wsBroker");
 //		DatacenterBroker appBroker = createBroker("appBroker");
 //		DatacenterBroker dbBroker = createBroker("dbBroker");
@@ -44,9 +44,9 @@ public class DatacenterTest {
 		wsBroker.setSuccessor(appBroker);
 		appBroker.setSuccessor(dbBroker);
 		
-		List<Vm> wsVms = VmFactory.createVms(0, 3, wsBroker.getId());
-		List<Vm> appVms = VmFactory.createVms(3, 3, appBroker.getId());
-		List<Vm> dbVms = VmFactory.createVms(6, 3, dbBroker.getId());
+		List<Vm> wsVms = VmFactory.createVms(1, wsBroker.getId());
+		List<Vm> appVms = VmFactory.createVms(1, appBroker.getId());
+		List<Vm> dbVms = VmFactory.createVms(1, dbBroker.getId());
 		
 		List<Integer> wsDcAffinity = new ArrayList<Integer>();
 		List<Integer> appDcAffinity = new ArrayList<Integer>();
@@ -64,9 +64,9 @@ public class DatacenterTest {
 		appBroker.submitVmList(appVms);
 		dbBroker.submitVmList(dbVms);
 
-		List<MultiTierCloudlet> wsCloudlets = CloudletFactory.createCloudlets(0, 2, wsBroker.getId());
-		List<MultiTierCloudlet> appCloudlets = CloudletFactory.createCloudlets(10, 5, appBroker.getId());
-		List<MultiTierCloudlet> dbCloudlets = CloudletFactory.createCloudlets(20, 2, dbBroker.getId());
+		List<MultiTierCloudlet> wsCloudlets = CloudletFactory.createCloudlets(2, wsBroker);
+		List<MultiTierCloudlet> appCloudlets = CloudletFactory.createCloudlets(5, appBroker);
+		List<MultiTierCloudlet> dbCloudlets = CloudletFactory.createCloudlets(2, dbBroker);
 
 		wsBroker.submitCloudletList(wsCloudlets);
 	}

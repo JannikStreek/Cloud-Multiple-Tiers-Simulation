@@ -18,19 +18,21 @@ public class VmFactory {
 	public static final String VMM = "Xen";					// virtual machine manager (hypervisor)
 	//public static final String DEFAULT_NAME = "EC2-Standard(Small)";
 	
+	private static int vmIdCounter = 0;
 	
 	public static Vm createVm(int brokerId) {
-		return defaultVm(0, brokerId);
+		vmIdCounter++;
+		return defaultVm(vmIdCounter, brokerId);
 	}
 	
-	public static Vm createVm(int brokerId, int vmId) {
-		return defaultVm(vmId, brokerId);
-	}
-	
-	public static List<Vm> createVms(int startId, int count, int brokerId) {
+	public static List<Vm> createVms(int count, int brokerId) {
 		List<Vm> vms = new ArrayList<Vm>();
-		for (int i = startId; i < startId + count; i++)
-			vms.add(defaultVm(i, brokerId));
+		
+		for (int i = 0; i < count; i++) {
+			vms.add(defaultVm(vmIdCounter, brokerId));
+			vmIdCounter++;
+		}
+		
 		return vms;
 	}
 	
