@@ -120,6 +120,7 @@ public class StartAction implements ActionListener{
 			int index = 1;			// we dont start at 0, this is the LoadBalancer which we do not track atm
 			for (DatacenterBroker broker : brokers) {
 				layers.put(broker, cpuValues.get(index));
+				index++;
 			}
 			UtilManager utilManager = new UtilManager("UtilManager", delay, upperThreshold, lowerThreshold, layers);
 
