@@ -63,6 +63,8 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 	private void processDestroyVm(SimEvent ev) {
 		// pick one VM and destroy it. Doesnt matter which one
 		// TODO could pick VM through cloudlet list... getCloudletSubmittedList().get(0).getVmId()
+		if (getVmsCreatedList().isEmpty())
+			return;
 		Vm vm = getVmsCreatedList().get(0);
 		for (Cloudlet c : getCloudletSubmittedList()) {
 			if (c.getVmId() == vm.getId()) {
@@ -142,7 +144,8 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 		
 		notifyObservers();
 
-	    sendNow(ev.getSource(), UtilManager.ROUND_COMPLETED, null);
+		// TODO: support for more than 1 broker. Prbly send this or our id
+	    sendNow(ev.getSource(), UtilManager.ROUND_COMPLETED, getId());
 	}
 	
 	@Override

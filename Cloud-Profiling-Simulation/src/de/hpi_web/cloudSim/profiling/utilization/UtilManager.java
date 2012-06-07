@@ -41,12 +41,18 @@ public class UtilManager extends SimEntity {
 	//TODO first test with fixed values
     
     private double delay; //seconds
+    private List<Integer> brokers;
+    private List<Integer> finishedTurnBrokers;
     
 
 	public UtilManager(String name, double delay, int upperThreshold, int lowerThreshold, HashMap<DatacenterBroker, List<Double>> layers) {
 		super(name);
 		
 		this.layers = layers;
+		this.brokers = new ArrayList<Integer>();
+		this.finishedTurnBrokers = new ArrayList<Integer>();
+		for (DatacenterBroker d : layers.keySet())
+			brokers.add(d.getId());
 		
 		this.delay = delay;
 		this.upperThreshold = upperThreshold;
@@ -91,22 +97,36 @@ public class UtilManager extends SimEntity {
 	}
 
 	private void processCompleted(SimEvent ev) {
-		
-		try {
-			Thread.sleep(new Double(delay*1000).intValue());
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		int brokerId = (int) ev.getData();
+		if (brokers.contains(brokerId) && !finishedTurnBrokers.contains(brokerId)) {
+			finishedTurnBrokers.add(brokerId);
+			if (finishedTurnBrokers.containsAll(brokers)) {
+				finishedTurnBrokers.clear();
+				
+				try {
+					Thread.sleep(new Double(delay*1000).intValue());
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				Log.printLine(CloudSim.clock() + ": " + getName() + ": Completed Round ");
+				int numberOfValues = layers.values().iterator().next().size();
+				if(i < numberOfValues) {
+					schedule(getId(), 3, RUN);
+				} else {
+					for (DatacenterBroker tier : layers.keySet() )
+						schedule(tier.getId(), 3, UTIL_SIM_FINISHED);
+				}
+			}
 		}
-		Log.printLine(CloudSim.clock() + ": " + getName() + ": Completed Round ");
-		
 	}
 
 	private void processRun(SimEvent ev) {
 		Log.printLine(CloudSim.clock() + ": " + getName() + ": UtilManager is running... ");
+		this.i++;
 		
 		//for each tier
-		for(DatacenterBroker tier : layers.keySet()) {
+		for (DatacenterBroker tier : layers.keySet()) {
 			List<Double> cpuUtils = layers.get(tier);
 			//schedule(tier.getId(),1, UtilManager.CLOUDLET_UPDATE, cpuUtils.get(i));
 			
@@ -130,15 +150,6 @@ public class UtilManager extends SimEntity {
 			}
 			//TODO calc new util
 			schedule(tier.getId(), 2, UtilManager.CLOUDLET_UPDATE, cpuUtils.get(i));
-			
-			this.i++;
-			
-			if(i < cpuUtils.size()) {
-				schedule(getId(), 3, RUN);
-			} else {
-				schedule(tier.getId(), 3, UTIL_SIM_FINISHED);
-			}
-
 		}
 		
 
