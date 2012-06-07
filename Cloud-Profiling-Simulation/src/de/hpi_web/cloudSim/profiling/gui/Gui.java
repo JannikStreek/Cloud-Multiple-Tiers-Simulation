@@ -246,11 +246,12 @@ public class Gui implements Observer {
 			area = textArea_2;
 		String newText = "";
 		for(Cloudlet cloudlet :broker.getCloudletSubmittedList()) {
-			double util = cloudlet.getUtilizationModelCpu().getUtilization(CloudSim.clock());
+			Double util = new Double(cloudlet.getUtilizationModelCpu().getUtilization(CloudSim.clock()));
+			int shownUtil = util.intValue();
 			int vm = cloudlet.getVmId();
 			newText += "VM: " + vm + "\r\n";
 			newText += "-----------\r\n";
-			newText += "CPU util at " + util + "\r\n\r\n";
+			newText += "CPU util at " + shownUtil + "\r\n\r\n";
 			
 		}
 		area.setText(newText);

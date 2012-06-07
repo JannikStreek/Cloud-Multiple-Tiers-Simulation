@@ -123,7 +123,6 @@ public class UtilManager extends SimEntity {
 
 	private void processRun(SimEvent ev) {
 		Log.printLine(CloudSim.clock() + ": " + getName() + ": UtilManager is running... ");
-		this.i++;
 		
 		//for each tier
 		for (DatacenterBroker tier : layers.keySet()) {
@@ -151,6 +150,7 @@ public class UtilManager extends SimEntity {
 			//TODO calc new util
 			schedule(tier.getId(), 2, UtilManager.CLOUDLET_UPDATE, cpuUtils.get(i));
 		}
+		this.i++;
 		
 
 	}
