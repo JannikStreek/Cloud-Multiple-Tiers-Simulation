@@ -700,9 +700,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
                 area = tier3_VMPanel;
         if (broker.getName().equalsIgnoreCase("dbBroker"))
                 area = tier2_VMPanel;
-
-        String newText = "";
-
+        area.removeAll();
         for(Cloudlet cloudlet : broker.getCloudletSubmittedList()) {
                 Double util = new Double(cloudlet.getUtilizationModelCpu().getUtilization(CloudSim.clock()));
                 int shownUtil = util.intValue();
@@ -710,21 +708,12 @@ public class Gui extends javax.swing.JFrame implements Observer {
                 int hostId = 0;
 
                 hostId = broker.getVmForVmId(vmId).getHost().getId();
-
                 VMContainer c = createVmContainer(area, "VM: " + vmId + " at host " + hostId);
 
                 c.setCpuUtil(util);
-                newText += "VM: " + vmId + " at host " + hostId + "\r\n";
-                newText += "-----------\r\n";
-                newText += "CPU util at " + shownUtil + "\r\n\r\n";
-                /*
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        createVmContainer(area, "VM: " + vmId + " at host " + hostId);
-                }});
-                */
         }
-        //area.setText(newText);
+        area.validate();
+        //area.repaint();
     }
     
     private VMContainer createVmContainer(JPanel parent, String title) {
@@ -733,7 +722,6 @@ public class Gui extends javax.swing.JFrame implements Observer {
         parent.add(vmPanel);
         //parent.getLayout().addLayoutComponent(title, vmPanel);
         //vmPanel.validate();
-        parent.validate();
         return vmPanel;
     }
     
