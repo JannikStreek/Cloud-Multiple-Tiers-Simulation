@@ -160,7 +160,7 @@
                               <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="227" max="32767" attributes="0"/>
+                          <EmptySpace pref="225" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -208,9 +208,8 @@
                     </Property>
                   </Properties>
 
-                  <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout">
-                    <Property name="horizontalGap" type="int" value="5"/>
-                    <Property name="verticalGap" type="int" value="5"/>
+                  <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout">
+                    <Property name="axis" type="int" value="1"/>
                   </Layout>
                 </Container>
               </SubComponents>
@@ -235,9 +234,8 @@
                     </Property>
                   </Properties>
 
-                  <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout">
-                    <Property name="horizontalGap" type="int" value="5"/>
-                    <Property name="verticalGap" type="int" value="5"/>
+                  <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout">
+                    <Property name="axis" type="int" value="1"/>
                   </Layout>
                 </Container>
               </SubComponents>
@@ -266,9 +264,8 @@
                     </Property>
                   </Properties>
 
-                  <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout">
-                    <Property name="horizontalGap" type="int" value="5"/>
-                    <Property name="verticalGap" type="int" value="5"/>
+                  <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout">
+                    <Property name="axis" type="int" value="1"/>
                   </Layout>
                 </Container>
               </SubComponents>

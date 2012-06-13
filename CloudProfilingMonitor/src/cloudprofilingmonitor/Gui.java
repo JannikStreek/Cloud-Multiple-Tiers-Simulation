@@ -145,7 +145,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
                 .addGroup(GlobalStatisticsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(jLabel4))
-                .addContainerGap(227, Short.MAX_VALUE))
+                .addContainerGap(225, Short.MAX_VALUE))
         );
 
         SimulationPanel.add(GlobalStatisticsPanel);
@@ -155,7 +155,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
         tier1_scrollPane.setPreferredSize(new java.awt.Dimension(280, 342));
 
         tier1_VMPanel.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED));
-        tier1_VMPanel.setLayout(new java.awt.BorderLayout(5, 5));
+        tier1_VMPanel.setLayout(new javax.swing.BoxLayout(tier1_VMPanel, javax.swing.BoxLayout.Y_AXIS));
         tier1_scrollPane.setViewportView(tier1_VMPanel);
 
         SimulationPanel.add(tier1_scrollPane);
@@ -165,7 +165,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
         tier2_scrollPane.setPreferredSize(new java.awt.Dimension(280, 313));
 
         tier2_VMPanel.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED));
-        tier2_VMPanel.setLayout(new java.awt.BorderLayout(5, 5));
+        tier2_VMPanel.setLayout(new javax.swing.BoxLayout(tier2_VMPanel, javax.swing.BoxLayout.Y_AXIS));
         tier2_scrollPane.setViewportView(tier2_VMPanel);
 
         SimulationPanel.add(tier2_scrollPane);
@@ -175,7 +175,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
         tier3_scrollPane.setPreferredSize(new java.awt.Dimension(280, 307));
 
         tier3_VMPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED)));
-        tier3_VMPanel.setLayout(new java.awt.BorderLayout(5, 5));
+        tier3_VMPanel.setLayout(new javax.swing.BoxLayout(tier3_VMPanel, javax.swing.BoxLayout.Y_AXIS));
         tier3_scrollPane.setViewportView(tier3_VMPanel);
 
         SimulationPanel.add(tier3_scrollPane);
@@ -697,13 +697,12 @@ public class Gui extends javax.swing.JFrame implements Observer {
         // TODO: we need to decide which text area to use; this is just a fixed, quick and dirty solution
         JPanel area = tier1_VMPanel;
         if (broker.getName().equalsIgnoreCase("appBroker"))
-                area = tier3_VMPanel;
-        if (broker.getName().equalsIgnoreCase("dbBroker"))
                 area = tier2_VMPanel;
+        if (broker.getName().equalsIgnoreCase("dbBroker"))
+                area = tier3_VMPanel;
         area.removeAll();
         for(Cloudlet cloudlet : broker.getCloudletSubmittedList()) {
                 Double util = new Double(cloudlet.getUtilizationModelCpu().getUtilization(CloudSim.clock()));
-                int shownUtil = util.intValue();
                 int vmId = cloudlet.getVmId();
                 int hostId = 0;
 
@@ -720,8 +719,6 @@ public class Gui extends javax.swing.JFrame implements Observer {
         VMContainer vmPanel = new VMContainer();
         vmPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, title, javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("DejaVu Sans", 1, 14)));
         parent.add(vmPanel);
-        //parent.getLayout().addLayoutComponent(title, vmPanel);
-        //vmPanel.validate();
         return vmPanel;
     }
     
