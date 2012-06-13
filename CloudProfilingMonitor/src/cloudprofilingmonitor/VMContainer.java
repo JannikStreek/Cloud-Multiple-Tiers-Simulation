@@ -25,7 +25,10 @@ public class VMContainer extends JPanel {
         initializeLabels();
         initializeLayout();
         setSize(200, 150);
+        setAlignmentX(java.awt.Component.CENTER_ALIGNMENT);
         df = new DecimalFormat("#.##");
+        df.setMinimumFractionDigits(2);
+        df.setMinimumIntegerDigits(2);
     }
     
     public void setCpuUtil(Double value) {
