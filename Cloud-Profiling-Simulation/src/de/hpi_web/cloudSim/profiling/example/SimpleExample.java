@@ -12,7 +12,7 @@ import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
 
-import arx.ARX;
+import arx.NewArx;
 
 import de.hpi_web.cloudSim.multitier.MultiTierCloudlet;
 import de.hpi_web.cloudSim.multitier.staticTier.CloudletFactory;
@@ -60,7 +60,7 @@ public class SimpleExample {
 		dbBroker.register(observer);
 		
 		// create a map where for each broker the CPU usage is recorded
-		List<List<Double>> cpuValues = ARX.predictCPUUsage("training.csv", "running.csv");
+		List<List<Double>> cpuValues = NewArx.predictCPUUsage("training-new.csv", "running.csv");
 		HashMap<DatacenterBroker, List<Double>> layers = new HashMap<DatacenterBroker, List<Double>>();
 		int index = 1;			// we dont start at 0, this is the LoadBalancer which we do not track atm
 		for (DatacenterBroker broker : brokers) {
