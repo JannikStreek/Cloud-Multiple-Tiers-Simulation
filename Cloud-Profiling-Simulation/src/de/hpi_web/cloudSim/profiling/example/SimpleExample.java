@@ -60,7 +60,8 @@ public class SimpleExample {
 		dbBroker.register(observer);
 		
 		// create a map where for each broker the CPU usage is recorded
-		List<List<Double>> cpuValues = NewArx.predictCPUUsage("training-new.csv", "running.csv");
+		NewArx.init("training-new.csv", "running.csv");
+		List<List<Double>> cpuValues = NewArx.predictCPUUsage();
 		HashMap<DatacenterBroker, List<Double>> layers = new HashMap<DatacenterBroker, List<Double>>();
 		int index = 1;			// we dont start at 0, this is the LoadBalancer which we do not track atm
 		for (DatacenterBroker broker : brokers) {

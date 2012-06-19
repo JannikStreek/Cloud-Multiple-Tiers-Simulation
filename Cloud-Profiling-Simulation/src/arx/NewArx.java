@@ -10,11 +10,55 @@ import Jama.Matrix;
  * @author wesam.dawoud
  */
 public class NewArx {
+	
+	private static Matrix Ms;
+	private static Matrix Mv;
 
-    public static List<List<Double>> predictCPUUsage(String trainFile, String runFile) {
+	public static void init(String trainFile, String runFile) {
+    	Ms = buildMatrix(trainFile);
+    	Mv = buildMatrix(runFile);
+	}
+	
+	public static List<List<Double>> predictCPUUsage() {
+        int modeledMetricIndices[] = {21, 28, 35, 42};
+        int modeledMetricIndicesRunning[] = {18, 19, 20, 21};
+		return getUsage(0.01,modeledMetricIndices,modeledMetricIndicesRunning);
+	}
+	
+	public static List<List<Double>> predictMemoryUsage() {
+        int modeledMetricIndices[] = {22, 29, 36, 43};
+        int modeledMetricIndicesRunning[] = {18, 19, 20, 21};
+		return getUsage(1,modeledMetricIndices,modeledMetricIndicesRunning);
+	}
+	
+	public static List<List<Double>> predictDiskReadUsage() {
+        int modeledMetricIndices[] = {23, 30, 37, 44};
+        int modeledMetricIndicesRunning[] = {18, 19, 20, 21};
+		return getUsage(1,modeledMetricIndices,modeledMetricIndicesRunning);
+	}
+	
+	public static List<List<Double>> predictDiskWriteUsage() {
+        int modeledMetricIndices[] = {24, 31, 38, 45};
+        int modeledMetricIndicesRunning[] = {18, 19, 20, 21};
+		return getUsage(1,modeledMetricIndices,modeledMetricIndicesRunning);
+	}
+	
+	public static List<List<Double>> predictNetworkIncomingUsage() {
+        int modeledMetricIndices[] = {25, 32, 39, 46};
+        int modeledMetricIndicesRunning[] = {18, 19, 20, 21};
+		return getUsage(1,modeledMetricIndices,modeledMetricIndicesRunning);
+	}
+	
+	public static List<List<Double>> predictNetworkOutgoingUsage() {
+        int modeledMetricIndices[] = {26, 33, 40, 47};
+        int modeledMetricIndicesRunning[] = {18, 19, 20, 21};
+		return getUsage(1,modeledMetricIndices,modeledMetricIndicesRunning);
+	}
+	
+
+    private static List<List<Double>> getUsage(double factor,int modeledMetricIndices[],int modeledMetricIndicesRunning[]) {
         List<List<Double>> output = new ArrayList<List<Double>>();
-    	Matrix Ms = buildMatrix(trainFile);
-    	Matrix Mv = buildMatrix(runFile);
+
         
         //Select the metric that is going to be modeled
         //modeledMetricIndex determines its index in training file, at this example we use CPU utilization!
@@ -24,17 +68,16 @@ public class NewArx {
     	// 29 = webserver
     	// 36 = app
     	// 43 = db
-        int modeledMetricIndices[] = {21, 28, 35, 42};
-        int modeledMetricIndicesRunning[] = {18, 19, 20, 21};
+
         int n = 0;
 	    for (int modeledMetrixIndex : modeledMetricIndices) {
 	        int modeledOut[] = {modeledMetrixIndex};
-	        
+
 	        //Determine part of the training file to be considered
 	        //We ignore samples afterwor 100 because the system shows a saturation
 	        int numberOfSamples = 100;
 	        Matrix ys = Ms.getMatrix(0,numberOfSamples,modeledOut);
-	        ys = ys.times(0.01);
+	        ys = ys.times(factor);
 	        
 	        //List the inputs you are going to consider for modeling
 	        //Note: We have 18 type of requets in our case
@@ -45,7 +88,6 @@ public class NewArx {
 	        Matrix R = new Matrix(ys.getRowDimension(),us.getColumnDimension()+1);
 	        for(int i=0;i<R.getRowDimension()-1;i++) {
 	            R.set(i+1, 0, ys.get(i, 0));
-	            System.out.println(ys.get(i, 0));
 	        }
 	        
 	        R.setMatrix(0, us.getRowDimension()-1, 1, us.getColumnDimension(), us);
