@@ -9,6 +9,7 @@ import de.hpi_web.cloudSim.profiling.example.SimpleExample;
 import de.hpi_web.cloudSim.profiling.gui.StartAction;
 import de.hpi_web.cloudSim.profiling.observer.Observable;
 import de.hpi_web.cloudSim.profiling.observer.Observer;
+import java.io.File;
 import javax.swing.JPanel;
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.core.CloudSim;
@@ -26,7 +27,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
         start = new StartAction(this);
         initComponents();
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -91,11 +92,12 @@ public class Gui extends javax.swing.JFrame implements Observer {
         startButton = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextPane1 = new javax.swing.JTextPane();
-        jLabel5 = new javax.swing.JLabel();
+        trainingInput = new javax.swing.JTextPane();
         jScrollPane5 = new javax.swing.JScrollPane();
-        jTextPane2 = new javax.swing.JTextPane();
-        jLabel6 = new javax.swing.JLabel();
+        runningInput = new javax.swing.JTextPane();
+        fileChooser = new javax.swing.JFileChooser();
+        selectTrainingBtn = new javax.swing.JButton();
+        selectRunningBtn = new javax.swing.JButton();
 
         jLabel10.setText("MB RAM per Host:");
 
@@ -486,13 +488,41 @@ public class Gui extends javax.swing.JFrame implements Observer {
 
         jButton4.setText("Stop");
 
-        jScrollPane2.setViewportView(jTextPane1);
+        jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane2.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
-        jLabel5.setText("Training Input File");
+        trainingInput.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                trainingInputFocusGained(evt);
+            }
+        });
+        jScrollPane2.setViewportView(trainingInput);
 
-        jScrollPane5.setViewportView(jTextPane2);
+        jScrollPane5.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane5.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        jScrollPane5.setViewportView(runningInput);
 
-        jLabel6.setText("Running Input File");
+        fileChooser.setDialogTitle("Choose input file...");
+        fileChooser.setFileFilter(new CSVFileFilter());
+        fileChooser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fileChooserActionPerformed(evt);
+            }
+        });
+
+        selectTrainingBtn.setText("Select Training Input File...");
+        selectTrainingBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selectTrainingBtnActionPerformed(evt);
+            }
+        });
+
+        selectRunningBtn.setText("Select Running Input File...");
+        selectRunningBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selectRunningBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -502,44 +532,52 @@ public class Gui extends javax.swing.JFrame implements Observer {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1218, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(startButton, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(24, 24, 24)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(selectRunningBtn)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(selectTrainingBtn)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(startButton, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addContainerGap(693, Short.MAX_VALUE)
+                    .addComponent(fileChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(404, 404, 404)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 392, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(15, 15, 15)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(15, 15, 15)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                            .addComponent(jLabel5)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(startButton)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                            .addComponent(jLabel6)
-                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap())
+                        .addComponent(startButton)
+                        .addGap(6, 6, 6)
+                        .addComponent(jButton4))
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton4)
-                        .addGap(12, 12, 12))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(selectTrainingBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2))
+                        .addGap(6, 6, 6)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(selectRunningBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane5))))
+                .addContainerGap())
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addContainerGap(444, Short.MAX_VALUE)
+                    .addComponent(fileChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 9, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(42, 42, 42)))
         );
 
         pack();
@@ -574,20 +612,54 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
         class Start extends Thread {
             private Observer observer;
+            private File running, training;
             
-            Start(Observer observer) {
+            Start(Observer observer, File training, File running) {
                 super();
                 this.observer = observer;
+                this.running = running;
+                this.training = training;
             }
 
             @Override
             public void run() {
+                
                 SimpleExample.start(observer, start.getDelay(), start.getUpperThreshold(), start.getLowerThreshold());
             }
         }
-        Thread thread = new Start(this);
-        thread.start();
+        File t = new File(trainingInput.getText());
+        File r = new File(runningInput.getText());
+        if (t.isFile() && r.isFile()) {
+            Thread thread = new Start(this, t, r);
+            
+            thread.start();
+        }
+        // TODO: wrong input
     }//GEN-LAST:event_startButtonActionPerformed
+
+    private void fileChooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileChooserActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fileChooserActionPerformed
+
+    private void trainingInputFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_trainingInputFocusGained
+
+    }//GEN-LAST:event_trainingInputFocusGained
+
+    private void selectTrainingBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectTrainingBtnActionPerformed
+        int returnVal = fileChooser.showOpenDialog(this);
+        if (returnVal == javax.swing.JFileChooser.APPROVE_OPTION) {
+            File file = fileChooser.getSelectedFile();
+            trainingInput.setText(file.getAbsolutePath());
+        }
+    }//GEN-LAST:event_selectTrainingBtnActionPerformed
+
+    private void selectRunningBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectRunningBtnActionPerformed
+        int returnVal = fileChooser.showOpenDialog(this);
+        if (returnVal == javax.swing.JFileChooser.APPROVE_OPTION) {
+            File file = fileChooser.getSelectedFile();
+            runningInput.setText(file.getAbsolutePath());
+        }
+    }//GEN-LAST:event_selectRunningBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -640,6 +712,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private javax.swing.JTextField coresPerVmTextField;
     private javax.swing.JButton defaultSettingsButton;
     private javax.swing.JTextField delayTextField;
+    private javax.swing.JFileChooser fileChooser;
     private javax.swing.JButton jButton4;
     private javax.swing.JFileChooser jFileChooser1;
     private javax.swing.JLabel jLabel1;
@@ -659,8 +732,6 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
@@ -671,8 +742,6 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextPane jTextPane1;
-    private javax.swing.JTextPane jTextPane2;
     private javax.swing.JTextField maxCpuTextField;
     private javax.swing.JTextField minCpuTextField;
     private javax.swing.JTextField mipsPerCoreTextField;
@@ -681,6 +750,9 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private javax.swing.JTextField numberStartVmsTextField;
     private javax.swing.JTextField ramPerHostTextField;
     private javax.swing.JTextField ramPerVmTextField;
+    private javax.swing.JTextPane runningInput;
+    private javax.swing.JButton selectRunningBtn;
+    private javax.swing.JButton selectTrainingBtn;
     private javax.swing.JButton startButton;
     private javax.swing.JTextField storagePerHostTextField;
     private javax.swing.JTextField storagePerVmTextField;
@@ -691,6 +763,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private javax.swing.JScrollPane tier2_scrollPane;
     private javax.swing.JPanel tier3_VMPanel;
     private javax.swing.JScrollPane tier3_scrollPane;
+    private javax.swing.JTextPane trainingInput;
     // End of variables declaration//GEN-END:variables
 
     @Override
