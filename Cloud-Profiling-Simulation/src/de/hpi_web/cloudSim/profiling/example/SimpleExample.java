@@ -60,14 +60,26 @@ public class SimpleExample {
 		dbBroker.register(observer);
 		
 		// create a map where for each broker the CPU usage is recorded
-		NewArx.init("training-new.csv", "running.csv");
-		List<List<Double>> cpuValues = NewArx.predictCPUUsage();
-		HashMap<DatacenterBroker, List<Double>> layers = new HashMap<DatacenterBroker, List<Double>>();
-		int index = 1;			// we dont start at 0, this is the LoadBalancer which we do not track atm
-		for (DatacenterBroker broker : brokers) {
-			layers.put(broker, cpuValues.get(index));
-			index++;
-		}
+		NewArx.init("training.csv", "running.csv");
+//		List<List<Double>> cpuValues = NewArx.predictCPUUsage();
+//		List<List<Double>> memoryValues = NewArx.predictMemoryUsage();
+//		List<List<Double>> diskRead = NewArx.predictDiskReadUsage();
+//		List<List<Double>> diskWrite = NewArx.predictDiskWriteUsage();
+//		List<List<Double>> networkIncoming = NewArx.predictNetworkIncomingUsage();
+//		List<List<Double>> networkOutgoing = NewArx.predictNetworkOutgoingUsage();
+		
+		HashMap<DatacenterBroker, List<List<Double>>> layers = new HashMap<DatacenterBroker, List<List<Double>>>();
+		//int index = 1;			// we dont start at 0, this is the LoadBalancer which we do not track atm
+//		List utils = new ArrayList<Double>();
+//		for (DatacenterBroker broker : brokers) {
+//			
+//			//cpuValues.get(index)
+//			index++;
+//		}
+		layers.put(brokers.get(0), NewArx.predictWebTierUtil());
+		//layers.put(brokers.get(1), NewArx.predictWebTierUtil());
+		layers.put(brokers.get(1), NewArx.predictAppTierUtil());
+		layers.put(brokers.get(2), NewArx.predictDbTierUtil());
 		UtilManager utilManager = new UtilManager("UtilManager", delay, upperThreshold, lowerThreshold, layers);
 
 		//List<MultiTierCloudlet> wsCloudlets = CloudletFactory.createCloudlets(0, 10, wsBroker);

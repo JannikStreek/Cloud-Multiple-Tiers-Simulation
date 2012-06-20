@@ -34,14 +34,14 @@ public class UtilManager extends SimEntity {
 	private int i = 0;
 	private int upperThreshold;
 	private int lowerThreshold;
-	private Map<DatacenterBroker,List<Double>> layers;
+	private Map<DatacenterBroker,List<List<Double>>> layers;
     
     private double delay; //seconds
     private List<Integer> brokers;
     private List<Integer> finishedTurnBrokers;
     
 
-	public UtilManager(String name, double delay, int upperThreshold, int lowerThreshold, HashMap<DatacenterBroker, List<Double>> layers) {
+	public UtilManager(String name, double delay, int upperThreshold, int lowerThreshold, HashMap<DatacenterBroker, List<List<Double>>> layers) {
 		super(name);
 		
 		this.layers = layers;
@@ -109,7 +109,7 @@ public class UtilManager extends SimEntity {
 		
 		//for each tier
 		for (DatacenterBroker tier : layers.keySet()) {
-			List<Double> cpuUtils = layers.get(tier);
+			List<Double> cpuUtils = layers.get(tier).get(0);
 			//schedule(tier.getId(),1, UtilManager.CLOUDLET_UPDATE, cpuUtils.get(i));
 
 			// check if enough vms are present / too much vms present and handle this event => regarding threshold
