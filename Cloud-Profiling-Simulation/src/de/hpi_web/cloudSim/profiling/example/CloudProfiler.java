@@ -22,12 +22,37 @@ import de.hpi_web.cloudSim.profiling.datacenter.ProfilingBroker;
 import de.hpi_web.cloudSim.profiling.observer.Observer;
 import de.hpi_web.cloudSim.profiling.utilization.UtilManager;
 
-public class SimpleExample {
+public class CloudProfiler {
 		
-	public static void start(Observer observer, double delay, int upperThreshold, int lowerThreshold) {
+	public static void start(Observer observer, double delay, String training, String running, int upperThreshold, int lowerThreshold) {
 		
 		Log.printLine("Starting...");
 		initializeCloudSim();
+		List<ProfilingBroker> brokers = prepareThreeTierScenario(observer);
+		
+		// create a map where for each broker the CPU usage is recorded
+		NewArx.init(training, running);
+		List<List<Double>> cpuValues = NewArx.predictCPUUsage();
+		HashMap<DatacenterBroker, List<Double>> layers = new HashMap<DatacenterBroker, List<Double>>();
+		int index = 1;			// we dont start at 0, this is the LoadBalancer which we do not track atm
+		for (DatacenterBroker broker : brokers) {
+			layers.put(broker, cpuValues.get(index));
+			index++;
+		}
+		@SuppressWarnings("unused")
+		UtilManager utilManager = new UtilManager("UtilManager", delay, upperThreshold, lowerThreshold, layers);
+		
+		CloudSim.startSimulation();
+		CloudSim.stopSimulation();
+
+		//Print results
+		//List<Cloudlet> wsList = wsBroker.getCloudletReceivedList();
+		Log.printLine("Simulation finished!");
+		
+	}
+	
+	private static List<ProfilingBroker> prepareThreeTierScenario(Observer observer) {
+
 		Datacenter wsDatacenter = DatacenterBuilder.createDatacenter("WebserverCenter", 3);
 		Datacenter appDatacenter = DatacenterBuilder.createDatacenter("ApplicationCenter", 3);
 		Datacenter dbDatacenter = DatacenterBuilder.createDatacenter("DatabaseCenter", 3);
@@ -59,30 +84,9 @@ public class SimpleExample {
 		appBroker.register(observer);
 		dbBroker.register(observer);
 		
-		// create a map where for each broker the CPU usage is recorded
-		NewArx.init("training-new.csv", "running.csv");
-		List<List<Double>> cpuValues = NewArx.predictCPUUsage();
-		HashMap<DatacenterBroker, List<Double>> layers = new HashMap<DatacenterBroker, List<Double>>();
-		int index = 1;			// we dont start at 0, this is the LoadBalancer which we do not track atm
-		for (DatacenterBroker broker : brokers) {
-			layers.put(broker, cpuValues.get(index));
-			index++;
-		}
-		UtilManager utilManager = new UtilManager("UtilManager", delay, upperThreshold, lowerThreshold, layers);
-
-		//List<MultiTierCloudlet> wsCloudlets = CloudletFactory.createCloudlets(0, 10, wsBroker);
-
-		//wsBroker.submitCloudletList(wsCloudlets);
-		
-		CloudSim.startSimulation();
-		CloudSim.stopSimulation();
-
-		//Print results
-		List<Cloudlet> wsList = wsBroker.getCloudletReceivedList();
-		Log.printLine("Simulation finished!");
-		
+		return brokers;
 	}
-	
+
 	public static void initializeCloudSim() {
 		int num_user = 1; // number of cloud users
 		Calendar calendar = Calendar.getInstance();

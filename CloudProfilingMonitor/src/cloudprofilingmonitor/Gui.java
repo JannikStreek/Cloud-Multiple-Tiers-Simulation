@@ -5,10 +5,9 @@
 package cloudprofilingmonitor;
 
 import de.hpi_web.cloudSim.profiling.datacenter.ProfilingBroker;
-import de.hpi_web.cloudSim.profiling.example.SimpleExample;
-import de.hpi_web.cloudSim.profiling.gui.StartAction;
 import de.hpi_web.cloudSim.profiling.observer.Observable;
 import de.hpi_web.cloudSim.profiling.observer.Observer;
+import de.hpi_web.cloudSim.profiling.utilization.UtilizationThreshold;
 import java.io.File;
 import javax.swing.JPanel;
 import org.cloudbus.cloudsim.Cloudlet;
@@ -19,12 +18,12 @@ import org.cloudbus.cloudsim.core.CloudSim;
  * @author christoph
  */
 public class Gui extends javax.swing.JFrame implements Observer {
-    private StartAction start;
+    private Simulation simulation;
     /**
      * Creates new form Gui
      */
     public Gui() {
-        start = new StartAction(this);
+        simulation = new Simulation(this, null, null);
         initComponents();
     }
     
@@ -37,9 +36,6 @@ public class Gui extends javax.swing.JFrame implements Observer {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel10 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
-        jFileChooser1 = new javax.swing.JFileChooser();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         SimulationPanel = new javax.swing.JPanel();
         GlobalStatisticsPanel = new javax.swing.JPanel();
@@ -89,8 +85,8 @@ public class Gui extends javax.swing.JFrame implements Observer {
         minCpuTextField = new javax.swing.JTextField();
         jLabel22 = new javax.swing.JLabel();
         delayTextField = new javax.swing.JTextField();
-        startButton = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        startBtn = new javax.swing.JButton();
+        stopBtn = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         trainingInput = new javax.swing.JTextPane();
         jScrollPane5 = new javax.swing.JScrollPane();
@@ -98,10 +94,6 @@ public class Gui extends javax.swing.JFrame implements Observer {
         fileChooser = new javax.swing.JFileChooser();
         selectTrainingBtn = new javax.swing.JButton();
         selectRunningBtn = new javax.swing.JButton();
-
-        jLabel10.setText("MB RAM per Host:");
-
-        jTextField4.setText("4096");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -479,18 +471,24 @@ public class Gui extends javax.swing.JFrame implements Observer {
 
         jTabbedPane1.addTab("Settings", SettingsPanel);
 
-        startButton.setText("Start");
-        startButton.addActionListener(new java.awt.event.ActionListener() {
+        startBtn.setText("Start");
+        startBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                startButtonActionPerformed(evt);
+                startBtnActionPerformed(evt);
             }
         });
 
-        jButton4.setText("Stop");
+        stopBtn.setText("Stop");
+        stopBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                stopBtnActionPerformed(evt);
+            }
+        });
 
         jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane2.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
+        trainingInput.setText("training-new.csv");
         trainingInput.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 trainingInputFocusGained(evt);
@@ -500,6 +498,8 @@ public class Gui extends javax.swing.JFrame implements Observer {
 
         jScrollPane5.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane5.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+
+        runningInput.setText("running.csv");
         jScrollPane5.setViewportView(runningInput);
 
         fileChooser.setDialogTitle("Choose input file...");
@@ -541,11 +541,11 @@ public class Gui extends javax.swing.JFrame implements Observer {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(selectRunningBtn)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(stopBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(selectTrainingBtn)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(startButton, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(startBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -561,9 +561,9 @@ public class Gui extends javax.swing.JFrame implements Observer {
                 .addGap(15, 15, 15)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(startButton)
+                        .addComponent(startBtn)
                         .addGap(6, 6, 6)
-                        .addComponent(jButton4))
+                        .addComponent(stopBtn))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(selectTrainingBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -584,9 +584,11 @@ public class Gui extends javax.swing.JFrame implements Observer {
     }// </editor-fold>//GEN-END:initComponents
 
     private void submitSettingsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitSettingsButtonActionPerformed
-        start.setDelay(Double.parseDouble(delayTextField.getText()));
-        start.setLowerThreshold(Integer.parseInt(minCpuTextField.getText()));
-        start.setUpperThreshold(Integer.parseInt(maxCpuTextField.getText()));
+        simulation.setDelay(Double.parseDouble(delayTextField.getText()));
+        UtilizationThreshold cpuThreshold = new UtilizationThreshold(
+                Integer.parseInt(maxCpuTextField.getText()), 
+                Integer.parseInt(minCpuTextField.getText()));
+        simulation.setCpuThreshold(cpuThreshold);
     }//GEN-LAST:event_submitSettingsButtonActionPerformed
 
     private void numberOfHostsTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_numberOfHostsTextFieldActionPerformed
@@ -609,33 +611,16 @@ public class Gui extends javax.swing.JFrame implements Observer {
         // TODO add your handling code here:
     }//GEN-LAST:event_delayTextFieldActionPerformed
 
-    private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
-        class Start extends Thread {
-            private Observer observer;
-            private File running, training;
-            
-            Start(Observer observer, File training, File running) {
-                super();
-                this.observer = observer;
-                this.running = running;
-                this.training = training;
-            }
-
-            @Override
-            public void run() {
-                
-                SimpleExample.start(observer, start.getDelay(), start.getUpperThreshold(), start.getLowerThreshold());
-            }
-        }
+    private void startBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startBtnActionPerformed
         File t = new File(trainingInput.getText());
         File r = new File(runningInput.getText());
         if (t.isFile() && r.isFile()) {
-            Thread thread = new Start(this, t, r);
-            
-            thread.start();
+            simulation.setTraining(t);
+            simulation.setRunning(r);
+            simulation.start();
         }
         // TODO: wrong input
-    }//GEN-LAST:event_startButtonActionPerformed
+    }//GEN-LAST:event_startBtnActionPerformed
 
     private void fileChooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileChooserActionPerformed
         // TODO add your handling code here:
@@ -660,6 +645,10 @@ public class Gui extends javax.swing.JFrame implements Observer {
             runningInput.setText(file.getAbsolutePath());
         }
     }//GEN-LAST:event_selectRunningBtnActionPerformed
+
+    private void stopBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopBtnActionPerformed
+        simulation.stopped(true);
+    }//GEN-LAST:event_stopBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -713,10 +702,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private javax.swing.JButton defaultSettingsButton;
     private javax.swing.JTextField delayTextField;
     private javax.swing.JFileChooser fileChooser;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JFileChooser jFileChooser1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
@@ -741,7 +727,6 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField maxCpuTextField;
     private javax.swing.JTextField minCpuTextField;
     private javax.swing.JTextField mipsPerCoreTextField;
@@ -753,7 +738,8 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private javax.swing.JTextPane runningInput;
     private javax.swing.JButton selectRunningBtn;
     private javax.swing.JButton selectTrainingBtn;
-    private javax.swing.JButton startButton;
+    private javax.swing.JButton startBtn;
+    private javax.swing.JButton stopBtn;
     private javax.swing.JTextField storagePerHostTextField;
     private javax.swing.JTextField storagePerVmTextField;
     private javax.swing.JButton submitSettingsButton;
@@ -783,8 +769,8 @@ public class Gui extends javax.swing.JFrame implements Observer {
 
                 hostId = broker.getVmForVmId(vmId).getHost().getId();
                 VMContainer c = createVmContainer(area, "VM: " + vmId + " at host " + hostId);
-
-                c.setCpuUtil(util);
+                
+                c.setCpuUtil(util, simulation.getCpuThreshold());
         }
         area.validate();
         //area.repaint();

@@ -4,6 +4,8 @@
  */
 package cloudprofilingmonitor;
 
+import de.hpi_web.cloudSim.profiling.utilization.UtilizationThreshold;
+import java.awt.Color;
 import java.text.DecimalFormat;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -31,8 +33,10 @@ public class VMContainer extends JPanel {
         df.setMinimumIntegerDigits(2);
     }
     
-    public void setCpuUtil(Double value) {
+    public void setCpuUtil(Double value, UtilizationThreshold threshold) {
+        Color fgColor = getColorForValue(value, threshold.getUpper(), threshold.getLower());
         cpuUtilValue.setText(df.format(value) + "%");
+        cpuUtilValue.setForeground(fgColor);
     }
     public void setMemUtil(Double value) {
         memUtilValue.setText(value.toString() + "%");
@@ -41,6 +45,22 @@ public class VMContainer extends JPanel {
         bwUtilValue.setText(value.toString() + "%");
     }
     
+    private Color getColorForValue(double value, double upper, double lower) {
+        // blue = very close to or below lower threshold
+        if (value <= lower*1.05)
+            return Color.BLUE;
+        // green = close to lower threshold
+        if (value <= lower*1.10)
+            return Color.GREEN;
+        // black = normal
+        if (value < upper*0.90)
+            return Color.BLACK;
+        // orange = close to upper threshold
+        if (value < upper*0.95)
+            return Color.ORANGE;
+        // red = very close to or above upper threshold
+        return Color.RED;
+    }
     private void initializeLabels() {
         cpuUtilText = new javax.swing.JLabel();
         memUtilText = new javax.swing.JLabel();

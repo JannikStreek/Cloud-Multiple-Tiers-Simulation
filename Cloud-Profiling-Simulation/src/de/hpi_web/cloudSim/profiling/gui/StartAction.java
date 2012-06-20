@@ -3,7 +3,7 @@ package de.hpi_web.cloudSim.profiling.gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import de.hpi_web.cloudSim.profiling.example.SimpleExample;
+import de.hpi_web.cloudSim.profiling.example.CloudProfiler;
 import de.hpi_web.cloudSim.profiling.observer.Observer;
 
 public class StartAction implements ActionListener{
@@ -25,7 +25,7 @@ public class StartAction implements ActionListener{
 			
 			@Override
 			public void run() {
-				SimpleExample.start(observer, delay, upperThreshold, lowerThreshold);
+				CloudProfiler.start(observer, delay, "training-new.csv", "running.csv", upperThreshold, lowerThreshold);
 			}
 		}
 		
