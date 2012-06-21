@@ -206,7 +206,7 @@ public class UtilManager extends SimEntity {
 				schedule(tier.getId(), 1, CloudSimTags.VM_DESTROY);
 			}
 			//update utilization of all cloudlets
-			UtilWrapper wrapper = new UtilWrapper(cpuUtils.get(i), memUtils.get(i), diskReadUtils.get(i),diskWriteUtils.get(i),bwOutUtils.get(i),bwInUtils.get(i));
+			UtilWrapper wrapper = new UtilWrapper(cpuUtils.get(i), memUtils.get(i), diskReadUtils.get(i),diskWriteUtils.get(i),bwInUtils.get(i),bwOutUtils.get(i));
 			
 			schedule(tier.getId(), 2, UtilManager.CLOUDLET_UPDATE, wrapper);
 		}

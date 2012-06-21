@@ -188,7 +188,7 @@ public class NewArx {
             
             yk_minus_1 = yk.get(0, 0);
             
-            if(1.0 > yk_minus_1) {
+            if(0.0 > yk_minus_1) {
             	yk_minus_1 = 0.0;
             }
             result.add(yk_minus_1);
