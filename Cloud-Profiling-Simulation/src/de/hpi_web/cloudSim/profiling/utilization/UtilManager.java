@@ -34,8 +34,25 @@ public class UtilManager extends SimEntity {
 	public static final int UTIL_SIM_FINISHED = 7003;
 	
 	private int i = 0;
-	private int upperThreshold;
-	private int lowerThreshold;
+	
+	private int upperCpuThreshold;
+	private int lowerCpuThreshold;
+	
+	private int upperMemThreshold;
+	private int lowerMemThreshold;
+	
+	private int upperDiskReadThreshold;
+	private int lowerDiskReadThreshold;
+	
+	private int upperDiskWriteThreshold;
+	private int lowerDiskWriteThreshold;
+	
+	private int upperBwInThreshold;
+	private int lowerBwInThreshold;
+	
+	private int upperBwOutThreshold;
+	private int lowerBwOutThreshold;
+	
 	private Map<DatacenterBroker,List<List<Double>>> layers;
     
     private double delay; //seconds
@@ -43,7 +60,14 @@ public class UtilManager extends SimEntity {
     private List<Integer> finishedTurnBrokers;
     
 
-	public UtilManager(String name, double delay, int upperThreshold, int lowerThreshold, HashMap<DatacenterBroker, List<List<Double>>> layers) {
+	public UtilManager(String name, double delay,
+			int upperCpuThreshold, int lowerCpuThreshold,
+			int upperMemThreshold, int lowerMemThreshold,
+			int upperDiskReadThreshold, int lowerDiskReadThreshold,
+			int upperDiskWriteThreshold, int lowerDiskWriteThreshold,
+			int upperBwInThreshold, int lowerBwInThreshold,
+			int upperBwOutThreshold, int lowerBwOutThreshold,
+			HashMap<DatacenterBroker, List<List<Double>>> layers) {
 		super(name);
 		
 		this.layers = layers;
@@ -54,8 +78,25 @@ public class UtilManager extends SimEntity {
 			brokers.add(d.getId());
 		
 		this.delay = delay;
-		this.upperThreshold = upperThreshold;
-		this.lowerThreshold = lowerThreshold;
+		
+		this.upperCpuThreshold = upperCpuThreshold;
+		this.lowerCpuThreshold = lowerCpuThreshold;
+		
+		this.upperMemThreshold = upperMemThreshold;
+		this.lowerMemThreshold = lowerMemThreshold;
+		
+		this.upperDiskReadThreshold = upperDiskReadThreshold;
+		this.lowerDiskReadThreshold = lowerDiskReadThreshold;
+		
+		this.upperDiskWriteThreshold = upperDiskWriteThreshold;
+		this.lowerDiskWriteThreshold = lowerDiskWriteThreshold;
+		
+		this.upperBwInThreshold = upperBwInThreshold;
+		this.lowerBwInThreshold = lowerBwInThreshold;
+		
+		this.upperBwOutThreshold = upperBwOutThreshold;
+		this.lowerBwOutThreshold = lowerBwOutThreshold;
+		
 		
 		for (DatacenterBroker tier : layers.keySet()) {
 			System.out.println("Broker values: "+ layers.get(tier).get(0).size()); 
@@ -123,6 +164,10 @@ public class UtilManager extends SimEntity {
 			//6 = network out
 			List<Double> cpuUtils = layers.get(tier).get(0);
 			List<Double> memUtils = layers.get(tier).get(1);
+			List<Double> diskReadUtils = layers.get(tier).get(2);
+			List<Double> diskWriteUtils = layers.get(tier).get(3);
+			List<Double> bwInUtils = layers.get(tier).get(4);
+			List<Double> bwOutUtils = layers.get(tier).get(5);
 			//schedule(tier.getId(),1, UtilManager.CLOUDLET_UPDATE, cpuUtils.get(i));
 
 			// check if enough vms are present / too much vms present and handle this event => regarding threshold
@@ -130,24 +175,38 @@ public class UtilManager extends SimEntity {
 			Log.printLine(CloudSim.clock() + ": " + getName() + ": Vms running: " + runningVms);
 			double cpuUtilizationPerVm = (cpuUtils.get(i)/(double)runningVms);
 			double memUtilizationPerVm = (memUtils.get(i)/(double)runningVms);
+			double diskReadUtilizationPerVm = (diskReadUtils.get(i)/(double)runningVms);
+			double diskWriteUtilizationPerVm = (diskWriteUtils.get(i)/(double)runningVms);
+			double bwInUtilizationPerVm = (bwInUtils.get(i)/(double)runningVms);
+			double bwOutUtilizationPerVm = (bwOutUtils.get(i)/(double)runningVms);
 			Log.printLine("Current CPU Util: " + cpuUtilizationPerVm);
 			Log.printLine("Running Vms: " + runningVms);
 			
-			if ((cpuUtilizationPerVm > this.upperThreshold && runningVms > 0) ||
-				(memUtilizationPerVm > 200000.0 && runningVms > 0)) {
+			if (runningVms > 0 &&
+					((cpuUtilizationPerVm > this.upperCpuThreshold) ||
+					(memUtilizationPerVm > this.upperMemThreshold) ||
+					(diskReadUtilizationPerVm > this.upperDiskReadThreshold) ||
+					(diskWriteUtilizationPerVm > this.upperDiskWriteThreshold) ||
+					(bwInUtilizationPerVm > this.upperBwInThreshold) ||
+					(bwOutUtilizationPerVm > this.upperBwOutThreshold))) {
 				// create new vm
 				Log.printLine("Too few Vms... creating");
 				Vm v = VmFactory.createVm(tier.getId());
 				schedule(tier.getId(), 1, CloudSimTags.VM_CREATE, v);
 			}
-			else if ((cpuUtilizationPerVm < this.lowerThreshold && runningVms > 1) &&
-					  (memUtilizationPerVm < 100000.0 && runningVms > 1)) {
+			else if (runningVms > 1 &&
+						(cpuUtilizationPerVm < this.lowerCpuThreshold) &&
+						(memUtilizationPerVm < this.lowerMemThreshold) &&
+						(diskReadUtilizationPerVm < this.lowerDiskReadThreshold) &&
+						(diskWriteUtilizationPerVm < this.lowerDiskWriteThreshold) &&
+						(bwInUtilizationPerVm < this.lowerBwInThreshold) &&
+						(bwOutUtilizationPerVm < this.lowerBwOutThreshold)) {
 				// destroy vm
 				Log.printLine("Too many Vms... destroying");
 				schedule(tier.getId(), 1, CloudSimTags.VM_DESTROY);
 			}
 			//update utilization of all cloudlets
-			UtilWrapper wrapper = new UtilWrapper(cpuUtils.get(i), memUtils.get(i), 0.0,0.0,0.0,0.0);
+			UtilWrapper wrapper = new UtilWrapper(cpuUtils.get(i), memUtils.get(i), diskReadUtils.get(i),diskWriteUtils.get(i),bwOutUtils.get(i),bwInUtils.get(i));
 			
 			schedule(tier.getId(), 2, UtilManager.CLOUDLET_UPDATE, wrapper);
 		}

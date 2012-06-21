@@ -143,13 +143,25 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 		}
 		
 		for (Cloudlet cloudlet : getCloudletSubmittedList()) {
-			cloudlet.setUtilizationModelCpu(new UtilizationModelFixed(wrapper.getCpuUtil()/(double)cloudletsSubmitted));
-			//Vm vm = this.getVmForVmId(cloudlet.getVmId());
-			cloudlet.setUtilizationModelRam(new UtilizationModelFixed(wrapper.getMemUtil()/(double)cloudletsSubmitted));
+			double cloudletsSubmittedDouble = (double)cloudletsSubmitted;
+			
+			ProfilingCloudlet pcloudlet = (ProfilingCloudlet) cloudlet;
+			pcloudlet.setUtilizationModelCpu(new UtilizationModelFixed(wrapper.getCpuUtil()/cloudletsSubmittedDouble));
+			pcloudlet.setUtilizationModelRam(new UtilizationModelFixed(wrapper.getMemUtil()/cloudletsSubmittedDouble));
+			pcloudlet.setUtilizationModelDiskRead(new UtilizationModelFixed(wrapper.getDiskReadUtil()/cloudletsSubmittedDouble));
+			pcloudlet.setUtilizationModelDiskWrite(new UtilizationModelFixed(wrapper.getDiskWriteUtil()/cloudletsSubmittedDouble));
+			pcloudlet.setUtilizationModelBw(new UtilizationModelFixed(wrapper.getBwInUtil()/cloudletsSubmittedDouble));
+			pcloudlet.setUtilizationModelBwOut(new UtilizationModelFixed(wrapper.getBwOutUtil()/cloudletsSubmittedDouble));
 		}
 		
 		for(Cloudlet cloudlet : cloudletSubmittedList) {
-			Log.printLine(CloudSim.clock() + ": " + getName() + " : at VM" + cloudlet.getVmId() + " : cloudlet at CPU util  "+ cloudlet.getUtilizationOfCpu(CloudSim.clock()));
+			ProfilingCloudlet pcloudlet = (ProfilingCloudlet) cloudlet;
+			Log.printLine(CloudSim.clock() + ": " + getName() + " : at VM" + cloudlet.getVmId() + " : cloudlet at CPU util  "+ pcloudlet.getUtilizationOfCpu(CloudSim.clock()));
+			Log.printLine(CloudSim.clock() + ": " + getName() + " : at VM" + cloudlet.getVmId() + " : cloudlet at Mem util  "+ pcloudlet.getUtilizationOfRam(CloudSim.clock()));
+			Log.printLine(CloudSim.clock() + ": " + getName() + " : at VM" + cloudlet.getVmId() + " : cloudlet at Disk Read util  "+ pcloudlet.getUtilizationOfDiskRead(CloudSim.clock()));
+			Log.printLine(CloudSim.clock() + ": " + getName() + " : at VM" + cloudlet.getVmId() + " : cloudlet at Disk Write util  "+ pcloudlet.getUtilizationOfDiskWrite(CloudSim.clock()));
+			Log.printLine(CloudSim.clock() + ": " + getName() + " : at VM" + cloudlet.getVmId() + " : cloudlet at Bw In util  "+ pcloudlet.getUtilizationOfBw(CloudSim.clock()));
+			Log.printLine(CloudSim.clock() + ": " + getName() + " : at VM" + cloudlet.getVmId() + " : cloudlet at Bw Out util  "+ pcloudlet.getUtilizationOfBwOut(CloudSim.clock()));
 		}
 		
 		//change gui
@@ -215,15 +227,25 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 	  int id = 0;
 	  int pesNumber = 1;
 	  long length = 100000000; //TODO calc it
-	  double cpuUtilizationPerVm = (wrapper.getCpuUtil()/(double)getVmsCreatedList().size());
-	  double memUtilizationPerVm = (wrapper.getMemUtil()/(double)getVmsCreatedList().size());
+	  double createdVms = (double)getVmsCreatedList().size();
+	  
+	  double cpuUtilizationPerVm = (wrapper.getCpuUtil()/createdVms);
+	  double memUtilizationPerVm = (wrapper.getMemUtil()/createdVms);
+	  double diskReadUtilizationPerVm = (wrapper.getDiskReadUtil()/createdVms);
+	  double diskWriteUtilizationPerVm = (wrapper.getDiskWriteUtil()/createdVms);
+	  double bwInUtilizationPerVm = (wrapper.getBwInUtil()/createdVms);
+	  double bwOutUtilizationPerVm = (wrapper.getBwOutUtil()/createdVms);
 	  //double cpuUtilizationPerVm = (wrapper.getCpuUtil()/(double)getVmsCreatedList().size());// util = 1 means 100% utilization
 
 	  long fileSize = 300;
 	  long outputSize = 300;
 	  UtilizationModel cpuUtilizationModel = new UtilizationModelFixed(cpuUtilizationPerVm);
 	  UtilizationModel memUtilizationModel = new UtilizationModelFixed(memUtilizationPerVm);
-	  Cloudlet cloudlet = new Cloudlet(id, length, pesNumber, fileSize, outputSize, cpuUtilizationModel, memUtilizationModel, memUtilizationModel);
+	  UtilizationModel diskReadUtilizationModel = new UtilizationModelFixed(diskReadUtilizationPerVm);
+	  UtilizationModel diskWriteUtilizationModel = new UtilizationModelFixed(diskWriteUtilizationPerVm);
+	  UtilizationModel bwInUtilizationModel = new UtilizationModelFixed(bwInUtilizationPerVm);
+	  UtilizationModel bwOutUtilizationModel = new UtilizationModelFixed(bwOutUtilizationPerVm);
+	  Cloudlet cloudlet = new ProfilingCloudlet(id, length, pesNumber, fileSize, outputSize, cpuUtilizationModel, memUtilizationModel, diskReadUtilizationModel,diskWriteUtilizationModel,bwInUtilizationModel,bwOutUtilizationModel);
 	  cloudlet.setUserId(getId());
 	  return cloudlet;
 	}

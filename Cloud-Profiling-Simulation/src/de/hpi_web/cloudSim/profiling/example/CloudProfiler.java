@@ -41,7 +41,7 @@ public class CloudProfiler {
 		//wsBroker.submitCloudletList(wsCloudlets);
 
 		@SuppressWarnings("unused")
-		UtilManager utilManager = new UtilManager("UtilManager", delay, upperThreshold, lowerThreshold, layers);
+		UtilManager utilManager = new UtilManager("UtilManager", delay, upperThreshold, lowerThreshold, 10000,5000,10000,5000,10000,5000,10000,5000,10000,5000, layers);
 		
 		CloudSim.startSimulation();
 		CloudSim.stopSimulation();

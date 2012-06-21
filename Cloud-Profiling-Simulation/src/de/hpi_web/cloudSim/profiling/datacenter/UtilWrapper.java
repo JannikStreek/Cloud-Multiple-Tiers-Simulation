@@ -5,12 +5,8 @@ public class UtilWrapper {
 	private double memUtil;
 	private double diskReadUtil;
 	private double diskWriteUtil;
-	private double networkInUtil;
-	private double networkOutUtil;
-	
-	
-	
-	
+	private double bwInUtil;
+	private double bwOutUtil;
 	
 	public UtilWrapper(double cpuUtil, double memUtil, double diskReadUtil,
 			double diskWriteUtil, double networkInUtil, double networkOutUtil) {
@@ -18,8 +14,8 @@ public class UtilWrapper {
 		this.memUtil = memUtil;
 		this.diskReadUtil = diskReadUtil;
 		this.diskWriteUtil = diskWriteUtil;
-		this.networkInUtil = networkInUtil;
-		this.networkOutUtil = networkOutUtil;
+		this.bwInUtil = networkInUtil;
+		this.bwOutUtil = networkOutUtil;
 	}
 	public double getCpuUtil() {
 		return cpuUtil;
@@ -45,17 +41,17 @@ public class UtilWrapper {
 	public void setDiskWriteUtil(double diskWriteUtil) {
 		this.diskWriteUtil = diskWriteUtil;
 	}
-	public double getNetworkInUtil() {
-		return networkInUtil;
+	public double getBwInUtil() {
+		return bwInUtil;
 	}
-	public void setNetworkInUtil(double networkInUtil) {
-		this.networkInUtil = networkInUtil;
+	public void setBwInUtil(double bwInUtil) {
+		this.bwInUtil = bwInUtil;
 	}
-	public double getNetworkOutUtil() {
-		return networkOutUtil;
+	public double getBwOutUtil() {
+		return bwOutUtil;
 	}
-	public void setNetworkOutUtil(double networkOutUtil) {
-		this.networkOutUtil = networkOutUtil;
+	public void setBwOutUtil(double bwOutUtil) {
+		this.bwOutUtil = bwOutUtil;
 	}
 
 }
