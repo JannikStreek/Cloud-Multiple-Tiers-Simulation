@@ -5,10 +5,10 @@
 package cloudprofilingmonitor;
 
 import de.hpi_web.cloudSim.profiling.datacenter.ProfilingBroker;
-import de.hpi_web.cloudSim.profiling.example.SimpleExample;
-import de.hpi_web.cloudSim.profiling.gui.StartAction;
 import de.hpi_web.cloudSim.profiling.observer.Observable;
 import de.hpi_web.cloudSim.profiling.observer.Observer;
+import de.hpi_web.cloudSim.profiling.utilization.UtilizationThreshold;
+import java.io.File;
 import javax.swing.JPanel;
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.core.CloudSim;
@@ -18,15 +18,15 @@ import org.cloudbus.cloudsim.core.CloudSim;
  * @author christoph
  */
 public class Gui extends javax.swing.JFrame implements Observer {
-    private StartAction start;
+    private Simulation simulation;
     /**
      * Creates new form Gui
      */
     public Gui() {
-        start = new StartAction(this);
+        simulation = new Simulation(this, null, null);
         initComponents();
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -36,9 +36,6 @@ public class Gui extends javax.swing.JFrame implements Observer {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel10 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
-        jFileChooser1 = new javax.swing.JFileChooser();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         SimulationPanel = new javax.swing.JPanel();
         GlobalStatisticsPanel = new javax.swing.JPanel();
@@ -88,18 +85,15 @@ public class Gui extends javax.swing.JFrame implements Observer {
         minCpuTextField = new javax.swing.JTextField();
         jLabel22 = new javax.swing.JLabel();
         delayTextField = new javax.swing.JTextField();
-        startButton = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        startBtn = new javax.swing.JButton();
+        stopBtn = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextPane1 = new javax.swing.JTextPane();
-        jLabel5 = new javax.swing.JLabel();
+        trainingInput = new javax.swing.JTextPane();
         jScrollPane5 = new javax.swing.JScrollPane();
-        jTextPane2 = new javax.swing.JTextPane();
-        jLabel6 = new javax.swing.JLabel();
-
-        jLabel10.setText("MB RAM per Host:");
-
-        jTextField4.setText("4096");
+        runningInput = new javax.swing.JTextPane();
+        fileChooser = new javax.swing.JFileChooser();
+        selectTrainingBtn = new javax.swing.JButton();
+        selectRunningBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -477,22 +471,58 @@ public class Gui extends javax.swing.JFrame implements Observer {
 
         jTabbedPane1.addTab("Settings", SettingsPanel);
 
-        startButton.setText("Start");
-        startButton.addActionListener(new java.awt.event.ActionListener() {
+        startBtn.setText("Start");
+        startBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                startButtonActionPerformed(evt);
+                startBtnActionPerformed(evt);
             }
         });
 
-        jButton4.setText("Stop");
+        stopBtn.setText("Stop");
+        stopBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                stopBtnActionPerformed(evt);
+            }
+        });
 
-        jScrollPane2.setViewportView(jTextPane1);
+        jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane2.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
-        jLabel5.setText("Training Input File");
+        trainingInput.setText("training-new.csv");
+        trainingInput.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                trainingInputFocusGained(evt);
+            }
+        });
+        jScrollPane2.setViewportView(trainingInput);
 
-        jScrollPane5.setViewportView(jTextPane2);
+        jScrollPane5.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane5.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
-        jLabel6.setText("Running Input File");
+        runningInput.setText("running.csv");
+        jScrollPane5.setViewportView(runningInput);
+
+        fileChooser.setDialogTitle("Choose input file...");
+        fileChooser.setFileFilter(new CSVFileFilter());
+        fileChooser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fileChooserActionPerformed(evt);
+            }
+        });
+
+        selectTrainingBtn.setText("Select Training Input File...");
+        selectTrainingBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selectTrainingBtnActionPerformed(evt);
+            }
+        });
+
+        selectRunningBtn.setText("Select Running Input File...");
+        selectRunningBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selectRunningBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -502,53 +532,63 @@ public class Gui extends javax.swing.JFrame implements Observer {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1218, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(startButton, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(24, 24, 24)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(selectRunningBtn)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(stopBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(selectTrainingBtn)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(startBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addContainerGap(693, Short.MAX_VALUE)
+                    .addComponent(fileChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(404, 404, 404)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 392, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(15, 15, 15)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(15, 15, 15)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                            .addComponent(jLabel5)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(startButton)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                            .addComponent(jLabel6)
-                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap())
+                        .addComponent(startBtn)
+                        .addGap(6, 6, 6)
+                        .addComponent(stopBtn))
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton4)
-                        .addGap(12, 12, 12))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(selectTrainingBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2))
+                        .addGap(6, 6, 6)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(selectRunningBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane5))))
+                .addContainerGap())
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addContainerGap(444, Short.MAX_VALUE)
+                    .addComponent(fileChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 9, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(42, 42, 42)))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void submitSettingsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitSettingsButtonActionPerformed
-        start.setDelay(Double.parseDouble(delayTextField.getText()));
-        start.setLowerThreshold(Integer.parseInt(minCpuTextField.getText()));
-        start.setUpperThreshold(Integer.parseInt(maxCpuTextField.getText()));
+        simulation.setDelay(Double.parseDouble(delayTextField.getText()));
+        UtilizationThreshold cpuThreshold = new UtilizationThreshold(
+                Integer.parseInt(maxCpuTextField.getText()), 
+                Integer.parseInt(minCpuTextField.getText()));
+        simulation.setCpuThreshold(cpuThreshold);
     }//GEN-LAST:event_submitSettingsButtonActionPerformed
 
     private void numberOfHostsTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_numberOfHostsTextFieldActionPerformed
@@ -571,23 +611,44 @@ public class Gui extends javax.swing.JFrame implements Observer {
         // TODO add your handling code here:
     }//GEN-LAST:event_delayTextFieldActionPerformed
 
-    private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
-        class Start extends Thread {
-            private Observer observer;
-            
-            Start(Observer observer) {
-                super();
-                this.observer = observer;
-            }
-
-            @Override
-            public void run() {
-                SimpleExample.start(observer, start.getDelay(), start.getUpperThreshold(), start.getLowerThreshold());
-            }
+    private void startBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startBtnActionPerformed
+        File t = new File(trainingInput.getText());
+        File r = new File(runningInput.getText());
+        if (t.isFile() && r.isFile()) {
+            simulation.setTraining(t);
+            simulation.setRunning(r);
+            simulation.start();
         }
-        Thread thread = new Start(this);
-        thread.start();
-    }//GEN-LAST:event_startButtonActionPerformed
+        // TODO: wrong input
+    }//GEN-LAST:event_startBtnActionPerformed
+
+    private void fileChooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileChooserActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fileChooserActionPerformed
+
+    private void trainingInputFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_trainingInputFocusGained
+
+    }//GEN-LAST:event_trainingInputFocusGained
+
+    private void selectTrainingBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectTrainingBtnActionPerformed
+        int returnVal = fileChooser.showOpenDialog(this);
+        if (returnVal == javax.swing.JFileChooser.APPROVE_OPTION) {
+            File file = fileChooser.getSelectedFile();
+            trainingInput.setText(file.getAbsolutePath());
+        }
+    }//GEN-LAST:event_selectTrainingBtnActionPerformed
+
+    private void selectRunningBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectRunningBtnActionPerformed
+        int returnVal = fileChooser.showOpenDialog(this);
+        if (returnVal == javax.swing.JFileChooser.APPROVE_OPTION) {
+            File file = fileChooser.getSelectedFile();
+            runningInput.setText(file.getAbsolutePath());
+        }
+    }//GEN-LAST:event_selectRunningBtnActionPerformed
+
+    private void stopBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopBtnActionPerformed
+        simulation.stopped(true);
+    }//GEN-LAST:event_stopBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -640,10 +701,8 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private javax.swing.JTextField coresPerVmTextField;
     private javax.swing.JButton defaultSettingsButton;
     private javax.swing.JTextField delayTextField;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JFileChooser jFileChooser1;
+    private javax.swing.JFileChooser fileChooser;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
@@ -659,8 +718,6 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
@@ -670,9 +727,6 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextPane jTextPane1;
-    private javax.swing.JTextPane jTextPane2;
     private javax.swing.JTextField maxCpuTextField;
     private javax.swing.JTextField minCpuTextField;
     private javax.swing.JTextField mipsPerCoreTextField;
@@ -681,7 +735,11 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private javax.swing.JTextField numberStartVmsTextField;
     private javax.swing.JTextField ramPerHostTextField;
     private javax.swing.JTextField ramPerVmTextField;
-    private javax.swing.JButton startButton;
+    private javax.swing.JTextPane runningInput;
+    private javax.swing.JButton selectRunningBtn;
+    private javax.swing.JButton selectTrainingBtn;
+    private javax.swing.JButton startBtn;
+    private javax.swing.JButton stopBtn;
     private javax.swing.JTextField storagePerHostTextField;
     private javax.swing.JTextField storagePerVmTextField;
     private javax.swing.JButton submitSettingsButton;
@@ -691,6 +749,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private javax.swing.JScrollPane tier2_scrollPane;
     private javax.swing.JPanel tier3_VMPanel;
     private javax.swing.JScrollPane tier3_scrollPane;
+    private javax.swing.JTextPane trainingInput;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -710,8 +769,8 @@ public class Gui extends javax.swing.JFrame implements Observer {
 
                 hostId = broker.getVmForVmId(vmId).getHost().getId();
                 VMContainer c = createVmContainer(area, "VM: " + vmId + " at host " + hostId);
-
-                c.setCpuUtil(util);
+                
+                c.setCpuUtil(util, simulation.getCpuThreshold());
         }
         area.validate();
         //area.repaint();

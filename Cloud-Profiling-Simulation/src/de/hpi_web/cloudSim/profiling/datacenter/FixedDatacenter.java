@@ -12,11 +12,16 @@ import org.cloudbus.cloudsim.VmAllocationPolicy;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.SimEvent;
+import de.hpi_web.cloudSim.profiling.builders.DatacenterBuilder;
 
 import de.hpi_web.cloudSim.profiling.utilization.UtilManager;
 
 public class FixedDatacenter extends Datacenter{
 
+	public FixedDatacenter(de.hpi_web.cloudSim.profiling.builders.DatacenterBuilder builder) throws Exception {
+		super(builder.name, builder.characteristics, builder.vmAllocationPolicy, builder.storageList, builder.lastProcessTime);
+	}
+	
 	public FixedDatacenter(String name,
 			DatacenterCharacteristics characteristics,
 			VmAllocationPolicy vmAllocationPolicy, List<Storage> storageList,
