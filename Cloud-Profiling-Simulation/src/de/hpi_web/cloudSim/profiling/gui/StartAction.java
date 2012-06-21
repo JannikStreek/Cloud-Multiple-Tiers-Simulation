@@ -25,7 +25,7 @@ public class StartAction implements ActionListener{
 			
 			@Override
 			public void run() {
-				CloudProfiler.start(observer, delay, "training-new.csv", "running.csv", upperThreshold, lowerThreshold);
+				CloudProfiler.start(observer, delay, "training.csv", "running.csv", upperThreshold, lowerThreshold);
 			}
 		}
 		

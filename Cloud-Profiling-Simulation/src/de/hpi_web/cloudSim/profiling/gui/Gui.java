@@ -41,8 +41,7 @@ public class Gui implements Observer {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-		
-		
+
 	}
 
 	/**
