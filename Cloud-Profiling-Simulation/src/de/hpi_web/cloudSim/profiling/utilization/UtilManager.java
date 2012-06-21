@@ -21,8 +21,10 @@ import org.cloudbus.cloudsim.core.SimEntity;
 import org.cloudbus.cloudsim.core.SimEvent;
 
 import de.hpi_web.cloudSim.multitier.staticTier.VmFactory;
+import de.hpi_web.cloudSim.profiling.datacenter.UtilWrapper;
 
 import arx.ARX;
+import arx.NewArx;
 
 public class UtilManager extends SimEntity {
 	
@@ -54,6 +56,10 @@ public class UtilManager extends SimEntity {
 		this.delay = delay;
 		this.upperThreshold = upperThreshold;
 		this.lowerThreshold = lowerThreshold;
+		
+		for (DatacenterBroker tier : layers.keySet()) {
+			System.out.println("Broker values: "+ layers.get(tier).get(0).size()); 
+		}
 
 	}
 	
@@ -93,10 +99,10 @@ public class UtilManager extends SimEntity {
 					e.printStackTrace();
 				}
 				Log.printLine(CloudSim.clock() + ": " + getName() + ": Completed Round ");
-				int numberOfValues = layers.values().iterator().next().size();
-				if(i < numberOfValues) {
+				if(i < NewArx.RUNNING_VALUES) {
 					schedule(getId(), 3, RUN);
 				} else {
+					//TODO check if it makes a difference if we end each layer here instead of all
 					for (DatacenterBroker tier : layers.keySet() )
 						schedule(tier.getId(), 3, UTIL_SIM_FINISHED);
 				}
@@ -109,29 +115,41 @@ public class UtilManager extends SimEntity {
 		
 		//for each tier
 		for (DatacenterBroker tier : layers.keySet()) {
+			//1 = cpu
+			//2 = memory
+			//3 = disk read
+			//4 = disk write
+			//5 = network in
+			//6 = network out
 			List<Double> cpuUtils = layers.get(tier).get(0);
+			List<Double> memUtils = layers.get(tier).get(1);
 			//schedule(tier.getId(),1, UtilManager.CLOUDLET_UPDATE, cpuUtils.get(i));
 
 			// check if enough vms are present / too much vms present and handle this event => regarding threshold
 			int runningVms = tier.getCloudletSubmittedList().size();
 			Log.printLine(CloudSim.clock() + ": " + getName() + ": Vms running: " + runningVms);
-			double utilizationPerVm = (cpuUtils.get(i)/(double)runningVms);
-			Log.printLine("Current Util: " + utilizationPerVm);
+			double cpuUtilizationPerVm = (cpuUtils.get(i)/(double)runningVms);
+			double memUtilizationPerVm = (memUtils.get(i)/(double)runningVms);
+			Log.printLine("Current CPU Util: " + cpuUtilizationPerVm);
 			Log.printLine("Running Vms: " + runningVms);
 			
-			if (utilizationPerVm > this.upperThreshold && runningVms > 0) {
+			if ((cpuUtilizationPerVm > this.upperThreshold && runningVms > 0) ||
+				(memUtilizationPerVm > 200000.0 && runningVms > 0)) {
 				// create new vm
 				Log.printLine("Too few Vms... creating");
 				Vm v = VmFactory.createVm(tier.getId());
 				schedule(tier.getId(), 1, CloudSimTags.VM_CREATE, v);
 			}
-			else if (utilizationPerVm < this.lowerThreshold && runningVms > 1) {
+			else if ((cpuUtilizationPerVm < this.lowerThreshold && runningVms > 1) &&
+					  (memUtilizationPerVm < 100000.0 && runningVms > 1)) {
 				// destroy vm
 				Log.printLine("Too many Vms... destroying");
 				schedule(tier.getId(), 1, CloudSimTags.VM_DESTROY);
 			}
 			//update utilization of all cloudlets
-			schedule(tier.getId(), 2, UtilManager.CLOUDLET_UPDATE, cpuUtils.get(i));
+			UtilWrapper wrapper = new UtilWrapper(cpuUtils.get(i), memUtils.get(i), 0.0,0.0,0.0,0.0);
+			
+			schedule(tier.getId(), 2, UtilManager.CLOUDLET_UPDATE, wrapper);
 		}
 		this.i++;
 		

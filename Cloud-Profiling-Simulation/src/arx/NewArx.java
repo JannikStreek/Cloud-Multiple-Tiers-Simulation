@@ -13,6 +13,7 @@ public class NewArx {
 	
 	private static CSVFileReader training;
 	private static CSVFileReader running;
+	public static int RUNNING_VALUES = 370;
 
 	public static void init(String trainFile, String runFile) {
         //The location of the training file
@@ -45,11 +46,6 @@ public class NewArx {
     //db network in - 46
     //db network out - 47
 	
-	public static List<List<Double>> predictCPUUsage() {
-		int modeledMetricIndices[] = {21, 28, 35, 42};
-		return getResultList(modeledMetricIndices);
-	}
-	
 	public static List<List<Double>> predictWebTierUtil() {
 		int modeledMetricIndices[] = {28, 29, 30, 31, 32, 33};
 		return getResultList(modeledMetricIndices);
@@ -64,6 +60,14 @@ public class NewArx {
 		int modeledMetricIndices[] = {42, 43, 44, 45,46,47};
 		return getResultList(modeledMetricIndices);
 	}
+	
+	
+	public static List<List<Double>> predictCPUUsage() {
+		int modeledMetricIndices[] = {21, 28, 35, 42};
+		return getResultList(modeledMetricIndices);
+	}
+	
+
 	
 	private static List<List<Double>> getResultList(int modeledMetricIndices[]) {
 		List<List<Double>> resultList = new ArrayList<List<Double>>();
@@ -102,6 +106,7 @@ public class NewArx {
 
 
     private static List<Double> getUsage(int modeledMetricIndex) {
+    	List<Double> result = new ArrayList<Double>();
     	//We ignore first column in the csv file which shows the sampling time
         Matrix Ms = new Matrix(training.getRowsNum(),training.getColsNum()-1);
         for(int row=0;row<training.getRowsNum();row++)
@@ -132,9 +137,17 @@ public class NewArx {
             R.set(i+1, 0, ys.get(i, 0));
         
         R.setMatrix(0, us.getRowDimension()-1, 1, us.getColumnDimension(), us);
+        Matrix x;
         
-
-        Matrix x = R.solve(ys);
+        try {
+        	x = R.solve(ys);
+        }catch(RuntimeException e){
+        	for(int i = 0; i < 370; i++) {
+        		result.add(0.0);
+        	}
+        	return result;
+        	
+        }
         System.out.println("System parameters, (theta) at equation 5: ");
         x.print(2, 4);
         
@@ -142,11 +155,10 @@ public class NewArx {
         //In your simulator you should expect a continues stream of these samples. It is the only input to the simulator!
         //These samples will be used to describe the CPU utilization of each VM instance in multi-tier system
         //int samplingOut[] = {modeledMetricIndex};
-        int numberOfValidationSamples = 370;
         //Matrix yv = Mv.getMatrix(0, numberOfValidationSamples, samplingOut);
         
         int validationInput[] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17};
-        Matrix uv = Mv.getMatrix(0, numberOfValidationSamples, validationInput);
+        Matrix uv = Mv.getMatrix(0, RUNNING_VALUES, validationInput);
         
         //Assume the last measured value of the modeled metric to be zero
         double yk_minus_1 = 0.0;
@@ -158,8 +170,8 @@ public class NewArx {
         //System.out.println(input_row.getColumnDimension());
         //input_row.print(2, 4);
         
-        List<Double> result = new ArrayList<Double>();
-        for(int j=0; j<numberOfValidationSamples; j++)
+        
+        for(int j=0; j<RUNNING_VALUES; j++)
         {
             for(int i=1; i<validationInput.length+1; i++)
                 input_row.set(0, i, uv.get(j, i-1));
@@ -175,6 +187,10 @@ public class NewArx {
             yk.print(2, 4);
             
             yk_minus_1 = yk.get(0, 0);
+            
+            if(1.0 > yk_minus_1) {
+            	yk_minus_1 = 0.0;
+            }
             result.add(yk_minus_1);
 
         }

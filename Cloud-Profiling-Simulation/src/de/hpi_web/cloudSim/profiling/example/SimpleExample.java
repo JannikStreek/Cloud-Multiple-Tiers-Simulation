@@ -77,7 +77,6 @@ public class SimpleExample {
 //			index++;
 //		}
 		layers.put(brokers.get(0), NewArx.predictWebTierUtil());
-		//layers.put(brokers.get(1), NewArx.predictWebTierUtil());
 		layers.put(brokers.get(1), NewArx.predictAppTierUtil());
 		layers.put(brokers.get(2), NewArx.predictDbTierUtil());
 		UtilManager utilManager = new UtilManager("UtilManager", delay, upperThreshold, lowerThreshold, layers);

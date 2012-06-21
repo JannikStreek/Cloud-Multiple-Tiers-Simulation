@@ -122,13 +122,13 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 
 	private void processCloudletUpdate(SimEvent ev) {
 		Log.printLine(CloudSim.clock() + ": " + getName() + ": Updating Cloudlets for next round ");
-		double cpuUtil = Double.parseDouble(ev.getData().toString());
+		UtilWrapper wrapper = (UtilWrapper) ev.getData();
 		if(cloudletsSubmitted < getVmsCreatedList().size()) {
 			List<Integer> vmsWithCloudletIds = getVmsWithCloudletIds();
 			List<Vm> vms = getVmsCreatedList();
 			List<Vm> missingCloudletVms = getMissingCloudletVms(vmsWithCloudletIds, vms);
 			for (Vm vm : missingCloudletVms) {
-			    Cloudlet cloudlet = createCloudlet(vm, cpuUtil);
+			    Cloudlet cloudlet = createCloudlet(vm, wrapper);
 				cloudlet.setVmId(vm.getId());
 				sendNow(getVmsToDatacentersMap().get(vm.getId()), CloudSimTags.CLOUDLET_SUBMIT, cloudlet);
 				//cloudlets.add(cloudlet);
@@ -143,7 +143,9 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 		}
 		
 		for (Cloudlet cloudlet : getCloudletSubmittedList()) {
-			cloudlet.setUtilizationModelCpu(new UtilizationModelFixed(cpuUtil/(double)cloudletsSubmitted));
+			cloudlet.setUtilizationModelCpu(new UtilizationModelFixed(wrapper.getCpuUtil()/(double)cloudletsSubmitted));
+			//Vm vm = this.getVmForVmId(cloudlet.getVmId());
+			cloudlet.setUtilizationModelRam(new UtilizationModelFixed(wrapper.getMemUtil()/(double)cloudletsSubmitted));
 		}
 		
 		for(Cloudlet cloudlet : cloudletSubmittedList) {
@@ -206,19 +208,22 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 		return vmIds;
 	}
 
-	private Cloudlet createCloudlet(Vm vm, double cpuUtil) {
+	private Cloudlet createCloudlet(Vm vm, UtilWrapper wrapper) {
 		Log.printLine(CloudSim.clock() + ": " + getName() + ": Creating Cloudlet ");
 		
 	  // Cloudlet properties
 	  int id = 0;
 	  int pesNumber = 1;
 	  long length = 100000000; //TODO calc it
-	  double utilizationPerVm = (cpuUtil/(double)getVmsCreatedList().size());	// util = 1 means 100% utilization
+	  double cpuUtilizationPerVm = (wrapper.getCpuUtil()/(double)getVmsCreatedList().size());
+	  double memUtilizationPerVm = (wrapper.getMemUtil()/(double)getVmsCreatedList().size());
+	  //double cpuUtilizationPerVm = (wrapper.getCpuUtil()/(double)getVmsCreatedList().size());// util = 1 means 100% utilization
 
 	  long fileSize = 300;
 	  long outputSize = 300;
-	  UtilizationModel utilizationModel = new UtilizationModelFixed(utilizationPerVm);
-	  Cloudlet cloudlet = new Cloudlet(id, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
+	  UtilizationModel cpuUtilizationModel = new UtilizationModelFixed(cpuUtilizationPerVm);
+	  UtilizationModel memUtilizationModel = new UtilizationModelFixed(memUtilizationPerVm);
+	  Cloudlet cloudlet = new Cloudlet(id, length, pesNumber, fileSize, outputSize, cpuUtilizationModel, memUtilizationModel, memUtilizationModel);
 	  cloudlet.setUserId(getId());
 	  return cloudlet;
 	}
