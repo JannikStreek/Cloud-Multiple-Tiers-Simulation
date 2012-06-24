@@ -19,12 +19,20 @@ public class Simulation extends Thread {
     private File running, training;
     private double delay = SimulationDefaults.STEP_DELAY;
 
-    public UtilizationThreshold getBwThreshold() {
-        return bwThreshold;
+    public UtilizationThreshold getBwInThreshold() {
+        return bwInThreshold;
     }
 
-    public void setBwThreshold(UtilizationThreshold bwThreshold) {
-        this.bwThreshold = bwThreshold;
+    public void setBwInThreshold(UtilizationThreshold bwThreshold) {
+        this.bwInThreshold = bwThreshold;
+    }
+
+    public UtilizationThreshold getBwOutThreshold() {
+        return bwOutThreshold;
+    }
+
+    public void setBwOutThreshold(UtilizationThreshold bwThreshold) {
+        this.bwOutThreshold = bwThreshold;
     }
 
     public UtilizationThreshold getCpuThreshold() {
@@ -44,7 +52,8 @@ public class Simulation extends Thread {
     }
     private UtilizationThreshold cpuThreshold;
     private UtilizationThreshold memThreshold;
-    private UtilizationThreshold bwThreshold;
+    private UtilizationThreshold bwInThreshold;
+    private UtilizationThreshold bwOutThreshold;
 
     Simulation(Observer observer, File training, File running) {
         super();
@@ -62,8 +71,10 @@ public class Simulation extends Thread {
                 delay, 
                 training.getAbsolutePath(), 
                 running.getAbsolutePath(), 
-                cpuThreshold.getUpper(), 
-                cpuThreshold.getLower());
+                cpuThreshold, 
+                memThreshold,
+                bwInThreshold,
+                bwOutThreshold);
     }
     
     public void stopped(Boolean stopped) {
@@ -98,6 +109,7 @@ public class Simulation extends Thread {
     private void initializeThresholds() {
         cpuThreshold = new UtilizationThreshold(SimulationDefaults.MAX_THRESHOLD_CPU, SimulationDefaults.MIN_THRESHOLD_CPU);
         memThreshold = new UtilizationThreshold(SimulationDefaults.MAX_THRESHOLD_MEM, SimulationDefaults.MIN_THRESHOLD_MEM);
-        bwThreshold = new UtilizationThreshold(SimulationDefaults.MAX_THRESHOLD_BW, SimulationDefaults.MIN_THRESHOLD_BW);
+        bwInThreshold = new UtilizationThreshold(SimulationDefaults.MAX_THRESHOLD_BW, SimulationDefaults.MIN_THRESHOLD_BW);
+        bwOutThreshold = new UtilizationThreshold(SimulationDefaults.MAX_THRESHOLD_BW, SimulationDefaults.MIN_THRESHOLD_BW);
     }
 }

@@ -85,6 +85,26 @@ public class Gui extends javax.swing.JFrame implements Observer {
         minCpuTextField = new javax.swing.JTextField();
         jLabel22 = new javax.swing.JLabel();
         delayTextField = new javax.swing.JTextField();
+        minMemTextField = new javax.swing.JTextField();
+        maxMemTextField = new javax.swing.JTextField();
+        jLabel23 = new javax.swing.JLabel();
+        jLabel24 = new javax.swing.JLabel();
+        jLabel25 = new javax.swing.JLabel();
+        minBwInTextField = new javax.swing.JTextField();
+        maxBwInTextField = new javax.swing.JTextField();
+        jLabel26 = new javax.swing.JLabel();
+        jLabel27 = new javax.swing.JLabel();
+        maxBwOutTextField = new javax.swing.JTextField();
+        jLabel28 = new javax.swing.JLabel();
+        minBwOutTextField = new javax.swing.JTextField();
+        jLabel29 = new javax.swing.JLabel();
+        maxHdReadTextField = new javax.swing.JTextField();
+        jLabel30 = new javax.swing.JLabel();
+        minHdReadTextField = new javax.swing.JTextField();
+        jLabel31 = new javax.swing.JLabel();
+        maxHdWriteTextField = new javax.swing.JTextField();
+        jLabel32 = new javax.swing.JLabel();
+        minHdWriteTextField = new javax.swing.JTextField();
         startBtn = new javax.swing.JButton();
         stopBtn = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -362,7 +382,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel20)
                     .addComponent(bwPerVmTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(67, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Simulation Settings"));
@@ -397,6 +417,106 @@ public class Gui extends javax.swing.JFrame implements Observer {
             }
         });
 
+        minMemTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        minMemTextField.setText("30");
+        minMemTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                minMemTextFieldActionPerformed(evt);
+            }
+        });
+
+        maxMemTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        maxMemTextField.setText("70");
+        maxMemTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maxMemTextFieldActionPerformed(evt);
+            }
+        });
+
+        jLabel23.setText("max. Mem./VM:");
+
+        jLabel24.setText("min. Mem./VM:");
+
+        jLabel25.setText("min. BwIn./VM:");
+
+        minBwInTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        minBwInTextField.setText("0");
+        minBwInTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                minBwInTextFieldActionPerformed(evt);
+            }
+        });
+
+        maxBwInTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        maxBwInTextField.setText("0");
+        maxBwInTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maxBwInTextFieldActionPerformed(evt);
+            }
+        });
+
+        jLabel26.setText("max. BwIn./VM:");
+
+        jLabel27.setText("max. BwO./VM:");
+
+        maxBwOutTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        maxBwOutTextField.setText("0");
+        maxBwOutTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maxBwOutTextFieldActionPerformed(evt);
+            }
+        });
+
+        jLabel28.setText("min. BwO./VM:");
+
+        minBwOutTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        minBwOutTextField.setText("0");
+        minBwOutTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                minBwOutTextFieldActionPerformed(evt);
+            }
+        });
+
+        jLabel29.setText("max. HD R/VM:");
+
+        maxHdReadTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        maxHdReadTextField.setText("0");
+        maxHdReadTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maxHdReadTextFieldActionPerformed(evt);
+            }
+        });
+
+        jLabel30.setText("min. HD R/VM:");
+
+        minHdReadTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        minHdReadTextField.setText("0");
+        minHdReadTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                minHdReadTextFieldActionPerformed(evt);
+            }
+        });
+
+        jLabel31.setText("max. HD W/VM:");
+
+        maxHdWriteTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        maxHdWriteTextField.setText("0");
+        maxHdWriteTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maxHdWriteTextFieldActionPerformed(evt);
+            }
+        });
+
+        jLabel32.setText("min. HD W/VM:");
+
+        minHdWriteTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        minHdWriteTextField.setText("0");
+        minHdWriteTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                minHdWriteTextFieldActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
@@ -404,36 +524,101 @@ public class Gui extends javax.swing.JFrame implements Observer {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(jLabel14)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(maxCpuTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel21)
-                            .addComponent(jLabel22))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(delayTextField)
-                            .addComponent(minCpuTextField))))
+                    .addComponent(jLabel31)
+                    .addComponent(jLabel29)
+                    .addComponent(jLabel27)
+                    .addComponent(jLabel26)
+                    .addComponent(jLabel23)
+                    .addComponent(jLabel14))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(maxHdWriteTextField, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(maxHdReadTextField, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(maxBwOutTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(maxBwInTextField, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(maxMemTextField, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(maxCpuTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel32)
+                    .addComponent(jLabel30)
+                    .addComponent(jLabel28)
+                    .addComponent(jLabel25)
+                    .addComponent(jLabel24)
+                    .addComponent(jLabel21))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(minHdWriteTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(minHdReadTextField, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(minBwOutTextField, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(minBwInTextField, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(minMemTextField, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(minCpuTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(12, 12, 12)
+                .addComponent(jLabel22)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(delayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(45, 45, 45)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel14)
-                    .addComponent(maxCpuTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel21)
-                    .addComponent(minCpuTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(45, 45, 45)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel14)
+                            .addComponent(maxCpuTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel21)
+                            .addComponent(minCpuTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel23)
+                                    .addComponent(maxMemTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel26)
+                                    .addComponent(maxBwInTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel24)
+                                    .addComponent(minMemTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel25)
+                                    .addComponent(minBwInTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel27)
+                                .addComponent(maxBwOutTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel28)
+                                .addComponent(minBwOutTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                            .addComponent(jLabel29)
+                            .addComponent(maxHdReadTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(177, 177, 177)
+                        .addComponent(minHdReadTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(182, 182, 182)
+                        .addComponent(jLabel30)))
+                .addGap(5, 5, 5)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(jLabel32)
+                    .addComponent(jLabel31)
+                    .addComponent(minHdWriteTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(maxHdWriteTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel22)
-                    .addComponent(delayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(delayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         javax.swing.GroupLayout SettingsPanelLayout = new javax.swing.GroupLayout(SettingsPanel);
@@ -446,8 +631,8 @@ public class Gui extends javax.swing.JFrame implements Observer {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
+                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 327, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(defaultSettingsButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(submitSettingsButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -584,13 +769,39 @@ public class Gui extends javax.swing.JFrame implements Observer {
     }// </editor-fold>//GEN-END:initComponents
 
     private void submitSettingsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitSettingsButtonActionPerformed
+        submitDcSettings();
+        submitVmSettings();
+        submitDelay();
+        submitUtilizationThresholds();
+    }//GEN-LAST:event_submitSettingsButtonActionPerformed
+
+    private void submitDcSettings() {
+        
+    }
+    
+    private void submitVmSettings() {
+        
+    }
+    
+    private void submitDelay() {
         simulation.setDelay(Double.parseDouble(delayTextField.getText()));
+    }
+    
+    private void submitUtilizationThresholds() {
         UtilizationThreshold cpuThreshold = new UtilizationThreshold(
                 Integer.parseInt(maxCpuTextField.getText()), 
                 Integer.parseInt(minCpuTextField.getText()));
         simulation.setCpuThreshold(cpuThreshold);
-    }//GEN-LAST:event_submitSettingsButtonActionPerformed
-
+        UtilizationThreshold memThreshold = new UtilizationThreshold(
+                Integer.parseInt(maxMemTextField.getText()), 
+                Integer.parseInt(minMemTextField.getText()));
+        simulation.setMemThreshold(memThreshold);
+        UtilizationThreshold bwInThreshold = new UtilizationThreshold(
+                Integer.parseInt(maxBwInTextField.getText()), 
+                Integer.parseInt(minBwInTextField.getText()));
+        simulation.setBwInThreshold(bwInThreshold);
+        
+    }
     private void numberOfHostsTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_numberOfHostsTextFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_numberOfHostsTextFieldActionPerformed
@@ -649,6 +860,46 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private void stopBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopBtnActionPerformed
         simulation.stopped(true);
     }//GEN-LAST:event_stopBtnActionPerformed
+
+    private void minMemTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_minMemTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_minMemTextFieldActionPerformed
+
+    private void maxMemTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maxMemTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_maxMemTextFieldActionPerformed
+
+    private void minBwInTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_minBwInTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_minBwInTextFieldActionPerformed
+
+    private void maxBwInTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maxBwInTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_maxBwInTextFieldActionPerformed
+
+    private void maxBwOutTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maxBwOutTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_maxBwOutTextFieldActionPerformed
+
+    private void minBwOutTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_minBwOutTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_minBwOutTextFieldActionPerformed
+
+    private void maxHdReadTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maxHdReadTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_maxHdReadTextFieldActionPerformed
+
+    private void minHdReadTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_minHdReadTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_minHdReadTextFieldActionPerformed
+
+    private void maxHdWriteTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maxHdWriteTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_maxHdWriteTextFieldActionPerformed
+
+    private void minHdWriteTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_minHdWriteTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_minHdWriteTextFieldActionPerformed
 
     /**
      * @param args the command line arguments
@@ -716,7 +967,17 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel26;
+    private javax.swing.JLabel jLabel27;
+    private javax.swing.JLabel jLabel28;
+    private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel30;
+    private javax.swing.JLabel jLabel31;
+    private javax.swing.JLabel jLabel32;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
@@ -727,8 +988,18 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTextField maxBwInTextField;
+    private javax.swing.JTextField maxBwOutTextField;
     private javax.swing.JTextField maxCpuTextField;
+    private javax.swing.JTextField maxHdReadTextField;
+    private javax.swing.JTextField maxHdWriteTextField;
+    private javax.swing.JTextField maxMemTextField;
+    private javax.swing.JTextField minBwInTextField;
+    private javax.swing.JTextField minBwOutTextField;
     private javax.swing.JTextField minCpuTextField;
+    private javax.swing.JTextField minHdReadTextField;
+    private javax.swing.JTextField minHdWriteTextField;
+    private javax.swing.JTextField minMemTextField;
     private javax.swing.JTextField mipsPerCoreTextField;
     private javax.swing.JTextField mipsPerVmCore;
     private javax.swing.JTextField numberOfHostsTextField;

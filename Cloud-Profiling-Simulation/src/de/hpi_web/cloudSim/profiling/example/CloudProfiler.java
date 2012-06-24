@@ -21,17 +21,26 @@ import de.hpi_web.cloudSim.profiling.datacenter.DatacenterBuilder;
 import de.hpi_web.cloudSim.profiling.datacenter.ProfilingBroker;
 import de.hpi_web.cloudSim.profiling.observer.Observer;
 import de.hpi_web.cloudSim.profiling.utilization.UtilManager;
+import de.hpi_web.cloudSim.profiling.utilization.UtilizationThreshold;
 
 public class CloudProfiler {
 		
-	public static void start(Observer observer, double delay, String training, String running, int upperThreshold, int lowerThreshold) {
+	public static void start(
+			Observer observer, 
+			double delay, 
+			String training, 
+			String running, 
+			UtilizationThreshold cpuThreshold, 
+			UtilizationThreshold memThreshold,  
+			UtilizationThreshold bwInThreshold,  
+			UtilizationThreshold bwOutThreshold) {
 		
 		Log.printLine("Starting...");
 		initializeCloudSim();
 		List<ProfilingBroker> brokers = prepareThreeTierScenario(observer);
 		
 		// create a map where for each broker the CPU usage is recorded
-		NewArx.init("training.csv", "running.csv");
+		NewArx.init(training, running);
 		HashMap<DatacenterBroker, List<List<Double>>> layers = new HashMap<DatacenterBroker, List<List<Double>>>();
 		layers.put(brokers.get(0), NewArx.predictWebTierUtil());
 		layers.put(brokers.get(1), NewArx.predictAppTierUtil());
@@ -41,7 +50,16 @@ public class CloudProfiler {
 		//wsBroker.submitCloudletList(wsCloudlets);
 
 		@SuppressWarnings("unused")
-		UtilManager utilManager = new UtilManager("UtilManager", delay, upperThreshold, lowerThreshold, 10000,5000,10000,5000,10000,5000,10000,5000,10000,5000, layers);
+		UtilManager utilManager = new UtilManager(
+				"UtilManager", 
+				delay, 
+				cpuThreshold.getUpper(), cpuThreshold.getLower(), 
+				memThreshold.getUpper(), memThreshold.getLower(),
+				10000,5000,
+				10000,5000,
+				10000,5000,//bwInThreshold.getUpper(), bwInThreshold.getLower(), //bw in
+				10000,5000,//bwOutThreshold.getUpper(), bwOutThreshold.getLower(), //bw out
+				layers);
 		
 		CloudSim.startSimulation();
 		CloudSim.stopSimulation();

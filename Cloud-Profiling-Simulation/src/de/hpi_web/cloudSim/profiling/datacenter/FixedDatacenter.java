@@ -19,7 +19,7 @@ import de.hpi_web.cloudSim.profiling.utilization.UtilManager;
 public class FixedDatacenter extends Datacenter{
 
 	public FixedDatacenter(de.hpi_web.cloudSim.profiling.builders.DatacenterBuilder builder) throws Exception {
-		super(builder.name, builder.characteristics, builder.vmAllocationPolicy, builder.storageList, builder.lastProcessTime);
+		super(builder.getName(), builder.getCharacteristics(), builder.getVmAllocationPolicy(), builder.getStorageList(), builder.getLastProcessTime());
 	}
 	
 	public FixedDatacenter(String name,

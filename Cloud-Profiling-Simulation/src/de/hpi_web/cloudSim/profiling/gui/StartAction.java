@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 
 import de.hpi_web.cloudSim.profiling.example.CloudProfiler;
 import de.hpi_web.cloudSim.profiling.observer.Observer;
+import de.hpi_web.cloudSim.profiling.utilization.UtilizationThreshold;
 
 public class StartAction implements ActionListener{
 	
@@ -25,7 +26,9 @@ public class StartAction implements ActionListener{
 			
 			@Override
 			public void run() {
-				CloudProfiler.start(observer, delay, "training.csv", "running.csv", upperThreshold, lowerThreshold);
+				UtilizationThreshold cpu = new UtilizationThreshold(upperThreshold, lowerThreshold);
+				UtilizationThreshold allOthers = new UtilizationThreshold(5000000, 0);
+				CloudProfiler.start(observer, delay, "training.csv", "running.csv", cpu, allOthers, allOthers, allOthers);
 			}
 		}
 		
