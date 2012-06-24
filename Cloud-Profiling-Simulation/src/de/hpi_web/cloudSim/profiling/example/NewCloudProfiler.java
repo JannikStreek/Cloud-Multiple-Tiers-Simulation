@@ -5,7 +5,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
-import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.Datacenter;
 import org.cloudbus.cloudsim.DatacenterBroker;
 import org.cloudbus.cloudsim.Log;
@@ -13,31 +12,32 @@ import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
 
 import arx.NewArx;
-
-import de.hpi_web.cloudSim.multitier.MultiTierCloudlet;
-import de.hpi_web.cloudSim.multitier.staticTier.CloudletFactory;
-import de.hpi_web.cloudSim.multitier.staticTier.VmFactory;
-import de.hpi_web.cloudSim.profiling.datacenter.FixedDatacenterFactory;
+import de.hpi_web.cloudSim.profiling.builders.DatacenterBuilder;
+import de.hpi_web.cloudSim.profiling.builders.VmBuilder;
 import de.hpi_web.cloudSim.profiling.datacenter.ProfilingBroker;
 import de.hpi_web.cloudSim.profiling.observer.Observer;
 import de.hpi_web.cloudSim.profiling.utilization.UtilManager;
 import de.hpi_web.cloudSim.profiling.utilization.UtilizationThreshold;
 
-public class CloudProfiler {
+public class NewCloudProfiler {
 		
 	public static void start(
 			Observer observer, 
 			double delay, 
 			String training, 
 			String running, 
-			UtilizationThreshold cpuThreshold, 
-			UtilizationThreshold memThreshold,  
-			UtilizationThreshold bwInThreshold,  
-			UtilizationThreshold bwOutThreshold) {
+			UtilizationThreshold cpuThreshold,
+			UtilizationThreshold memThreshold,
+			UtilizationThreshold bwInThreshold,
+			UtilizationThreshold bwOutThreshold,
+			UtilizationThreshold hdReadThreshold,
+			UtilizationThreshold hdWriteThreshold,
+			DatacenterBuilder dcBuilder,
+			VmBuilder vmBuilder) {
 		
 		Log.printLine("Starting...");
 		initializeCloudSim();
-		List<ProfilingBroker> brokers = prepareThreeTierScenario(observer);
+		List<ProfilingBroker> brokers = prepareThreeTierScenario(observer, dcBuilder, vmBuilder);
 		
 		// create a map where for each broker the CPU usage is recorded
 		NewArx.init(training, running);
@@ -55,8 +55,8 @@ public class CloudProfiler {
 				delay, 
 				cpuThreshold.getUpper(), cpuThreshold.getLower(), 
 				memThreshold.getUpper(), memThreshold.getLower(),
-				10000,5000,
-				10000,5000,
+				10000,5000,//hdReadThreshold.getUpper(), hdReadThreshold.getLower(),
+				10000,5000,//hdWriteThreshold.getUpper(), hdWriteThreshold.getLower(),
 				10000,5000,//bwInThreshold.getUpper(), bwInThreshold.getLower(), //bw in
 				10000,5000,//bwOutThreshold.getUpper(), bwOutThreshold.getLower(), //bw out
 				layers);
@@ -70,11 +70,13 @@ public class CloudProfiler {
 		
 	}
 	
-	private static List<ProfilingBroker> prepareThreeTierScenario(Observer observer) {
+	private static List<ProfilingBroker> prepareThreeTierScenario(
+			Observer observer, 
+			DatacenterBuilder dcBuilder, VmBuilder vmBuilder) {
 
-		Datacenter wsDatacenter = FixedDatacenterFactory.createDatacenter("WebserverCenter", 3);
-		Datacenter appDatacenter = FixedDatacenterFactory.createDatacenter("ApplicationCenter", 3);
-		Datacenter dbDatacenter = FixedDatacenterFactory.createDatacenter("DatabaseCenter", 3);
+		Datacenter wsDatacenter = dcBuilder.setName("WebserverCenter").build();
+		Datacenter appDatacenter = dcBuilder.setName("ApplicationCenter").build();
+		Datacenter dbDatacenter = dcBuilder.setName("DatabaseCenter").build();
 		
 		ProfilingBroker wsBroker = createBroker("wsBroker");
 		ProfilingBroker appBroker = createBroker("appBroker");
@@ -89,9 +91,15 @@ public class CloudProfiler {
 		brokers.add(appBroker);
 		brokers.add(dbBroker);
 		
-		List<Vm> wsVms = VmFactory.createVms(1, wsBroker.getId());
-		List<Vm> appVms = VmFactory.createVms(1, appBroker.getId());
-		List<Vm> dbVms = VmFactory.createVms(1, dbBroker.getId());
+		List<Vm> wsVms, appVms, dbVms;
+		wsVms = new ArrayList<Vm>();
+		appVms = new ArrayList<Vm>();
+		dbVms = new ArrayList<Vm>();
+		
+		// TODO: include different amount of start Vms (has to be passed down from the GUI)
+		wsVms.add(vmBuilder.setUserId(wsBroker.getId()).build());
+		appVms.add(vmBuilder.setUserId(appBroker.getId()).build());
+		dbVms.add(vmBuilder.setUserId(dbBroker.getId()).build());
 		
 		// submit vm lists to the brokers
 		wsBroker.submitVmList(wsVms);

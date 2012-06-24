@@ -4,6 +4,9 @@
  */
 package cloudprofilingmonitor;
 
+import de.hpi_web.cloudSim.profiling.builders.DatacenterBuilder;
+import de.hpi_web.cloudSim.profiling.builders.HostBuilder;
+import de.hpi_web.cloudSim.profiling.builders.VmBuilder;
 import de.hpi_web.cloudSim.profiling.datacenter.ProfilingBroker;
 import de.hpi_web.cloudSim.profiling.observer.Observable;
 import de.hpi_web.cloudSim.profiling.observer.Observer;
@@ -19,11 +22,17 @@ import org.cloudbus.cloudsim.core.CloudSim;
  */
 public class Gui extends javax.swing.JFrame implements Observer {
     private Simulation simulation;
+    private HostBuilder hostBuilder;
+    private DatacenterBuilder dcBuilder;
+    private VmBuilder vmBuilder;
     /**
      * Creates new form Gui
      */
     public Gui() {
         simulation = new Simulation(this, null, null);
+        hostBuilder = new HostBuilder();
+        dcBuilder = new DatacenterBuilder("DummyName");
+        vmBuilder = new VmBuilder();
         initComponents();
     }
     
@@ -776,10 +785,23 @@ public class Gui extends javax.swing.JFrame implements Observer {
     }//GEN-LAST:event_submitSettingsButtonActionPerformed
 
     private void submitDcSettings() {
-        
+        hostBuilder.setBandwidth(Long.parseLong(bwPerHostTextField.getText()))
+                .setRam(Integer.parseInt(ramPerHostTextField.getText()))
+                .setStorage(Long.parseLong(storagePerHostTextField.getText()))
+                .setPes(Integer.parseInt(coresPerHostTextField.getText()))
+                .setMips(Integer.parseInt(mipsPerCoreTextField.getText()));
+        dcBuilder.setNumberOfHosts(Integer.parseInt(numberOfHostsTextField.getText()))
+                .setHostBuilder(hostBuilder);
+        simulation.setDcBuilder(dcBuilder);
     }
     
     private void submitVmSettings() {
+        vmBuilder.setBandwidth(Long.parseLong(bwPerVmTextField.getText()))
+                .setRam(Integer.parseInt(ramPerVmTextField.getText()))
+                .setSize(Long.parseLong(storagePerVmTextField.getText()))
+                .setPes(Integer.parseInt(coresPerVmTextField.getText()))
+                .setMips(Integer.parseInt(mipsPerVmCore.getText()));
+        simulation.setVmBuilder(vmBuilder);
         
     }
     

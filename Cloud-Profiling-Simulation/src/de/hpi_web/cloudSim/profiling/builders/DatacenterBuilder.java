@@ -1,5 +1,6 @@
 package de.hpi_web.cloudSim.profiling.builders;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -9,7 +10,6 @@ import org.cloudbus.cloudsim.Storage;
 import org.cloudbus.cloudsim.VmAllocationPolicy;
 import org.cloudbus.cloudsim.VmAllocationPolicySimple;
 
-import de.hpi_web.cloudSim.multitier.staticTier.DatacenterFactory;
 import de.hpi_web.cloudSim.profiling.datacenter.FixedDatacenter;
 
 public class DatacenterBuilder {
@@ -24,6 +24,9 @@ public class DatacenterBuilder {
 	public static final String ARCH = "x86";				// systen architecture
 	public static final String OS = "Linux";				// operating system
 	public static final String VMM = "Xen";					// virtual machine manager (hypervisor)
+	
+	private int numberOfHosts;	// additional variable only needed to prepare the hostlist
+	private HostBuilder hostBuilder;
 
 	private String name;
 	private DatacenterCharacteristics characteristics;
@@ -31,14 +34,32 @@ public class DatacenterBuilder {
 	private List<Storage> storageList;
 	private double lastProcessTime;
 	
-	DatacenterBuilder(String name) {
+	public DatacenterBuilder(String name) {
 		this.name = name;
 		this.lastProcessTime = 0;
+		this.numberOfHosts = 0;
 		this.storageList = new LinkedList<Storage>();
 	}
 	
-	public FixedDatacenter build() throws Exception {
-		return new FixedDatacenter(this);
+	public FixedDatacenter build() {
+		FixedDatacenter datacenter = null;
+		buildHostList();
+		
+		try {
+			datacenter = new FixedDatacenter(this);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return datacenter;
+	}
+	
+	private void buildHostList() {
+		ArrayList<Host> hostList = new ArrayList<Host>();
+
+		for(int i = 0; i < numberOfHosts; i++) {
+			hostList.add(hostBuilder.build());
+		}
+		setHostList(hostList);
 	}
 	
 	// could interfere with vmAllocation Policy
@@ -47,7 +68,16 @@ public class DatacenterBuilder {
 //		return this;
 //	}
 	
-	public DatacenterBuilder setHostList(List<Host> hostList) {
+	public DatacenterBuilder setNumberOfHosts(int numberOfHosts) {
+		this.numberOfHosts = numberOfHosts;
+		return this;
+	}
+	
+	public DatacenterBuilder setHostBuilder(HostBuilder hostBuilder) {
+		this.hostBuilder = hostBuilder;
+		return this;
+	}
+	private DatacenterBuilder setHostList(List<Host> hostList) {
 		this.characteristics = new DatacenterCharacteristics(
 				ARCH, OS, VMM, hostList, DEFAULT_TIMEZONE, DEFAULT_COST, DEFAULT_COST_MEM,
 				DEFAULT_COST_STORAGE, DEFAULT_COST_BW);

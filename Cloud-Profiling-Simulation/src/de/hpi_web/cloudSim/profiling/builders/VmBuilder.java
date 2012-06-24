@@ -28,7 +28,7 @@ public class VmBuilder {
 	private CloudletScheduler cloudletScheduler;
 
 
-	VmBuilder(int id) {
+	public VmBuilder(int id) {
 		this.id = id;
 		this.pes = DEFAULT_PES;
 		this.mips = DEFAULT_MIPS;
@@ -38,7 +38,7 @@ public class VmBuilder {
 		this.cloudletScheduler = new CloudletSchedulerTimeShared();
 	}	
 	
-	VmBuilder() {
+	public VmBuilder() {
 		this.id = -1;
 		this.pes = DEFAULT_PES;
 		this.mips = DEFAULT_MIPS;
@@ -48,7 +48,7 @@ public class VmBuilder {
 		this.cloudletScheduler = new CloudletSchedulerTimeShared();
 	}
 	
-	Vm build() {
+	public Vm build() {
 		if (id < 0)
 			id = idCounter;
 		return new Vm(id, userId, mips, pes, ram, bandwidth, size, vmm, cloudletScheduler);

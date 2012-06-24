@@ -16,7 +16,7 @@ import de.hpi_web.cloudSim.multitier.staticTier.DatacenterFactory;
 
 
 
-public class DatacenterBuilder extends DatacenterFactory {
+public class FixedDatacenterFactory extends DatacenterFactory {
 	
 	private static int hostIdCounter = 0;
 	

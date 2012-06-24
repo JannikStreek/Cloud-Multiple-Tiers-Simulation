@@ -32,7 +32,7 @@ public class HostBuilder {
 //	private VmScheduler vmScheduler;
 	private int hostId;
 	
-	HostBuilder(int hostId) {
+	public HostBuilder(int hostId) {
 		this.hostId = hostId;
 		this.pes = DEFAULT_PES;
 		this.mips = DEFAULT_MIPS;
@@ -41,7 +41,7 @@ public class HostBuilder {
 		this.bandwidth = DEFAULT_BW;
 	}
 	
-	HostBuilder() {
+	public HostBuilder() {
 		this.hostId = -1;
 		this.pes = DEFAULT_PES;
 		this.mips = DEFAULT_MIPS;
@@ -74,6 +74,24 @@ public class HostBuilder {
 		return peList;
 	}
 
+	public int getPes() {
+		return pes;
+	}
+
+	public HostBuilder setPes(int pes) {
+		this.pes = pes;
+		return this;
+	}
+
+	public int getMips() {
+		return mips;
+	}
+
+	public HostBuilder setMips(int mips) {
+		this.mips = mips;
+		return this;
+	}
+
 	public int getRam() {
 		return ram;
 	}
@@ -96,8 +114,8 @@ public class HostBuilder {
 		return bandwidth;
 	}
 
-	public HostBuilder setBandWidth(long bandWidth) {
-		this.bandwidth = bandWidth;
+	public HostBuilder setBandwidth(long bandwidth) {
+		this.bandwidth = bandwidth;
 		return this;
 	}
 }
