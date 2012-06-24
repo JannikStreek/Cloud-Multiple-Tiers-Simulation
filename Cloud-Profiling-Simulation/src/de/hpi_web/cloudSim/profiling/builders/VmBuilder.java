@@ -14,6 +14,8 @@ public class VmBuilder {
 	public static final long DEFAULT_BW   =    1000;		// total bandwith available
 	
 	public static final String VMM = "Xen";					// virtual machine manager (hypervisor)
+	
+	private static int idCounter = 0;
 
 	private int id;
 	private int userId;
@@ -34,9 +36,21 @@ public class VmBuilder {
 		this.size = DEFAULT_SIZE;
 		this.bandwidth = DEFAULT_BW;
 		this.cloudletScheduler = new CloudletSchedulerTimeShared();
+	}	
+	
+	VmBuilder() {
+		this.id = -1;
+		this.pes = DEFAULT_PES;
+		this.mips = DEFAULT_MIPS;
+		this.ram = DEFAULT_RAM;
+		this.size = DEFAULT_SIZE;
+		this.bandwidth = DEFAULT_BW;
+		this.cloudletScheduler = new CloudletSchedulerTimeShared();
 	}
 	
 	Vm build() {
+		if (id < 0)
+			id = idCounter;
 		return new Vm(id, userId, mips, pes, ram, bandwidth, size, vmm, cloudletScheduler);
 	}
 	

@@ -42,7 +42,7 @@ public class HostBuilder {
 	}
 	
 	HostBuilder() {
-		this.hostId = hostIdCounter;
+		this.hostId = -1;
 		this.pes = DEFAULT_PES;
 		this.mips = DEFAULT_MIPS;
 		this.ram = DEFAULT_RAM;
@@ -51,6 +51,8 @@ public class HostBuilder {
 	}
 	
 	Host build() {
+		if (hostId < 0)
+			hostId = hostIdCounter;
 		List<Pe> peList = buildPeList();
 		Host host = new Host(
 				hostId,
