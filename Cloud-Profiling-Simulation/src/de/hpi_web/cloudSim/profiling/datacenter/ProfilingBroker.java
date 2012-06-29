@@ -20,14 +20,14 @@ import de.hpi_web.cloudSim.profiling.utilization.UtilizationModelFixed;
 
 public class ProfilingBroker extends DatacenterBroker implements Observable{
 	
-	private List<Cloudlet> cloudlets;
+//	private List<Cloudlet> cloudlets;
 	private List<Observer> observers;
 	private List<Integer> dcAffinity;
 
 	public ProfilingBroker(String name) throws Exception {
 		super(name);
 		observers = new ArrayList<Observer>();
-		cloudlets = new ArrayList<Cloudlet>();
+//		cloudlets = new ArrayList<Cloudlet>();
 		dcAffinity = new ArrayList<Integer>();
 	}
 	public void setDcAffinityList(List<Integer> dcAffinity) {
@@ -154,15 +154,15 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 			pcloudlet.setUtilizationModelBwOut(new UtilizationModelFixed(wrapper.getBwOutUtil()/cloudletsSubmittedDouble));
 		}
 		
-		for(Cloudlet cloudlet : cloudletSubmittedList) {
-			ProfilingCloudlet pcloudlet = (ProfilingCloudlet) cloudlet;
-			Log.printLine(CloudSim.clock() + ": " + getName() + " : at VM" + cloudlet.getVmId() + " : cloudlet at CPU util  "+ pcloudlet.getUtilizationOfCpu(CloudSim.clock()));
-			Log.printLine(CloudSim.clock() + ": " + getName() + " : at VM" + cloudlet.getVmId() + " : cloudlet at Mem util  "+ pcloudlet.getUtilizationOfRam(CloudSim.clock()));
-			Log.printLine(CloudSim.clock() + ": " + getName() + " : at VM" + cloudlet.getVmId() + " : cloudlet at Disk Read util  "+ pcloudlet.getUtilizationOfDiskRead(CloudSim.clock()));
-			Log.printLine(CloudSim.clock() + ": " + getName() + " : at VM" + cloudlet.getVmId() + " : cloudlet at Disk Write util  "+ pcloudlet.getUtilizationOfDiskWrite(CloudSim.clock()));
-			Log.printLine(CloudSim.clock() + ": " + getName() + " : at VM" + cloudlet.getVmId() + " : cloudlet at Bw In util  "+ pcloudlet.getUtilizationOfBw(CloudSim.clock()));
-			Log.printLine(CloudSim.clock() + ": " + getName() + " : at VM" + cloudlet.getVmId() + " : cloudlet at Bw Out util  "+ pcloudlet.getUtilizationOfBwOut(CloudSim.clock()));
-		}
+//		for(Cloudlet cloudlet : cloudletSubmittedList) {
+//			ProfilingCloudlet pcloudlet = (ProfilingCloudlet) cloudlet;
+//			Log.printLine(CloudSim.clock() + ": " + getName() + " : at VM" + cloudlet.getVmId() + " : cloudlet at CPU util  "+ pcloudlet.getUtilizationOfCpu(CloudSim.clock()));
+//			Log.printLine(CloudSim.clock() + ": " + getName() + " : at VM" + cloudlet.getVmId() + " : cloudlet at Mem util  "+ pcloudlet.getUtilizationOfRam(CloudSim.clock()));
+//			Log.printLine(CloudSim.clock() + ": " + getName() + " : at VM" + cloudlet.getVmId() + " : cloudlet at Disk Read util  "+ pcloudlet.getUtilizationOfDiskRead(CloudSim.clock()));
+//			Log.printLine(CloudSim.clock() + ": " + getName() + " : at VM" + cloudlet.getVmId() + " : cloudlet at Disk Write util  "+ pcloudlet.getUtilizationOfDiskWrite(CloudSim.clock()));
+//			Log.printLine(CloudSim.clock() + ": " + getName() + " : at VM" + cloudlet.getVmId() + " : cloudlet at Bw In util  "+ pcloudlet.getUtilizationOfBw(CloudSim.clock()));
+//			Log.printLine(CloudSim.clock() + ": " + getName() + " : at VM" + cloudlet.getVmId() + " : cloudlet at Bw Out util  "+ pcloudlet.getUtilizationOfBwOut(CloudSim.clock()));
+//		}
 		
 		//change gui
 		notifyObservers();

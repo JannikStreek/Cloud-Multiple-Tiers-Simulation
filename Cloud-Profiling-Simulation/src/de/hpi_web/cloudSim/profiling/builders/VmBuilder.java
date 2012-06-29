@@ -29,28 +29,18 @@ public class VmBuilder {
 
 
 	public VmBuilder(int id) {
+		setDefaults();
 		this.id = id;
-		this.pes = DEFAULT_PES;
-		this.mips = DEFAULT_MIPS;
-		this.ram = DEFAULT_RAM;
-		this.size = DEFAULT_SIZE;
-		this.bandwidth = DEFAULT_BW;
-		this.cloudletScheduler = new CloudletSchedulerTimeShared();
 	}	
 	
 	public VmBuilder() {
-		this.id = -1;
-		this.pes = DEFAULT_PES;
-		this.mips = DEFAULT_MIPS;
-		this.ram = DEFAULT_RAM;
-		this.size = DEFAULT_SIZE;
-		this.bandwidth = DEFAULT_BW;
-		this.cloudletScheduler = new CloudletSchedulerTimeShared();
+		setDefaults();
 	}
 	
 	public Vm build() {
 		if (id < 0)
 			id = idCounter;
+		idCounter++;
 		return new Vm(id, userId, mips, pes, ram, bandwidth, size, vmm, cloudletScheduler);
 	}
 	
@@ -115,5 +105,16 @@ public class VmBuilder {
 	public VmBuilder setSize(long size) {
 		this.size = size;
 		return this;
+	}
+	
+	private void setDefaults() {
+		this.id = -1;
+		this.pes = DEFAULT_PES;
+		this.mips = DEFAULT_MIPS;
+		this.ram = DEFAULT_RAM;
+		this.size = DEFAULT_SIZE;
+		this.bandwidth = DEFAULT_BW;
+		this.vmm = VMM;
+		this.cloudletScheduler = new CloudletSchedulerTimeShared();
 	}
 }

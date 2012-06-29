@@ -15,7 +15,7 @@ import de.hpi_web.cloudSim.multitier.MultiTierCloudlet;
 import de.hpi_web.cloudSim.multitier.cloudlet.ExponentialGrowth;
 import de.hpi_web.cloudSim.multitier.cloudlet.MultiTierWorkload;
 import de.hpi_web.cloudSim.multitier.datacenter.DatacenterAffinityBroker;
-import de.hpi_web.cloudSim.multitier.staticTier.CloudletFactory;
+import de.hpi_web.cloudSim.multitier.factories.CloudletFactory;
 
 public class SpikeWorkloadGenerator extends WorkloadGenerator {
 

@@ -18,9 +18,9 @@ import org.junit.Test;
 import de.hpi_web.cloudSim.multitier.MultiTierCloudlet;
 import de.hpi_web.cloudSim.multitier.datacenter.DatacenterAffinityBroker;
 import de.hpi_web.cloudSim.multitier.example.MultiTierExample;
-import de.hpi_web.cloudSim.multitier.staticTier.CloudletFactory;
-import de.hpi_web.cloudSim.multitier.staticTier.DatacenterFactory;
-import de.hpi_web.cloudSim.multitier.staticTier.VmFactory;
+import de.hpi_web.cloudSim.multitier.factories.CloudletFactory;
+import de.hpi_web.cloudSim.multitier.factories.DatacenterFactory;
+import de.hpi_web.cloudSim.multitier.factories.VmFactory;
 
 public class DatacenterTest {
 

@@ -4,9 +4,37 @@ public class UtilizationThreshold {
 	private int upper;
 	private int lower;
 
-	public UtilizationThreshold(int upper, int lower) {
-		this.upper = upper;
-		this.lower = lower;
+	public UtilizationThreshold(int a, int b) {
+		this.upper = Math.max(a, b);
+		this.lower = Math.min(a, b);
+	}
+	
+	public boolean isValid() {
+		return (upper > 0 && lower > 0 && lower < upper);
+	}
+	
+	public boolean belowThreshold(int value) {
+		if (!isValid())
+			return true;
+		return value < lower;
+	}
+
+	public boolean belowThreshold(double value) {
+		if (!isValid())
+			return true;
+		return value < lower;
+	}
+
+	public boolean aboveThreshold(int value) {
+		if (!isValid())
+			return false;
+		return value > upper;
+	}
+
+	public boolean aboveThreshold(double value) {
+		if (!isValid())
+			return false;
+		return value > upper;
 	}
 
 	public int getUpper() {

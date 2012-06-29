@@ -53,13 +53,14 @@ public class NewCloudProfiler {
 		UtilManager utilManager = new UtilManager(
 				"UtilManager", 
 				delay, 
-				cpuThreshold.getUpper(), cpuThreshold.getLower(), 
-				memThreshold.getUpper(), memThreshold.getLower(),
-				10000,5000,//hdReadThreshold.getUpper(), hdReadThreshold.getLower(),
-				10000,5000,//hdWriteThreshold.getUpper(), hdWriteThreshold.getLower(),
-				10000,5000,//bwInThreshold.getUpper(), bwInThreshold.getLower(), //bw in
-				10000,5000,//bwOutThreshold.getUpper(), bwOutThreshold.getLower(), //bw out
-				layers);
+				cpuThreshold, 
+				memThreshold,
+				hdReadThreshold,
+				hdWriteThreshold,
+				bwInThreshold,
+				bwOutThreshold,
+				layers,
+				vmBuilder);
 		
 		CloudSim.startSimulation();
 		CloudSim.stopSimulation();

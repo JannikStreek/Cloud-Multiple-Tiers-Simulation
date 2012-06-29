@@ -37,7 +37,7 @@ public class DatacenterBuilder {
 	public DatacenterBuilder(String name) {
 		this.name = name;
 		this.lastProcessTime = 0;
-		this.numberOfHosts = 0;
+		this.numberOfHosts = 1;
 		this.storageList = new LinkedList<Storage>();
 	}
 	

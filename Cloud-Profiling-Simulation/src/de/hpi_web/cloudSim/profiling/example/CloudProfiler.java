@@ -5,7 +5,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
-import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.Datacenter;
 import org.cloudbus.cloudsim.DatacenterBroker;
 import org.cloudbus.cloudsim.Log;
@@ -13,14 +12,10 @@ import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
 
 import arx.NewArx;
-
-import de.hpi_web.cloudSim.multitier.MultiTierCloudlet;
-import de.hpi_web.cloudSim.multitier.staticTier.CloudletFactory;
-import de.hpi_web.cloudSim.multitier.staticTier.VmFactory;
+import de.hpi_web.cloudSim.multitier.factories.VmFactory;
 import de.hpi_web.cloudSim.profiling.datacenter.FixedDatacenterFactory;
 import de.hpi_web.cloudSim.profiling.datacenter.ProfilingBroker;
 import de.hpi_web.cloudSim.profiling.observer.Observer;
-import de.hpi_web.cloudSim.profiling.utilization.UtilManager;
 import de.hpi_web.cloudSim.profiling.utilization.UtilizationThreshold;
 
 public class CloudProfiler {
@@ -49,17 +44,17 @@ public class CloudProfiler {
 
 		//wsBroker.submitCloudletList(wsCloudlets);
 
-		@SuppressWarnings("unused")
-		UtilManager utilManager = new UtilManager(
-				"UtilManager", 
-				delay, 
-				cpuThreshold.getUpper(), cpuThreshold.getLower(), 
-				memThreshold.getUpper(), memThreshold.getLower(),
-				10000,5000,
-				10000,5000,
-				10000,5000,//bwInThreshold.getUpper(), bwInThreshold.getLower(), //bw in
-				10000,5000,//bwOutThreshold.getUpper(), bwOutThreshold.getLower(), //bw out
-				layers);
+//		@SuppressWarnings("unused")
+//		UtilManager utilManager = new UtilManager(
+//				"UtilManager", 
+//				delay, 
+//				cpuThreshold.getUpper(), cpuThreshold.getLower(), 
+//				memThreshold.getUpper(), memThreshold.getLower(),
+//				10000,5000,
+//				10000,5000,
+//				10000,5000,//bwInThreshold.getUpper(), bwInThreshold.getLower(), //bw in
+//				10000,5000,//bwOutThreshold.getUpper(), bwOutThreshold.getLower(), //bw out
+//				layers);
 		
 		CloudSim.startSimulation();
 		CloudSim.stopSimulation();

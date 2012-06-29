@@ -8,11 +8,10 @@ import org.cloudbus.cloudsim.DatacenterCharacteristics;
 import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Pe;
 import org.cloudbus.cloudsim.Storage;
-import org.cloudbus.cloudsim.VmAllocationPolicy;
 import org.cloudbus.cloudsim.VmAllocationPolicySimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
 
-import de.hpi_web.cloudSim.multitier.staticTier.DatacenterFactory;
+import de.hpi_web.cloudSim.multitier.factories.DatacenterFactory;
 
 
 

@@ -33,21 +33,12 @@ public class HostBuilder {
 	private int hostId;
 	
 	public HostBuilder(int hostId) {
+		setDefaults();
 		this.hostId = hostId;
-		this.pes = DEFAULT_PES;
-		this.mips = DEFAULT_MIPS;
-		this.ram = DEFAULT_RAM;
-		this.storage = DEFAULT_STORAGE;
-		this.bandwidth = DEFAULT_BW;
 	}
 	
 	public HostBuilder() {
-		this.hostId = -1;
-		this.pes = DEFAULT_PES;
-		this.mips = DEFAULT_MIPS;
-		this.ram = DEFAULT_RAM;
-		this.storage = DEFAULT_STORAGE;
-		this.bandwidth = DEFAULT_BW;
+		setDefaults();
 	}
 	
 	Host build() {
@@ -117,5 +108,14 @@ public class HostBuilder {
 	public HostBuilder setBandwidth(long bandwidth) {
 		this.bandwidth = bandwidth;
 		return this;
+	}
+	
+	private void setDefaults() {
+		this.hostId = -1;
+		this.pes = DEFAULT_PES;
+		this.mips = DEFAULT_MIPS;
+		this.ram = DEFAULT_RAM;
+		this.storage = DEFAULT_STORAGE;
+		this.bandwidth = DEFAULT_BW;
 	}
 }

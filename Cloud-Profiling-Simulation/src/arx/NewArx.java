@@ -178,12 +178,12 @@ public class NewArx {
             
             input_row.set(0, 0, yk_minus_1*(-1.0));
                         
-            System.out.print("\u03D5"+"k(at equation 6):");
+//            System.out.print("\u03D5"+"k(at equation 6):");
             input_row.print(2, 4);
             
             //It is equation 7 at paper!
             Matrix yk = input_row.times(x);
-            System.out.print("yk (Predicted y at equation 7):");
+//            System.out.print("yk (Predicted y at equation 7):");
             yk.print(2, 4);
             
             yk_minus_1 = yk.get(0, 0);
