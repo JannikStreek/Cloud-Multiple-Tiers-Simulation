@@ -42,8 +42,7 @@ public class HostBuilder {
 	}
 	
 	Host build() {
-		if (hostId < 0)
-			hostId = hostIdCounter;
+		hostId = hostIdCounter;
 		List<Pe> peList = buildPeList();
 		Host host = new Host(
 				hostId,

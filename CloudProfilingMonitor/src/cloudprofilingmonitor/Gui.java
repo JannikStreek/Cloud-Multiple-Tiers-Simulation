@@ -824,6 +824,10 @@ public class Gui extends javax.swing.JFrame implements Observer {
                 Integer.parseInt(maxBwInTextField.getText()), 
                 Integer.parseInt(minBwInTextField.getText()));
         simulation.setBwInThreshold(bwInThreshold);
+        UtilizationThreshold bwOutThreshold = new UtilizationThreshold(
+                Integer.parseInt(maxBwOutTextField.getText()), 
+                Integer.parseInt(minBwOutTextField.getText()));
+        simulation.setBwOutThreshold(bwOutThreshold);
         UtilizationThreshold hdReadThreshold = new UtilizationThreshold(
                 Integer.parseInt(maxHdReadTextField.getText()), 
                 Integer.parseInt(minHdReadTextField.getText()));

@@ -38,8 +38,7 @@ public class VmBuilder {
 	}
 	
 	public Vm build() {
-		if (id < 0)
-			id = idCounter;
+		id = idCounter;
 		idCounter++;
 		return new Vm(id, userId, mips, pes, ram, bandwidth, size, vmm, cloudletScheduler);
 	}
@@ -48,10 +47,10 @@ public class VmBuilder {
 		return id;
 	}
 
-	public VmBuilder setId(int id) {
-		this.id = id;
-		return this;
-	}
+//	public VmBuilder setId(int id) {
+//		this.id = id;
+//		return this;
+//	}
 
 	public int getUserId() {
 		return userId;
