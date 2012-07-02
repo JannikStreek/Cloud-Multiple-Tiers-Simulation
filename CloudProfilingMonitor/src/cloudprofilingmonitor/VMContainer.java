@@ -17,7 +17,10 @@ import javax.swing.JPanel;
 public class VMContainer extends JPanel {
     private JLabel cpuUtilText, cpuUtilValue;
     private JLabel memUtilText, memUtilValue;
-    private JLabel bwUtilText, bwUtilValue;
+    private JLabel bwInUtilText, bwInUtilValue;
+    private JLabel bwOutUtilText, bwOutUtilValue;
+    private JLabel hdReadUtilText, hdReadUtilValue;
+    private JLabel hdWriteUtilText, hdWriteUtilValue;
     
     private DecimalFormat df;
     
@@ -45,8 +48,32 @@ public class VMContainer extends JPanel {
     }
     public void setBwUtil(Double value, UtilizationThreshold threshold) {
         Color fgColor = getColorForValue(value, threshold);
-        bwUtilValue.setText(df.format(value) + "%");
-        bwUtilValue.setForeground(fgColor);
+        bwInUtilValue.setText(df.format(value) + "%");
+        bwInUtilValue.setForeground(fgColor);
+    }
+
+    void setHdReadUtil(Double value, UtilizationThreshold threshold) {
+        Color fgColor = getColorForValue(value, threshold);
+        bwInUtilValue.setText(df.format(value) + "%");
+        bwInUtilValue.setForeground(fgColor);
+    }
+
+    void setBwInUtil(Double value, UtilizationThreshold threshold) {
+        Color fgColor = getColorForValue(value, threshold);
+        bwInUtilValue.setText(df.format(value) + "%");
+        bwInUtilValue.setForeground(fgColor);
+    }
+
+    void setBwOutUtil(Double value, UtilizationThreshold threshold) {
+        Color fgColor = getColorForValue(value, threshold);
+        bwInUtilValue.setText(df.format(value) + "%");
+        bwInUtilValue.setForeground(fgColor);
+    }
+
+    void setHdWriteUtil(Double value, UtilizationThreshold threshold) {
+        Color fgColor = getColorForValue(value, threshold);
+        bwInUtilValue.setText(df.format(value) + "%");
+        bwInUtilValue.setForeground(fgColor);
     }
     
     private Color getColorForValue(double value, UtilizationThreshold threshold) {
@@ -73,10 +100,17 @@ public class VMContainer extends JPanel {
     private void initializeLabels() {
         cpuUtilText = new javax.swing.JLabel();
         memUtilText = new javax.swing.JLabel();
-        bwUtilText = new javax.swing.JLabel();
+        bwInUtilText = new javax.swing.JLabel();
+        bwOutUtilText = new javax.swing.JLabel();
+        hdReadUtilText = new javax.swing.JLabel();
+        hdWriteUtilText = new javax.swing.JLabel();
+        
         cpuUtilValue = new javax.swing.JLabel();
         memUtilValue = new javax.swing.JLabel();
-        bwUtilValue = new javax.swing.JLabel();
+        bwInUtilValue = new javax.swing.JLabel();
+        bwOutUtilValue = new javax.swing.JLabel();
+        hdReadUtilValue = new javax.swing.JLabel();
+        hdWriteUtilValue = new javax.swing.JLabel();
         
         cpuUtilText.setFont(new java.awt.Font("Ubuntu", 0, 12)); // NOI18N
         cpuUtilText.setText("CPU:");
@@ -84,8 +118,18 @@ public class VMContainer extends JPanel {
         memUtilText.setFont(new java.awt.Font("Ubuntu", 0, 12)); // NOI18N
         memUtilText.setText("RAM:");
 
-        bwUtilText.setFont(new java.awt.Font("Ubuntu", 0, 12)); // NOI18N
-        bwUtilText.setText("BW:");
+        bwInUtilText.setFont(new java.awt.Font("Ubuntu", 0, 12)); // NOI18N
+        bwInUtilText.setText("BW I:");
+
+        bwOutUtilText.setFont(new java.awt.Font("Ubuntu", 0, 12)); // NOI18N
+        bwOutUtilText.setText("BW O:");
+        
+        hdReadUtilText.setFont(new java.awt.Font("Ubuntu", 0, 12)); // NOI18N
+        hdReadUtilText.setText("HD R:");
+        
+        hdWriteUtilText.setFont(new java.awt.Font("Ubuntu", 0, 12)); // NOI18N
+        hdWriteUtilText.setText("HD W:");
+        
 
         cpuUtilValue.setFont(new java.awt.Font("Ubuntu", 0, 12)); // NOI18N
         cpuUtilValue.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -95,9 +139,21 @@ public class VMContainer extends JPanel {
         memUtilValue.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         memUtilValue.setText("0%");
 
-        bwUtilValue.setFont(new java.awt.Font("Ubuntu", 0, 12)); // NOI18N
-        bwUtilValue.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        bwUtilValue.setText("0%");
+        bwInUtilValue.setFont(new java.awt.Font("Ubuntu", 0, 12)); // NOI18N
+        bwInUtilValue.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        bwInUtilValue.setText("0%");
+
+        bwOutUtilValue.setFont(new java.awt.Font("Ubuntu", 0, 12)); // NOI18N
+        bwOutUtilValue.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        bwOutUtilValue.setText("0%");
+
+        hdReadUtilValue.setFont(new java.awt.Font("Ubuntu", 0, 12)); // NOI18N
+        hdReadUtilValue.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        hdReadUtilValue.setText("0%");
+
+        hdWriteUtilValue.setFont(new java.awt.Font("Ubuntu", 0, 12)); // NOI18N
+        hdWriteUtilValue.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        hdWriteUtilValue.setText("0%");
         
     }
     
@@ -111,12 +167,18 @@ public class VMContainer extends JPanel {
                 .addGroup(VMPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(cpuUtilText)  //23
                     .addComponent(memUtilText)  //24
-                    .addComponent(bwUtilText))  //25
+                    .addComponent(bwInUtilText)  //25
+                    .addComponent(bwOutUtilText)  //25
+                    .addComponent(hdReadUtilText)  //25
+                    .addComponent(hdWriteUtilText))  //25
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 175, Short.MAX_VALUE)
                 .addGroup(VMPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(cpuUtilValue, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)    //26
                     .addComponent(memUtilValue, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)    //27
-                    .addComponent(bwUtilValue, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))    //28
+                    .addComponent(bwInUtilValue, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)    //28
+                    .addComponent(bwOutUtilValue, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(hdReadUtilValue, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(hdWriteUtilValue, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         VMPanelLayout.setVerticalGroup(
@@ -126,13 +188,25 @@ public class VMContainer extends JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(memUtilText)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(bwUtilText))
+                .addComponent(bwInUtilText)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(bwOutUtilText)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(hdReadUtilText)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(hdWriteUtilText))
             .addGroup(VMPanelLayout.createSequentialGroup()
                 .addComponent(cpuUtilValue)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(memUtilValue)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(bwUtilValue))
+                .addComponent(bwInUtilValue)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(bwOutUtilValue)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(hdReadUtilValue)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(hdWriteUtilValue))
         );
     }
 }

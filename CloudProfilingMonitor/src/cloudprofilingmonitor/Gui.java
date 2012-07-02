@@ -8,6 +8,7 @@ import de.hpi_web.cloudSim.profiling.builders.DatacenterBuilder;
 import de.hpi_web.cloudSim.profiling.builders.HostBuilder;
 import de.hpi_web.cloudSim.profiling.builders.VmBuilder;
 import de.hpi_web.cloudSim.profiling.datacenter.ProfilingBroker;
+import de.hpi_web.cloudSim.profiling.datacenter.ProfilingCloudlet;
 import de.hpi_web.cloudSim.profiling.observer.Observable;
 import de.hpi_web.cloudSim.profiling.observer.Observer;
 import de.hpi_web.cloudSim.profiling.utilization.UtilizationThreshold;
@@ -844,11 +845,15 @@ public class Gui extends javax.swing.JFrame implements Observer {
         if (broker.getName().equalsIgnoreCase("dbBroker"))
                 area = tier3_VMPanel;
         area.removeAll();
-        for(Cloudlet cloudlet : broker.getCloudletSubmittedList()) {
+        for(Cloudlet cl : broker.getCloudletSubmittedList()) {
+                ProfilingCloudlet cloudlet = (ProfilingCloudlet) cl;
                 Double cpuUtil = new Double(cloudlet.getUtilizationOfCpu(CloudSim.clock()));
                 Double memUtil = new Double(cloudlet.getUtilizationOfRam(CloudSim.clock()));
                 // TODO: do this for BW IN, BW OUT, HD Write, HD Read. Need to adjust cloudlet
-                Double bwUtil = new Double(cloudlet.getUtilizationOfBw(CloudSim.clock()));
+                Double bwInUtil = new Double(cloudlet.getUtilizationOfBw(CloudSim.clock()));
+                Double bwOutUtil = new Double(cloudlet.getUtilizationOfBwOut(CloudSim.clock()));
+                Double hdReadUtil = new Double(cloudlet.getUtilizationOfDiskRead(CloudSim.clock()));
+                Double hdWriteUtil = new Double(cloudlet.getUtilizationOfDiskWrite(CloudSim.clock()));
                 int vmId = cloudlet.getVmId();
                 int hostId = 0;
 
@@ -857,7 +862,10 @@ public class Gui extends javax.swing.JFrame implements Observer {
                 
                 c.setCpuUtil(cpuUtil, simulation.getCpuThreshold());
                 c.setMemUtil(memUtil, simulation.getMemThreshold());
-                c.setBwUtil(bwUtil, simulation.getBwInThreshold());
+                c.setBwInUtil(bwInUtil, simulation.getBwInThreshold());
+                c.setBwOutUtil(bwOutUtil, simulation.getBwOutThreshold());
+                c.setHdReadUtil(hdReadUtil, simulation.getHdReadThreshold());
+                c.setHdWriteUtil(hdWriteUtil, simulation.getHdWriteThreshold());
         }
         area.validate();
         //area.repaint();
