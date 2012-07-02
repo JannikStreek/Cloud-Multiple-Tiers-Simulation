@@ -6,7 +6,6 @@ package cloudprofilingmonitor;
 
 import de.hpi_web.cloudSim.profiling.builders.DatacenterBuilder;
 import de.hpi_web.cloudSim.profiling.builders.VmBuilder;
-import de.hpi_web.cloudSim.profiling.example.CloudProfiler;
 import de.hpi_web.cloudSim.profiling.example.NewCloudProfiler;
 import de.hpi_web.cloudSim.profiling.observer.Observer;
 import de.hpi_web.cloudSim.profiling.utilization.UtilizationThreshold;

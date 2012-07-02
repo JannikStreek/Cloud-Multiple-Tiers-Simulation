@@ -33,6 +33,9 @@ public class Gui extends javax.swing.JFrame implements Observer {
         hostBuilder = new HostBuilder();
         dcBuilder = new DatacenterBuilder("DummyName");
         vmBuilder = new VmBuilder();
+        dcBuilder.setHostBuilder(hostBuilder);
+        simulation.setDcBuilder(dcBuilder);
+        simulation.setVmBuilder(vmBuilder);
         initComponents();
     }
     
@@ -510,6 +513,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
 
         maxHdWriteTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         maxHdWriteTextField.setText("0");
+        maxHdWriteTextField.setMinimumSize(new java.awt.Dimension(18, 27));
         maxHdWriteTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 maxHdWriteTextFieldActionPerformed(evt);
@@ -541,7 +545,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
                     .addComponent(jLabel14))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(maxHdWriteTextField, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(maxHdWriteTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(maxHdReadTextField, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(maxBwOutTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(maxBwInTextField, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -624,7 +628,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
                     .addComponent(jLabel31)
                     .addComponent(minHdWriteTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(maxHdWriteTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel22)
                     .addComponent(delayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -682,7 +686,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
         jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane2.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
-        trainingInput.setText("training-new.csv");
+        trainingInput.setText("training.csv");
         trainingInput.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 trainingInputFocusGained(evt);
@@ -790,9 +794,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
                 .setStorage(Long.parseLong(storagePerHostTextField.getText()))
                 .setPes(Integer.parseInt(coresPerHostTextField.getText()))
                 .setMips(Integer.parseInt(mipsPerCoreTextField.getText()));
-        dcBuilder.setNumberOfHosts(Integer.parseInt(numberOfHostsTextField.getText()))
-                .setHostBuilder(hostBuilder);
-        simulation.setDcBuilder(dcBuilder);
+        dcBuilder.setNumberOfHosts(Integer.parseInt(numberOfHostsTextField.getText()));
     }
     
     private void submitVmSettings() {
@@ -801,8 +803,6 @@ public class Gui extends javax.swing.JFrame implements Observer {
                 .setSize(Long.parseLong(storagePerVmTextField.getText()))
                 .setPes(Integer.parseInt(coresPerVmTextField.getText()))
                 .setMips(Integer.parseInt(mipsPerVmCore.getText()));
-        simulation.setVmBuilder(vmBuilder);
-        
     }
     
     private void submitDelay() {
@@ -822,8 +822,74 @@ public class Gui extends javax.swing.JFrame implements Observer {
                 Integer.parseInt(maxBwInTextField.getText()), 
                 Integer.parseInt(minBwInTextField.getText()));
         simulation.setBwInThreshold(bwInThreshold);
+        UtilizationThreshold hdReadThreshold = new UtilizationThreshold(
+                Integer.parseInt(maxHdReadTextField.getText()), 
+                Integer.parseInt(minHdReadTextField.getText()));
+        simulation.setHdReadThreshold(hdReadThreshold);
+        UtilizationThreshold hdWriteThreshold = new UtilizationThreshold(
+                Integer.parseInt(maxHdWriteTextField.getText()), 
+                Integer.parseInt(minHdWriteTextField.getText()));
+        simulation.setHdWriteThreshold(hdWriteThreshold);
         
     }
+    
+    
+    @Override
+    public void refreshData(Observable subject) {
+        ProfilingBroker broker = (ProfilingBroker) subject;
+        // TODO: we need to decide which text area to use; this is just a fixed, quick and dirty solution
+        JPanel area = tier1_VMPanel;
+        if (broker.getName().equalsIgnoreCase("appBroker"))
+                area = tier2_VMPanel;
+        if (broker.getName().equalsIgnoreCase("dbBroker"))
+                area = tier3_VMPanel;
+        area.removeAll();
+        for(Cloudlet cloudlet : broker.getCloudletSubmittedList()) {
+                Double cpuUtil = new Double(cloudlet.getUtilizationOfCpu(CloudSim.clock()));
+                Double memUtil = new Double(cloudlet.getUtilizationOfRam(CloudSim.clock()));
+                // TODO: do this for BW IN, BW OUT, HD Write, HD Read. Need to adjust cloudlet
+                Double bwUtil = new Double(cloudlet.getUtilizationOfBw(CloudSim.clock()));
+                int vmId = cloudlet.getVmId();
+                int hostId = 0;
+
+                hostId = broker.getVmForVmId(vmId).getHost().getId();
+                VMContainer c = createVmContainer(area, "VM: " + vmId + " at host " + hostId);
+                
+                c.setCpuUtil(cpuUtil, simulation.getCpuThreshold());
+                c.setMemUtil(memUtil, simulation.getMemThreshold());
+                c.setBwUtil(bwUtil, simulation.getBwInThreshold());
+        }
+        area.validate();
+        //area.repaint();
+    }
+    
+    private VMContainer createVmContainer(JPanel parent, String title) {
+        VMContainer vmPanel = new VMContainer();
+        vmPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, title, javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("DejaVu Sans", 1, 10)));
+        parent.add(vmPanel);
+        return vmPanel;
+    }
+    
+    private void updateGroupLayout(JPanel vmPanel) {
+        /*
+        javax.swing.GroupLayout tier1_VMPanelLayout = new javax.swing.GroupLayout(tier1_VMPanel);
+        tier1_VMPanel.setLayout(tier1_VMPanelLayout);
+        tier1_VMPanelLayout.setHorizontalGroup(
+            tier1_VMPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tier1_VMPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(VMPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        tier1_VMPanelLayout.setVerticalGroup(
+            tier1_VMPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(tier1_VMPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(VMPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(240, Short.MAX_VALUE))
+        );*/
+    }
+    
     private void numberOfHostsTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_numberOfHostsTextFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_numberOfHostsTextFieldActionPerformed
@@ -1045,54 +1111,4 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private javax.swing.JTextPane trainingInput;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public void refreshData(Observable subject) {
-        ProfilingBroker broker = (ProfilingBroker) subject;
-        // TODO: we need to decide which text area to use; this is just a fixed, quick and dirty solution
-        JPanel area = tier1_VMPanel;
-        if (broker.getName().equalsIgnoreCase("appBroker"))
-                area = tier2_VMPanel;
-        if (broker.getName().equalsIgnoreCase("dbBroker"))
-                area = tier3_VMPanel;
-        area.removeAll();
-        for(Cloudlet cloudlet : broker.getCloudletSubmittedList()) {
-                Double util = new Double(cloudlet.getUtilizationModelCpu().getUtilization(CloudSim.clock()));
-                int vmId = cloudlet.getVmId();
-                int hostId = 0;
-
-                hostId = broker.getVmForVmId(vmId).getHost().getId();
-                VMContainer c = createVmContainer(area, "VM: " + vmId + " at host " + hostId);
-                
-                c.setCpuUtil(util, simulation.getCpuThreshold());
-        }
-        area.validate();
-        //area.repaint();
-    }
-    
-    private VMContainer createVmContainer(JPanel parent, String title) {
-        VMContainer vmPanel = new VMContainer();
-        vmPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, title, javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("DejaVu Sans", 1, 10)));
-        parent.add(vmPanel);
-        return vmPanel;
-    }
-    
-    private void updateGroupLayout(JPanel vmPanel) {
-        /*
-        javax.swing.GroupLayout tier1_VMPanelLayout = new javax.swing.GroupLayout(tier1_VMPanel);
-        tier1_VMPanel.setLayout(tier1_VMPanelLayout);
-        tier1_VMPanelLayout.setHorizontalGroup(
-            tier1_VMPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tier1_VMPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(VMPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        tier1_VMPanelLayout.setVerticalGroup(
-            tier1_VMPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(tier1_VMPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(VMPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(240, Short.MAX_VALUE))
-        );*/
-    }
 }

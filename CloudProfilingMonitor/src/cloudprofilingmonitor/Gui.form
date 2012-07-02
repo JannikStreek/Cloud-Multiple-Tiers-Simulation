@@ -752,7 +752,7 @@
                               <Component id="minHdWriteTextField" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="maxHdWriteTextField" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="43" max="32767" attributes="0"/>
+                          <EmptySpace pref="45" max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jLabel22" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="delayTextField" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -925,6 +925,9 @@
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="4"/>
                     <Property name="text" type="java.lang.String" value="0"/>
+                    <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                      <Dimension value="[18, 27]"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="maxHdWriteTextFieldActionPerformed"/>
@@ -979,7 +982,7 @@
       <SubComponents>
         <Component class="javax.swing.JTextPane" name="trainingInput">
           <Properties>
-            <Property name="text" type="java.lang.String" value="training-new.csv"/>
+            <Property name="text" type="java.lang.String" value="training.csv"/>
           </Properties>
           <Events>
             <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="trainingInputFocusGained"/>

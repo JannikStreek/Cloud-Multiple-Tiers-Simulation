@@ -34,26 +34,35 @@ public class VMContainer extends JPanel {
     }
     
     public void setCpuUtil(Double value, UtilizationThreshold threshold) {
-        Color fgColor = getColorForValue(value, threshold.getUpper(), threshold.getLower());
+        Color fgColor = getColorForValue(value, threshold);
         cpuUtilValue.setText(df.format(value) + "%");
         cpuUtilValue.setForeground(fgColor);
     }
-    public void setMemUtil(Double value) {
-        memUtilValue.setText(value.toString() + "%");
+    public void setMemUtil(Double value, UtilizationThreshold threshold) {
+        Color fgColor = getColorForValue(value, threshold);
+        memUtilValue.setText(df.format(value) + "%");
+        memUtilValue.setForeground(fgColor);
     }
-    public void setBwUtil(Double value) {
-        bwUtilValue.setText(value.toString() + "%");
+    public void setBwUtil(Double value, UtilizationThreshold threshold) {
+        Color fgColor = getColorForValue(value, threshold);
+        bwUtilValue.setText(df.format(value) + "%");
+        bwUtilValue.setForeground(fgColor);
     }
     
-    private Color getColorForValue(double value, double upper, double lower) {
+    private Color getColorForValue(double value, UtilizationThreshold threshold) {
+        if (!threshold.isValid())
+            return Color.BLACK;
+        double lower = threshold.getLower();
+        double upper = threshold.getUpper();
+        
         // blue = very close to or below lower threshold
         if (value <= lower*1.05)
             return Color.BLUE;
         // green = close to lower threshold
-        if (value <= lower*1.10)
+        if (value <= lower*1.20)
             return Color.GREEN;
         // black = normal
-        if (value < upper*0.90)
+        if (value < upper*0.80)
             return Color.BLACK;
         // orange = close to upper threshold
         if (value < upper*0.95)
