@@ -15,6 +15,7 @@ import de.hpi_web.cloudSim.profiling.utilization.UtilizationThreshold;
 import java.io.File;
 import javax.swing.JPanel;
 import org.cloudbus.cloudsim.Cloudlet;
+import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.core.CloudSim;
 
 /**
@@ -854,6 +855,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
                 Double bwOutUtil = new Double(cloudlet.getUtilizationOfBwOut(CloudSim.clock()));
                 Double hdReadUtil = new Double(cloudlet.getUtilizationOfDiskRead(CloudSim.clock()));
                 Double hdWriteUtil = new Double(cloudlet.getUtilizationOfDiskWrite(CloudSim.clock()));
+                
                 int vmId = cloudlet.getVmId();
                 int hostId = 0;
 

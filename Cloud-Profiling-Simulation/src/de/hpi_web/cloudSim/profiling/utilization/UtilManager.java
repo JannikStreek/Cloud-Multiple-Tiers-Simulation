@@ -154,6 +154,11 @@ public class UtilManager extends SimEntity {
 			double bwInUtilizationPerVm = (bwInUtils.get(i)/(double)runningVms);
 			double bwOutUtilizationPerVm = (bwOutUtils.get(i)/(double)runningVms);
 			Log.printLine("Current CPU Util: " + cpuUtilizationPerVm);
+			Log.printLine("Current Mem Util: " + memUtilizationPerVm);
+			Log.printLine("Current Disk Read Util: " + diskReadUtilizationPerVm);
+			Log.printLine("Current Disk Write Util: " + diskWriteUtilizationPerVm);
+			Log.printLine("Current BwIn Util: " + bwInUtilizationPerVm);
+			Log.printLine("Current BwOut Util: " + bwOutUtilizationPerVm);
 			Log.printLine("Running Vms: " + runningVms);
 			
 			if (runningVms > 0 &&

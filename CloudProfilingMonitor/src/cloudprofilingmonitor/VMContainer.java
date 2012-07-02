@@ -46,16 +46,16 @@ public class VMContainer extends JPanel {
         memUtilValue.setText(df.format(value) + "%");
         memUtilValue.setForeground(fgColor);
     }
-    public void setBwUtil(Double value, UtilizationThreshold threshold) {
-        Color fgColor = getColorForValue(value, threshold);
-        bwInUtilValue.setText(df.format(value) + "%");
-        bwInUtilValue.setForeground(fgColor);
-    }
+//    public void setBwUtil(Double value, UtilizationThreshold threshold) {
+//        Color fgColor = getColorForValue(value, threshold);
+//        bwInUtilValue.setText(df.format(value) + "%");
+//        bwInUtilValue.setForeground(fgColor);
+//    }
 
     void setHdReadUtil(Double value, UtilizationThreshold threshold) {
         Color fgColor = getColorForValue(value, threshold);
-        bwInUtilValue.setText(df.format(value) + "%");
-        bwInUtilValue.setForeground(fgColor);
+        hdReadUtilValue.setText(df.format(value) + "%");
+        hdReadUtilValue.setForeground(fgColor);
     }
 
     void setBwInUtil(Double value, UtilizationThreshold threshold) {
@@ -66,14 +66,14 @@ public class VMContainer extends JPanel {
 
     void setBwOutUtil(Double value, UtilizationThreshold threshold) {
         Color fgColor = getColorForValue(value, threshold);
-        bwInUtilValue.setText(df.format(value) + "%");
-        bwInUtilValue.setForeground(fgColor);
+        bwOutUtilValue.setText(df.format(value) + "%");
+        bwOutUtilValue.setForeground(fgColor);
     }
 
     void setHdWriteUtil(Double value, UtilizationThreshold threshold) {
         Color fgColor = getColorForValue(value, threshold);
-        bwInUtilValue.setText(df.format(value) + "%");
-        bwInUtilValue.setForeground(fgColor);
+        hdWriteUtilValue.setText(df.format(value) + "%");
+        hdWriteUtilValue.setForeground(fgColor);
     }
     
     private Color getColorForValue(double value, UtilizationThreshold threshold) {

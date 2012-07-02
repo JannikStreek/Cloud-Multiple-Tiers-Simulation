@@ -152,6 +152,7 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 			pcloudlet.setUtilizationModelDiskWrite(new UtilizationModelFixed(wrapper.getDiskWriteUtil()/cloudletsSubmittedDouble));
 			pcloudlet.setUtilizationModelBw(new UtilizationModelFixed(wrapper.getBwInUtil()/cloudletsSubmittedDouble));
 			pcloudlet.setUtilizationModelBwOut(new UtilizationModelFixed(wrapper.getBwOutUtil()/cloudletsSubmittedDouble));
+			
 		}
 		
 //		for(Cloudlet cloudlet : cloudletSubmittedList) {
