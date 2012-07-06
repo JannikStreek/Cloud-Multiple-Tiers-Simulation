@@ -27,6 +27,8 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private HostBuilder hostBuilder;
     private DatacenterBuilder dcBuilder;
     private VmBuilder vmBuilder;
+    
+    private Chart cpuChart, memChart, bwInChart, bwOutChart, hdReadChart, hdWriteChart;
     /**
      * Creates new form Gui
      */
@@ -39,6 +41,14 @@ public class Gui extends javax.swing.JFrame implements Observer {
         simulation.setDcBuilder(dcBuilder);
         simulation.setVmBuilder(vmBuilder);
         initComponents();
+        
+        cpuChart = new Chart();
+        memChart = new Chart();
+        bwInChart = new Chart();
+        bwOutChart = new Chart();
+        hdReadChart = new Chart();
+        hdWriteChart = new Chart();
+        cpuChart.render(0, chartPanel);
     }
     
     /**
@@ -119,6 +129,14 @@ public class Gui extends javax.swing.JFrame implements Observer {
         maxHdWriteTextField = new javax.swing.JTextField();
         jLabel32 = new javax.swing.JLabel();
         minHdWriteTextField = new javax.swing.JTextField();
+        jPanel1 = new javax.swing.JPanel();
+        tierComboBox = new javax.swing.JComboBox();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        valueComboBox = new javax.swing.JComboBox();
+        jLabel10 = new javax.swing.JLabel();
+        vmComboBox = new javax.swing.JComboBox();
+        chartPanel = new javax.swing.JPanel();
         startBtn = new javax.swing.JButton();
         stopBtn = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -630,7 +648,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
                     .addComponent(jLabel31)
                     .addComponent(minHdWriteTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(maxHdWriteTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel22)
                     .addComponent(delayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -670,6 +688,66 @@ public class Gui extends javax.swing.JFrame implements Observer {
         );
 
         jTabbedPane1.addTab("Settings", SettingsPanel);
+
+        tierComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Webserver", "Application", "Database" }));
+        tierComboBox.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                tierComboBoxPropertyChange(evt);
+            }
+        });
+
+        jLabel5.setText("Tier:");
+
+        jLabel6.setText("Item:");
+
+        valueComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "CPU", "Memory", "Bandwith", "Disk" }));
+
+        jLabel10.setText("VM:");
+
+        vmComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        chartPanel.setLayout(new javax.swing.BoxLayout(chartPanel, javax.swing.BoxLayout.LINE_AXIS));
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tierComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(valueComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(vmComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 725, Short.MAX_VALUE))
+                    .addComponent(chartPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tierComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5)
+                    .addComponent(valueComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6)
+                    .addComponent(vmComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10))
+                .addGap(18, 18, 18)
+                .addComponent(chartPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jTabbedPane1.addTab("Charts", jPanel1);
 
         startBtn.setText("Start");
         startBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -845,10 +923,15 @@ public class Gui extends javax.swing.JFrame implements Observer {
         ProfilingBroker broker = (ProfilingBroker) subject;
         // TODO: we need to decide which text area to use; this is just a fixed, quick and dirty solution
         JPanel area = tier1_VMPanel;
-        if (broker.getName().equalsIgnoreCase("appBroker"))
-                area = tier2_VMPanel;
-        if (broker.getName().equalsIgnoreCase("dbBroker"))
-                area = tier3_VMPanel;
+        int tier = 0;
+        if (broker.getName().equalsIgnoreCase("appBroker")) {
+            area = tier2_VMPanel;
+            tier = 1;
+        } else if (broker.getName().equalsIgnoreCase("dbBroker")) {
+            area = tier3_VMPanel;
+            tier = 2;
+        }
+        area.invalidate();
         area.removeAll();
         for(Cloudlet cl : broker.getCloudletSubmittedList()) {
                 ProfilingCloudlet cloudlet = (ProfilingCloudlet) cl;
@@ -872,6 +955,13 @@ public class Gui extends javax.swing.JFrame implements Observer {
                 c.setBwOutUtil(bwOutUtil, simulation.getBwOutThreshold());
                 c.setHdReadUtil(hdReadUtil, simulation.getHdReadThreshold());
                 c.setHdWriteUtil(hdWriteUtil, simulation.getHdWriteThreshold());
+                
+                cpuChart.addValue(tier, cpuUtil);
+                memChart.addValue(tier, memUtil);
+                bwInChart.addValue(tier, bwInUtil);
+                bwOutChart.addValue(tier, bwOutUtil);
+                hdReadChart.addValue(tier, hdReadUtil);
+                hdWriteChart.addValue(tier, hdWriteUtil);
         }
         area.validate();
         //area.repaint();
@@ -882,6 +972,23 @@ public class Gui extends javax.swing.JFrame implements Observer {
         vmPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, title, javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("DejaVu Sans", 1, 10)));
         parent.add(vmPanel);
         return vmPanel;
+    }
+ 
+    private void updateChart() {
+        String selectedItem = (String) valueComboBox.getSelectedItem();
+        int tier = tierComboBox.getSelectedIndex();
+        switch (selectedItem) {
+            case "CPU": 
+                cpuChart.render(tier, chartPanel);
+                break;        
+            case "Memory": 
+                memChart.render(tier, chartPanel);
+                break;
+            case "BW": 
+                bwInChart.render(tier, chartPanel);
+                break;
+        // TODO: finish cases
+        }
     }
     
     private void updateGroupLayout(JPanel vmPanel) {
@@ -1003,6 +1110,13 @@ public class Gui extends javax.swing.JFrame implements Observer {
         // TODO add your handling code here:
     }//GEN-LAST:event_minHdWriteTextFieldActionPerformed
 
+    private void tierComboBoxPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_tierComboBoxPropertyChange
+        // TODO add your handling code here:
+        if (evt.getPropertyName().equals("selectedItem")) {
+            updateChart();
+        }
+    }//GEN-LAST:event_tierComboBoxPropertyChange
+
     /**
      * @param args the command line arguments
      */
@@ -1050,12 +1164,14 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private javax.swing.JPanel SimulationPanel;
     private javax.swing.JTextField bwPerHostTextField;
     private javax.swing.JTextField bwPerVmTextField;
+    private javax.swing.JPanel chartPanel;
     private javax.swing.JTextField coresPerHostTextField;
     private javax.swing.JTextField coresPerVmTextField;
     private javax.swing.JButton defaultSettingsButton;
     private javax.swing.JTextField delayTextField;
     private javax.swing.JFileChooser fileChooser;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
@@ -1081,9 +1197,12 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private javax.swing.JLabel jLabel31;
     private javax.swing.JLabel jLabel32;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
@@ -1122,7 +1241,10 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private javax.swing.JScrollPane tier2_scrollPane;
     private javax.swing.JPanel tier3_VMPanel;
     private javax.swing.JScrollPane tier3_scrollPane;
+    private javax.swing.JComboBox tierComboBox;
     private javax.swing.JTextPane trainingInput;
+    private javax.swing.JComboBox valueComboBox;
+    private javax.swing.JComboBox vmComboBox;
     // End of variables declaration//GEN-END:variables
 
 }

@@ -52,12 +52,6 @@ public class VMContainer extends JPanel {
 //        bwInUtilValue.setForeground(fgColor);
 //    }
 
-    void setHdReadUtil(Double value, UtilizationThreshold threshold) {
-        Color fgColor = getColorForValue(value, threshold);
-        hdReadUtilValue.setText(df.format(value) + "%");
-        hdReadUtilValue.setForeground(fgColor);
-    }
-
     void setBwInUtil(Double value, UtilizationThreshold threshold) {
         Color fgColor = getColorForValue(value, threshold);
         bwInUtilValue.setText(df.format(value) + "%");
@@ -70,9 +64,15 @@ public class VMContainer extends JPanel {
         bwOutUtilValue.setForeground(fgColor);
     }
 
+    void setHdReadUtil(Double value, UtilizationThreshold threshold) {
+        Color fgColor = getColorForValue(value, threshold);
+        hdReadUtilValue.setText(df.format(value) + "Kb/s");
+        hdReadUtilValue.setForeground(fgColor);
+    }
+
     void setHdWriteUtil(Double value, UtilizationThreshold threshold) {
         Color fgColor = getColorForValue(value, threshold);
-        hdWriteUtilValue.setText(df.format(value) + "%");
+        hdWriteUtilValue.setText(df.format(value) + "Kb/s");
         hdWriteUtilValue.setForeground(fgColor);
     }
     
