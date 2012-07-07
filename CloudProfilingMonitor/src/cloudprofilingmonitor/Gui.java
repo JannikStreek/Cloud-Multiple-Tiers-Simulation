@@ -869,6 +869,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
     @Override
     public void refreshData(Observable subject) {
         ProfilingBroker broker = (ProfilingBroker) subject;
+        Boolean newValuesForGraph = true;
         // TODO: we need to decide which text area to use; this is just a fixed, quick and dirty solution
         JPanel area = tier1_VMPanel;
         String tier = ChartPanel.WEB_TIER;
@@ -904,12 +905,15 @@ public class Gui extends javax.swing.JFrame implements Observer {
                 c.setHdReadUtil(hdReadUtil, simulation.getHdReadThreshold());
                 c.setHdWriteUtil(hdWriteUtil, simulation.getHdWriteThreshold());
                 
-                chartPanel.addCpuValue(tier, cpuUtil);
-                chartPanel.addMemValue(tier, memUtil);
-                chartPanel.addBwInValue(tier, bwInUtil);
-                chartPanel.addBwOutValue(tier, bwOutUtil);
-                chartPanel.addHdReadValue(tier, hdReadUtil);
-                chartPanel.addHdWriteValue(tier, hdWriteUtil);
+                if (newValuesForGraph) {
+                    chartPanel.addCpuValue(tier, cpuUtil);
+                    chartPanel.addMemValue(tier, memUtil);
+                    chartPanel.addBwInValue(tier, bwInUtil);
+                    chartPanel.addBwOutValue(tier, bwOutUtil);
+                    chartPanel.addHdReadValue(tier, hdReadUtil);
+                    chartPanel.addHdWriteValue(tier, hdWriteUtil);
+                    newValuesForGraph = false;
+                }
         }
         area.validate();
         //area.repaint();
