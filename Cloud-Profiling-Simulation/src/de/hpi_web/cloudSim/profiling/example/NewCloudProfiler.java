@@ -87,15 +87,15 @@ public class NewCloudProfiler {
 		appBroker.addAffinity(appDatacenter.getId());
 		dbBroker.addAffinity(dbDatacenter.getId());
 		
-		List<ProfilingBroker> brokers = new ArrayList<ProfilingBroker>();
+		List<ProfilingBroker> brokers = new ArrayList<>();
 		brokers.add(wsBroker);
 		brokers.add(appBroker);
 		brokers.add(dbBroker);
 		
 		List<Vm> wsVms, appVms, dbVms;
-		wsVms = new ArrayList<Vm>();
-		appVms = new ArrayList<Vm>();
-		dbVms = new ArrayList<Vm>();
+		wsVms = new ArrayList<>();
+		appVms = new ArrayList<>();
+		dbVms = new ArrayList<>();
 		
 		// TODO: include different amount of start Vms (has to be passed down from the GUI)
 		wsVms.add(vmBuilder.setUserId(wsBroker.getId()).build());

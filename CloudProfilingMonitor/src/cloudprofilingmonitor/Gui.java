@@ -13,9 +13,9 @@ import de.hpi_web.cloudSim.profiling.observer.Observable;
 import de.hpi_web.cloudSim.profiling.observer.Observer;
 import de.hpi_web.cloudSim.profiling.utilization.UtilizationThreshold;
 import java.io.File;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
 import org.cloudbus.cloudsim.Cloudlet;
-import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.core.CloudSim;
 
 /**
@@ -28,11 +28,18 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private DatacenterBuilder dcBuilder;
     private VmBuilder vmBuilder;
     
-    private Chart cpuChart, memChart, bwInChart, bwOutChart, hdReadChart, hdWriteChart;
+    private ChartPanel chartPanel;
     /**
      * Creates new form Gui
      */
     public Gui() {
+        initComponents();
+        
+        initializeSimulation();
+        initializeCharting();
+    }
+    
+    void initializeSimulation() {
         simulation = new Simulation(this, null, null);
         hostBuilder = new HostBuilder();
         dcBuilder = new DatacenterBuilder("DummyName");
@@ -40,15 +47,28 @@ public class Gui extends javax.swing.JFrame implements Observer {
         dcBuilder.setHostBuilder(hostBuilder);
         simulation.setDcBuilder(dcBuilder);
         simulation.setVmBuilder(vmBuilder);
-        initComponents();
+    }
+    
+    void initializeCharting() {
+        DefaultComboBoxModel tierModel = new DefaultComboBoxModel();
+        DefaultComboBoxModel valueModel = new DefaultComboBoxModel();
         
-        cpuChart = new Chart();
-        memChart = new Chart();
-        bwInChart = new Chart();
-        bwOutChart = new Chart();
-        hdReadChart = new Chart();
-        hdWriteChart = new Chart();
-        cpuChart.render(0, chartPanel);
+        tierModel.addElement("All");
+        tierModel.addElement(ChartPanel.WEB_TIER);
+        tierModel.addElement(ChartPanel.APP_TIER);
+        tierModel.addElement(ChartPanel.DB_TIER);
+        tierComboBox.setModel(tierModel);
+        
+        valueModel.addElement(ChartPanel.CPU);
+        valueModel.addElement(ChartPanel.MEMORY);
+        valueModel.addElement(ChartPanel.BANDWIDTH_IN);
+        valueModel.addElement(ChartPanel.BANDWIDTH_OUT);
+        valueModel.addElement(ChartPanel.HD_READ);
+        valueModel.addElement(ChartPanel.HD_WRITE);
+        valueComboBox.setModel(valueModel);
+        
+        chartPanel = new ChartPanel();
+        chartPanel.render(chartCanvas);
     }
     
     /**
@@ -136,7 +156,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
         valueComboBox = new javax.swing.JComboBox();
         jLabel10 = new javax.swing.JLabel();
         vmComboBox = new javax.swing.JComboBox();
-        chartPanel = new javax.swing.JPanel();
+        chartCanvas = new javax.swing.JPanel();
         startBtn = new javax.swing.JButton();
         stopBtn = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -243,11 +263,6 @@ public class Gui extends javax.swing.JFrame implements Observer {
 
         numberOfHostsTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         numberOfHostsTextField.setText("3");
-        numberOfHostsTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                numberOfHostsTextFieldActionPerformed(evt);
-            }
-        });
 
         jLabel8.setText("#PES per Host:");
 
@@ -333,11 +348,6 @@ public class Gui extends javax.swing.JFrame implements Observer {
 
         numberStartVmsTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         numberStartVmsTextField.setText("1");
-        numberStartVmsTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                numberStartVmsTextFieldActionPerformed(evt);
-            }
-        });
 
         jLabel16.setText("#PES per VM:");
 
@@ -423,47 +433,22 @@ public class Gui extends javax.swing.JFrame implements Observer {
 
         maxCpuTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         maxCpuTextField.setText("70");
-        maxCpuTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                maxCpuTextFieldActionPerformed(evt);
-            }
-        });
 
         jLabel21.setText("min. CPU/VM:");
 
         minCpuTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         minCpuTextField.setText("30");
-        minCpuTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                minCpuTextFieldActionPerformed(evt);
-            }
-        });
 
         jLabel22.setText("Delay between Steps:");
 
         delayTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         delayTextField.setText("1");
-        delayTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                delayTextFieldActionPerformed(evt);
-            }
-        });
 
         minMemTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         minMemTextField.setText("30");
-        minMemTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                minMemTextFieldActionPerformed(evt);
-            }
-        });
 
         maxMemTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         maxMemTextField.setText("70");
-        maxMemTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                maxMemTextFieldActionPerformed(evt);
-            }
-        });
 
         jLabel23.setText("max. Mem./VM:");
 
@@ -473,19 +458,9 @@ public class Gui extends javax.swing.JFrame implements Observer {
 
         minBwInTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         minBwInTextField.setText("0");
-        minBwInTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                minBwInTextFieldActionPerformed(evt);
-            }
-        });
 
         maxBwInTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         maxBwInTextField.setText("0");
-        maxBwInTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                maxBwInTextFieldActionPerformed(evt);
-            }
-        });
 
         jLabel26.setText("max. BwIn./VM:");
 
@@ -493,62 +468,32 @@ public class Gui extends javax.swing.JFrame implements Observer {
 
         maxBwOutTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         maxBwOutTextField.setText("0");
-        maxBwOutTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                maxBwOutTextFieldActionPerformed(evt);
-            }
-        });
 
         jLabel28.setText("min. BwO./VM:");
 
         minBwOutTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         minBwOutTextField.setText("0");
-        minBwOutTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                minBwOutTextFieldActionPerformed(evt);
-            }
-        });
 
         jLabel29.setText("max. HD R/VM:");
 
         maxHdReadTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         maxHdReadTextField.setText("0");
-        maxHdReadTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                maxHdReadTextFieldActionPerformed(evt);
-            }
-        });
 
         jLabel30.setText("min. HD R/VM:");
 
         minHdReadTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         minHdReadTextField.setText("0");
-        minHdReadTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                minHdReadTextFieldActionPerformed(evt);
-            }
-        });
 
         jLabel31.setText("max. HD W/VM:");
 
         maxHdWriteTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         maxHdWriteTextField.setText("0");
         maxHdWriteTextField.setMinimumSize(new java.awt.Dimension(18, 27));
-        maxHdWriteTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                maxHdWriteTextFieldActionPerformed(evt);
-            }
-        });
 
         jLabel32.setText("min. HD W/VM:");
 
         minHdWriteTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         minHdWriteTextField.setText("0");
-        minHdWriteTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                minHdWriteTextFieldActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -689,10 +634,9 @@ public class Gui extends javax.swing.JFrame implements Observer {
 
         jTabbedPane1.addTab("Settings", SettingsPanel);
 
-        tierComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Webserver", "Application", "Database" }));
-        tierComboBox.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                tierComboBoxPropertyChange(evt);
+        tierComboBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                tierComboBoxItemStateChanged(evt);
             }
         });
 
@@ -700,13 +644,17 @@ public class Gui extends javax.swing.JFrame implements Observer {
 
         jLabel6.setText("Item:");
 
-        valueComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "CPU", "Memory", "Bandwith", "Disk" }));
+        valueComboBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                valueComboBoxItemStateChanged(evt);
+            }
+        });
 
         jLabel10.setText("VM:");
 
         vmComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        chartPanel.setLayout(new javax.swing.BoxLayout(chartPanel, javax.swing.BoxLayout.LINE_AXIS));
+        chartCanvas.setLayout(new javax.swing.BoxLayout(chartCanvas, javax.swing.BoxLayout.LINE_AXIS));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -727,8 +675,8 @@ public class Gui extends javax.swing.JFrame implements Observer {
                         .addComponent(jLabel10)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(vmComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 725, Short.MAX_VALUE))
-                    .addComponent(chartPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 799, Short.MAX_VALUE))
+                    .addComponent(chartCanvas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -743,7 +691,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
                     .addComponent(vmComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel10))
                 .addGap(18, 18, 18)
-                .addComponent(chartPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE)
+                .addComponent(chartCanvas, javax.swing.GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -923,13 +871,13 @@ public class Gui extends javax.swing.JFrame implements Observer {
         ProfilingBroker broker = (ProfilingBroker) subject;
         // TODO: we need to decide which text area to use; this is just a fixed, quick and dirty solution
         JPanel area = tier1_VMPanel;
-        int tier = 0;
+        String tier = ChartPanel.WEB_TIER;
         if (broker.getName().equalsIgnoreCase("appBroker")) {
             area = tier2_VMPanel;
-            tier = 1;
+            tier = ChartPanel.APP_TIER;
         } else if (broker.getName().equalsIgnoreCase("dbBroker")) {
             area = tier3_VMPanel;
-            tier = 2;
+            tier = ChartPanel.DB_TIER;
         }
         area.invalidate();
         area.removeAll();
@@ -956,12 +904,12 @@ public class Gui extends javax.swing.JFrame implements Observer {
                 c.setHdReadUtil(hdReadUtil, simulation.getHdReadThreshold());
                 c.setHdWriteUtil(hdWriteUtil, simulation.getHdWriteThreshold());
                 
-                cpuChart.addValue(tier, cpuUtil);
-                memChart.addValue(tier, memUtil);
-                bwInChart.addValue(tier, bwInUtil);
-                bwOutChart.addValue(tier, bwOutUtil);
-                hdReadChart.addValue(tier, hdReadUtil);
-                hdWriteChart.addValue(tier, hdWriteUtil);
+                chartPanel.addCpuValue(tier, cpuUtil);
+                chartPanel.addMemValue(tier, memUtil);
+                chartPanel.addBwInValue(tier, bwInUtil);
+                chartPanel.addBwOutValue(tier, bwOutUtil);
+                chartPanel.addHdReadValue(tier, hdReadUtil);
+                chartPanel.addHdWriteValue(tier, hdWriteUtil);
         }
         area.validate();
         //area.repaint();
@@ -978,59 +926,31 @@ public class Gui extends javax.swing.JFrame implements Observer {
         String selectedItem = (String) valueComboBox.getSelectedItem();
         int tier = tierComboBox.getSelectedIndex();
         switch (selectedItem) {
-            case "CPU": 
-                cpuChart.render(tier, chartPanel);
+            case ChartPanel.CPU: 
+                chartPanel.selectCpuChart();
                 break;        
-            case "Memory": 
-                memChart.render(tier, chartPanel);
+            case ChartPanel.MEMORY: 
+                chartPanel.selectMemChart();
                 break;
-            case "BW": 
-                bwInChart.render(tier, chartPanel);
+            case ChartPanel.BANDWIDTH_IN: 
+                chartPanel.selectBwInChart();
+                break;
+            case ChartPanel.BANDWIDTH_OUT: 
+                chartPanel.selectBwOutChart();
+                break;
+            case ChartPanel.HD_READ: 
+                chartPanel.selectHdReadChart();
+                break;
+            case ChartPanel.HD_WRITE: 
+                chartPanel.selectHdWriteChart();
+                break;
+            default:
+                chartPanel.selectCpuChart();
                 break;
         // TODO: finish cases
         }
     }
     
-    private void updateGroupLayout(JPanel vmPanel) {
-        /*
-        javax.swing.GroupLayout tier1_VMPanelLayout = new javax.swing.GroupLayout(tier1_VMPanel);
-        tier1_VMPanel.setLayout(tier1_VMPanelLayout);
-        tier1_VMPanelLayout.setHorizontalGroup(
-            tier1_VMPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tier1_VMPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(VMPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        tier1_VMPanelLayout.setVerticalGroup(
-            tier1_VMPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(tier1_VMPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(VMPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(240, Short.MAX_VALUE))
-        );*/
-    }
-    
-    private void numberOfHostsTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_numberOfHostsTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_numberOfHostsTextFieldActionPerformed
-
-    private void numberStartVmsTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_numberStartVmsTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_numberStartVmsTextFieldActionPerformed
-
-    private void maxCpuTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maxCpuTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_maxCpuTextFieldActionPerformed
-
-    private void minCpuTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_minCpuTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_minCpuTextFieldActionPerformed
-
-    private void delayTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delayTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_delayTextFieldActionPerformed
-
     private void startBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startBtnActionPerformed
         File t = new File(trainingInput.getText());
         File r = new File(runningInput.getText());
@@ -1070,52 +990,15 @@ public class Gui extends javax.swing.JFrame implements Observer {
         simulation.stopped(true);
     }//GEN-LAST:event_stopBtnActionPerformed
 
-    private void minMemTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_minMemTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_minMemTextFieldActionPerformed
+    private void tierComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_tierComboBoxItemStateChanged
+        chartPanel.selectTier((String)evt.getItem());
+        chartPanel.render();
+    }//GEN-LAST:event_tierComboBoxItemStateChanged
 
-    private void maxMemTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maxMemTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_maxMemTextFieldActionPerformed
-
-    private void minBwInTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_minBwInTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_minBwInTextFieldActionPerformed
-
-    private void maxBwInTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maxBwInTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_maxBwInTextFieldActionPerformed
-
-    private void maxBwOutTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maxBwOutTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_maxBwOutTextFieldActionPerformed
-
-    private void minBwOutTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_minBwOutTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_minBwOutTextFieldActionPerformed
-
-    private void maxHdReadTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maxHdReadTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_maxHdReadTextFieldActionPerformed
-
-    private void minHdReadTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_minHdReadTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_minHdReadTextFieldActionPerformed
-
-    private void maxHdWriteTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maxHdWriteTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_maxHdWriteTextFieldActionPerformed
-
-    private void minHdWriteTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_minHdWriteTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_minHdWriteTextFieldActionPerformed
-
-    private void tierComboBoxPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_tierComboBoxPropertyChange
-        // TODO add your handling code here:
-        if (evt.getPropertyName().equals("selectedItem")) {
-            updateChart();
-        }
-    }//GEN-LAST:event_tierComboBoxPropertyChange
+    private void valueComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_valueComboBoxItemStateChanged
+        chartPanel.selectChart((String)evt.getItem());
+        chartPanel.render();
+    }//GEN-LAST:event_valueComboBoxItemStateChanged
 
     /**
      * @param args the command line arguments
@@ -1164,7 +1047,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private javax.swing.JPanel SimulationPanel;
     private javax.swing.JTextField bwPerHostTextField;
     private javax.swing.JTextField bwPerVmTextField;
-    private javax.swing.JPanel chartPanel;
+    private javax.swing.JPanel chartCanvas;
     private javax.swing.JTextField coresPerHostTextField;
     private javax.swing.JTextField coresPerVmTextField;
     private javax.swing.JButton defaultSettingsButton;
