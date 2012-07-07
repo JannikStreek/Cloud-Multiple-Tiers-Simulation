@@ -15,8 +15,6 @@ public class SimulationDefaults {
     public static final int MIN_THRESHOLD_MEM = 30;
     public static final int MAX_THRESHOLD_BW = 70;
     public static final int MIN_THRESHOLD_BW = 30;
-    public static final int MAX_THRESHOLD_HDD_READ = 0;
-    public static final int MIN_THRESHOLD_HDD_READ = 0;
-    public static final int MAX_THRESHOLD_HDD_WRITE = 0;
-    public static final int MIN_THRESHOLD_HDD_WRITE = 0;
+    public static final int MIN_THRESHOLD_HDD = 0;
+    public static final int MAX_THRESHOLD_HDD = 0;
 }

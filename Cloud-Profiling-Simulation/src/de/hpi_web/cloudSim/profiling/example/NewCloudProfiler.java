@@ -15,6 +15,7 @@ import arx.NewArx;
 import de.hpi_web.cloudSim.profiling.builders.DatacenterBuilder;
 import de.hpi_web.cloudSim.profiling.builders.VmBuilder;
 import de.hpi_web.cloudSim.profiling.datacenter.ProfilingBroker;
+import de.hpi_web.cloudSim.profiling.datacenter.ProfilingVm;
 import de.hpi_web.cloudSim.profiling.observer.Observer;
 import de.hpi_web.cloudSim.profiling.utilization.UtilManager;
 import de.hpi_web.cloudSim.profiling.utilization.UtilizationThreshold;
@@ -28,10 +29,8 @@ public class NewCloudProfiler {
 			String running, 
 			UtilizationThreshold cpuThreshold,
 			UtilizationThreshold memThreshold,
-			UtilizationThreshold bwInThreshold,
-			UtilizationThreshold bwOutThreshold,
-			UtilizationThreshold hdReadThreshold,
-			UtilizationThreshold hdWriteThreshold,
+			UtilizationThreshold bwThreshold,
+			UtilizationThreshold hdThreshold,
 			DatacenterBuilder dcBuilder,
 			VmBuilder vmBuilder) {
 		
@@ -55,10 +54,8 @@ public class NewCloudProfiler {
 				delay, 
 				cpuThreshold, 
 				memThreshold,
-				hdReadThreshold,
-				hdWriteThreshold,
-				bwInThreshold,
-				bwOutThreshold,
+				hdThreshold,
+				bwThreshold,
 				layers,
 				vmBuilder);
 		
@@ -92,7 +89,7 @@ public class NewCloudProfiler {
 		brokers.add(appBroker);
 		brokers.add(dbBroker);
 		
-		List<Vm> wsVms, appVms, dbVms;
+		List<ProfilingVm> wsVms, appVms, dbVms;
 		wsVms = new ArrayList<>();
 		appVms = new ArrayList<>();
 		dbVms = new ArrayList<>();

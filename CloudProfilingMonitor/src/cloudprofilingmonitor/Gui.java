@@ -846,22 +846,16 @@ public class Gui extends javax.swing.JFrame implements Observer {
                 Integer.parseInt(maxMemTextField.getText()), 
                 Integer.parseInt(minMemTextField.getText()));
         simulation.setMemThreshold(memThreshold);
-        UtilizationThreshold bwInThreshold = new UtilizationThreshold(
+        //TODO fix the fields, atm BwIn and HD Read are used, this should be only BW and HD
+        UtilizationThreshold bwThreshold = new UtilizationThreshold(
                 Integer.parseInt(maxBwInTextField.getText()), 
                 Integer.parseInt(minBwInTextField.getText()));
-        simulation.setBwInThreshold(bwInThreshold);
-        UtilizationThreshold bwOutThreshold = new UtilizationThreshold(
-                Integer.parseInt(maxBwOutTextField.getText()), 
-                Integer.parseInt(minBwOutTextField.getText()));
-        simulation.setBwOutThreshold(bwOutThreshold);
-        UtilizationThreshold hdReadThreshold = new UtilizationThreshold(
+        simulation.setBwThreshold(bwThreshold);
+        UtilizationThreshold hdThreshold = new UtilizationThreshold(
                 Integer.parseInt(maxHdReadTextField.getText()), 
                 Integer.parseInt(minHdReadTextField.getText()));
-        simulation.setHdReadThreshold(hdReadThreshold);
-        UtilizationThreshold hdWriteThreshold = new UtilizationThreshold(
-                Integer.parseInt(maxHdWriteTextField.getText()), 
-                Integer.parseInt(minHdWriteTextField.getText()));
-        simulation.setHdWriteThreshold(hdWriteThreshold);
+        simulation.setHdThreshold(hdThreshold);
+
         
     }
     
@@ -898,12 +892,13 @@ public class Gui extends javax.swing.JFrame implements Observer {
                 hostId = broker.getVmForVmId(vmId).getHost().getId();
                 VMContainer c = createVmContainer(area, "VM: " + vmId + " at host " + hostId);
                 
+                // TODO: do this for BW IN, BW OUT, HD Write, HD Read. Need to adjust cloudlet
                 c.setCpuUtil(cpuUtil, simulation.getCpuThreshold());
                 c.setMemUtil(memUtil, simulation.getMemThreshold());
-                c.setBwInUtil(bwInUtil, simulation.getBwInThreshold());
-                c.setBwOutUtil(bwOutUtil, simulation.getBwOutThreshold());
-                c.setHdReadUtil(hdReadUtil, simulation.getHdReadThreshold());
-                c.setHdWriteUtil(hdWriteUtil, simulation.getHdWriteThreshold());
+                c.setBwInUtil(bwInUtil, simulation.getBwThreshold());
+                c.setBwOutUtil(bwOutUtil, simulation.getBwThreshold());
+                c.setHdReadUtil(hdReadUtil, simulation.getHdThreshold());
+                c.setHdWriteUtil(hdWriteUtil, simulation.getHdThreshold());
                 
                 if (newValuesForGraph) {
                     chartPanel.addCpuValue(tier, cpuUtil);
