@@ -4,6 +4,8 @@ import org.cloudbus.cloudsim.CloudletScheduler;
 import org.cloudbus.cloudsim.CloudletSchedulerTimeShared;
 import org.cloudbus.cloudsim.Vm;
 
+import de.hpi_web.cloudSim.profiling.datacenter.ProfilingVm;
+
 public class VmBuilder {
 	// default values taken from http://aws.amazon.com/ec2/instance-types/
 	// => Standard instance (small) as of May 2012
@@ -12,6 +14,7 @@ public class VmBuilder {
 	public static final int  DEFAULT_RAM  =    1700;  		// vm memory (MB)
 	public static final long DEFAULT_SIZE =  160000; 		// image size (MB)
 	public static final long DEFAULT_BW   =    1000;		// total bandwith available
+	public static final double DEFAULT_DISK   =    75.0;	
 	
 	public static final String VMM = "Xen";					// virtual machine manager (hypervisor)
 	
@@ -24,6 +27,9 @@ public class VmBuilder {
 	private int ram;
 	private long bandwidth;
 	private long size;
+	private double diskAccessRate;
+
+
 	private String vmm;
 	private CloudletScheduler cloudletScheduler;
 
@@ -37,10 +43,10 @@ public class VmBuilder {
 		setDefaults();
 	}
 	
-	public Vm build() {
+	public ProfilingVm build() {
 		id = idCounter;
 		idCounter++;
-		return new Vm(id, userId, mips, pes, ram, bandwidth, size, vmm, cloudletScheduler);
+		return new ProfilingVm(id, userId, mips, pes, ram, bandwidth,size, diskAccessRate, vmm, cloudletScheduler);
 	}
 	
 	public int getId() {
@@ -106,6 +112,14 @@ public class VmBuilder {
 		return this;
 	}
 	
+	public double getDiskAccessRate() {
+		return diskAccessRate;
+	}
+
+	public void setDiskAccessRate(double diskAccessRate) {
+		this.diskAccessRate = diskAccessRate;
+	}
+	
 	private void setDefaults() {
 		this.id = -1;
 		this.pes = DEFAULT_PES;
@@ -113,6 +127,7 @@ public class VmBuilder {
 		this.ram = DEFAULT_RAM;
 		this.size = DEFAULT_SIZE;
 		this.bandwidth = DEFAULT_BW;
+		this.diskAccessRate = DEFAULT_DISK;
 		this.vmm = VMM;
 		this.cloudletScheduler = new CloudletSchedulerTimeShared();
 	}

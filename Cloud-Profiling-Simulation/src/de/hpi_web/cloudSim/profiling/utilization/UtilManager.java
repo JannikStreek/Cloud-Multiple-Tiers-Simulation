@@ -16,6 +16,7 @@ import org.cloudbus.cloudsim.core.SimEvent;
 import arx.NewArx;
 import de.hpi_web.cloudSim.multitier.factories.VmFactory;
 import de.hpi_web.cloudSim.profiling.builders.VmBuilder;
+import de.hpi_web.cloudSim.profiling.datacenter.ProfilingVm;
 import de.hpi_web.cloudSim.profiling.datacenter.UtilWrapper;
 
 public class UtilManager extends SimEntity {
@@ -29,10 +30,8 @@ public class UtilManager extends SimEntity {
 	
 	private UtilizationThreshold cpuThreshold;
 	private UtilizationThreshold memThreshold;
-	private UtilizationThreshold hdReadThreshold;
-	private UtilizationThreshold hdWriteThreshold;
-	private UtilizationThreshold bwInThreshold;
-	private UtilizationThreshold bwOutThreshold;
+	private UtilizationThreshold hdThreshold;
+	private UtilizationThreshold bwThreshold;
 	private VmBuilder vmBuilder;
 	
 	private Map<DatacenterBroker,List<List<Double>>> layers;
@@ -45,10 +44,8 @@ public class UtilManager extends SimEntity {
 	public UtilManager(String name, double delay,
 			UtilizationThreshold cpuThreshold,
 			UtilizationThreshold memThreshold,
-			UtilizationThreshold hdReadThreshold,
-			UtilizationThreshold hdWriteThreshold,
-			UtilizationThreshold bwInThreshold,
-			UtilizationThreshold bwOutThreshold,
+			UtilizationThreshold hdThreshold,
+			UtilizationThreshold bwThreshold,
 			HashMap<DatacenterBroker, List<List<Double>>> layers,
 			VmBuilder vmBuilder) {
 		super(name);
@@ -63,10 +60,8 @@ public class UtilManager extends SimEntity {
 		this.delay = delay;
 		this.cpuThreshold = cpuThreshold;
 		this.memThreshold = memThreshold;
-		this.hdReadThreshold = hdReadThreshold;
-		this.hdWriteThreshold = hdWriteThreshold;
-		this.bwInThreshold = bwInThreshold;
-		this.bwOutThreshold = bwOutThreshold;
+		this.hdThreshold = hdThreshold;
+		this.bwThreshold = bwThreshold;
 		
 		this.vmBuilder = vmBuilder;
 		
@@ -137,8 +132,8 @@ public class UtilManager extends SimEntity {
 			//6 = network out
 			List<Double> cpuUtils = layers.get(tier).get(0);
 			List<Double> memUtils = convertToRelative(layers.get(tier).get(1), vmBuilder.getRam(), 1024);
-			List<Double> diskReadUtils = layers.get(tier).get(2);
-			List<Double> diskWriteUtils = layers.get(tier).get(3);
+			List<Double> diskReadUtils = convertToRelative(layers.get(tier).get(2), vmBuilder.getDiskAccessRate(), 1);
+			List<Double> diskWriteUtils = convertToRelative(layers.get(tier).get(3), vmBuilder.getDiskAccessRate(), 1);
 			List<Double> bwInUtils = convertToRelative(layers.get(tier).get(4), vmBuilder.getBandwidth(), 1);
 			List<Double> bwOutUtils = convertToRelative(layers.get(tier).get(5), vmBuilder.getBandwidth(), 1);
 			//schedule(tier.getId(),1, UtilManager.CLOUDLET_UPDATE, cpuUtils.get(i));
@@ -162,25 +157,21 @@ public class UtilManager extends SimEntity {
 			Log.printLine("Running Vms: " + runningVms);
 			
 			if (runningVms > 0 &&
-					((cpuThreshold.aboveThreshold(cpuUtilizationPerVm)) ||
+					(cpuThreshold.aboveThreshold(cpuUtilizationPerVm)) ||
 					(memThreshold.aboveThreshold(memUtilizationPerVm)) ||
-					(hdReadThreshold.aboveThreshold(diskReadUtilizationPerVm)) ||
-					(hdWriteThreshold.aboveThreshold(diskWriteUtilizationPerVm)) ||
-					(bwInThreshold.aboveThreshold(bwInUtilizationPerVm)) ||
-					(bwOutThreshold.aboveThreshold(bwOutUtilizationPerVm)))) {
+					(hdThreshold.aboveThreshold(diskReadUtilizationPerVm+diskWriteUtilizationPerVm)) ||
+					(bwThreshold.aboveThreshold(bwInUtilizationPerVm+bwOutUtilizationPerVm))) {
 				// create new vm
 				Log.printLine("Too few Vms... creating");
 				//Vm v = VmFactory.createVm(tier.getId());
-				Vm v = vmBuilder.setUserId(tier.getId()).build();
+				ProfilingVm v = vmBuilder.setUserId(tier.getId()).build();
 				schedule(tier.getId(), 1, CloudSimTags.VM_CREATE, v);
 			}
 			else if (runningVms > 1 &&
 						(cpuThreshold.belowThreshold(cpuUtilizationPerVm)) &&
 						(memThreshold.belowThreshold(memUtilizationPerVm)) &&
-						(hdReadThreshold.belowThreshold(diskReadUtilizationPerVm)) &&
-						(hdWriteThreshold.belowThreshold(diskWriteUtilizationPerVm)) &&
-						(bwInThreshold.belowThreshold(bwInUtilizationPerVm)) &&
-						(bwOutThreshold.belowThreshold(bwOutUtilizationPerVm))) {
+						(hdThreshold.belowThreshold(diskWriteUtilizationPerVm+diskReadUtilizationPerVm)) &&
+						(bwThreshold.belowThreshold(bwInUtilizationPerVm+bwOutUtilizationPerVm))) {
 				// destroy vm
 				Log.printLine("Too many Vms... destroying");
 				schedule(tier.getId(), 1, CloudSimTags.VM_DESTROY);
@@ -195,10 +186,10 @@ public class UtilManager extends SimEntity {
 	}
 	
 
-	private List<Double> convertToRelative(List<Double> list, long maximum, int conversionDivisor) {
+	private List<Double> convertToRelative(List<Double> list, double maximum, int conversionDivisor) {
 		ArrayList<Double> relativeValues = new ArrayList<>();
 		for (Double e : list) {
-			relativeValues.add( (e*100)/((double)conversionDivisor * (double)maximum ));
+			relativeValues.add( (e*100)/((double)conversionDivisor * maximum ));
 		}
 		return relativeValues;
 	}

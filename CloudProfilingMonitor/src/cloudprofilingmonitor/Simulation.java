@@ -23,10 +23,9 @@ public class Simulation extends Thread {
     private double delay = SimulationDefaults.STEP_DELAY;
     private UtilizationThreshold cpuThreshold;
     private UtilizationThreshold memThreshold;
-    private UtilizationThreshold bwInThreshold;
-    private UtilizationThreshold bwOutThreshold;
-    private UtilizationThreshold hdReadThreshold;
-    private UtilizationThreshold hdWriteThreshold;
+    private UtilizationThreshold bwThreshold;
+    private UtilizationThreshold hdThreshold;
+
     private DatacenterBuilder dcBuilder;
     private VmBuilder vmBuilder;
     private Map<String, ResourceModelCollection> models;
@@ -50,12 +49,10 @@ public class Simulation extends Thread {
                 running.getAbsolutePath(), 
                 cpuThreshold, 
                 memThreshold,
-                bwInThreshold,
-                bwOutThreshold,
-		hdReadThreshold,
-		hdWriteThreshold,
-		dcBuilder,
-		vmBuilder);
+                bwThreshold,
+                hdThreshold,
+                dcBuilder,
+                vmBuilder);
 //        CloudProfiler.start(
 //                observer, 
 //                delay, 
@@ -104,20 +101,12 @@ public class Simulation extends Thread {
         this.training = training;
     }
 
-    public UtilizationThreshold getBwInThreshold() {
-        return bwInThreshold;
+    public UtilizationThreshold getBwThreshold() {
+        return bwThreshold;
     }
 
-    public void setBwInThreshold(UtilizationThreshold bwThreshold) {
-        this.bwInThreshold = bwThreshold;
-    }
-
-    public UtilizationThreshold getBwOutThreshold() {
-        return bwOutThreshold;
-    }
-
-    public void setBwOutThreshold(UtilizationThreshold bwThreshold) {
-        this.bwOutThreshold = bwThreshold;
+    public void setBwThreshold(UtilizationThreshold bwThreshold) {
+        this.bwThreshold = bwThreshold;
     }
 
     public UtilizationThreshold getCpuThreshold() {
@@ -145,21 +134,14 @@ public class Simulation extends Thread {
         this.dcBuilder = dcBuilder;
     }
 
-    public UtilizationThreshold getHdReadThreshold() {
-        return hdReadThreshold;
+    public UtilizationThreshold getHdThreshold() {
+        return hdThreshold;
     }
 
-    public void setHdReadThreshold(UtilizationThreshold hdReadThreshold) {
-        this.hdReadThreshold = hdReadThreshold;
+    public void setHdThreshold(UtilizationThreshold hdThreshold) {
+        this.hdThreshold = hdThreshold;
     }
 
-    public UtilizationThreshold getHdWriteThreshold() {
-        return hdWriteThreshold;
-    }
-
-    public void setHdWriteThreshold(UtilizationThreshold hdWriteThreshold) {
-        this.hdWriteThreshold = hdWriteThreshold;
-    }
 
     public VmBuilder getVmBuilder() {
         return vmBuilder;
@@ -169,11 +151,9 @@ public class Simulation extends Thread {
         this.vmBuilder = vmBuilder;
     }
     private void initializeThresholds() {
-        cpuThreshold =      new UtilizationThreshold(SimulationDefaults.MAX_THRESHOLD_CPU, SimulationDefaults.MIN_THRESHOLD_CPU);
-        memThreshold =      new UtilizationThreshold(SimulationDefaults.MAX_THRESHOLD_MEM, SimulationDefaults.MIN_THRESHOLD_MEM);
-        bwInThreshold =     new UtilizationThreshold(SimulationDefaults.MAX_THRESHOLD_BW, SimulationDefaults.MIN_THRESHOLD_BW);
-        bwOutThreshold =    new UtilizationThreshold(SimulationDefaults.MAX_THRESHOLD_BW, SimulationDefaults.MIN_THRESHOLD_BW);
-        hdReadThreshold =   new UtilizationThreshold(SimulationDefaults.MAX_THRESHOLD_HDD_READ, SimulationDefaults.MIN_THRESHOLD_HDD_READ);
-        hdWriteThreshold =  new UtilizationThreshold(SimulationDefaults.MAX_THRESHOLD_HDD_WRITE, SimulationDefaults.MIN_THRESHOLD_HDD_WRITE);
+        cpuThreshold = new UtilizationThreshold(SimulationDefaults.MAX_THRESHOLD_CPU, SimulationDefaults.MIN_THRESHOLD_CPU);
+        memThreshold = new UtilizationThreshold(SimulationDefaults.MAX_THRESHOLD_MEM, SimulationDefaults.MIN_THRESHOLD_MEM);
+        bwThreshold = new UtilizationThreshold(SimulationDefaults.MAX_THRESHOLD_BW, SimulationDefaults.MIN_THRESHOLD_BW);
+        hdThreshold = new UtilizationThreshold(SimulationDefaults.MAX_THRESHOLD_HDD, SimulationDefaults.MIN_THRESHOLD_HDD);
     }
 }
