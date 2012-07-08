@@ -13,6 +13,9 @@ import de.hpi_web.cloudSim.profiling.observer.Observable;
 import de.hpi_web.cloudSim.profiling.observer.Observer;
 import de.hpi_web.cloudSim.profiling.utilization.UtilizationThreshold;
 import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
 import org.cloudbus.cloudsim.Cloudlet;
@@ -29,6 +32,8 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private VmBuilder vmBuilder;
     
     private ChartPanel chartPanel;
+    private ResourceModel selectedModel;
+    private Map<String, ResourceModelCollection> customModelMap;
     /**
      * Creates new form Gui
      */
@@ -37,6 +42,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
         
         initializeSimulation();
         initializeCharting();
+        initializeModels();
     }
     
     void initializeSimulation() {
@@ -69,6 +75,20 @@ public class Gui extends javax.swing.JFrame implements Observer {
         
         chartPanel = new ChartPanel();
         chartPanel.render(chartCanvas);
+    }
+    
+    void initializeModels() {
+        trainingRadioBtn.doClick();
+        DefaultComboBoxModel tierModel = new DefaultComboBoxModel();
+        tierModel.addElement(ChartPanel.WEB_TIER);
+        tierModel.addElement(ChartPanel.APP_TIER);
+        tierModel.addElement(ChartPanel.DB_TIER);
+        modelTierComboBox.setModel(tierModel);
+        
+        customModelMap = new HashMap<>();
+        customModelMap.put(ChartPanel.WEB_TIER, new ResourceModelCollection());
+        customModelMap.put(ChartPanel.APP_TIER, new ResourceModelCollection());
+        customModelMap.put(ChartPanel.DB_TIER, new ResourceModelCollection());
     }
     
     /**
@@ -157,6 +177,30 @@ public class Gui extends javax.swing.JFrame implements Observer {
         jLabel10 = new javax.swing.JLabel();
         vmComboBox = new javax.swing.JComboBox();
         chartCanvas = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jPanel6 = new javax.swing.JPanel();
+        jLabel33 = new javax.swing.JLabel();
+        jLabel34 = new javax.swing.JLabel();
+        jLabel35 = new javax.swing.JLabel();
+        jLabel36 = new javax.swing.JLabel();
+        jLabel37 = new javax.swing.JLabel();
+        jLabel38 = new javax.swing.JLabel();
+        bwInModelActiveBtn = new javax.swing.JToggleButton();
+        cpuModelActiveBtn = new javax.swing.JToggleButton();
+        memoryModelActiveBtn = new javax.swing.JToggleButton();
+        bwOutModelActiveBtn = new javax.swing.JToggleButton();
+        hdReadModelActiveBtn = new javax.swing.JToggleButton();
+        hdWriteModelActiveBtn = new javax.swing.JToggleButton();
+        editCpuModelBtn = new javax.swing.JButton();
+        editMemModelBtn = new javax.swing.JButton();
+        editBwInModelBtn = new javax.swing.JButton();
+        editBwOutModelBtn = new javax.swing.JButton();
+        editHdReadModelBtn = new javax.swing.JButton();
+        editHdWriteModelBtn = new javax.swing.JButton();
+        modelTierComboBox = new javax.swing.JComboBox();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        customModelInput = new javax.swing.JTextArea();
+        submitModelBtn = new javax.swing.JButton();
         startBtn = new javax.swing.JButton();
         stopBtn = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -166,8 +210,11 @@ public class Gui extends javax.swing.JFrame implements Observer {
         fileChooser = new javax.swing.JFileChooser();
         selectTrainingBtn = new javax.swing.JButton();
         selectRunningBtn = new javax.swing.JButton();
+        modelsRadioBtn = new javax.swing.JRadioButton();
+        trainingRadioBtn = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Cloud Profiling Monitor");
 
         SimulationPanel.setLayout(new javax.swing.BoxLayout(SimulationPanel, javax.swing.BoxLayout.LINE_AXIS));
 
@@ -697,6 +744,223 @@ public class Gui extends javax.swing.JFrame implements Observer {
 
         jTabbedPane1.addTab("Charts", jPanel1);
 
+        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Model Settings"));
+
+        jLabel33.setText("CPU:");
+
+        jLabel34.setText("Memory:");
+
+        jLabel35.setText("Bandw. I:");
+
+        jLabel36.setText("Bandw. O:");
+
+        jLabel37.setText("Disk Read:");
+
+        jLabel38.setText("Disk Write:");
+
+        bwInModelActiveBtn.setText("Active");
+        bwInModelActiveBtn.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                bwInModelActiveBtnStateChanged(evt);
+            }
+        });
+
+        cpuModelActiveBtn.setText("Active");
+        cpuModelActiveBtn.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                cpuModelActiveBtnStateChanged(evt);
+            }
+        });
+
+        memoryModelActiveBtn.setText("Active");
+        memoryModelActiveBtn.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                memoryModelActiveBtnStateChanged(evt);
+            }
+        });
+
+        bwOutModelActiveBtn.setText("Active");
+        bwOutModelActiveBtn.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                bwOutModelActiveBtnStateChanged(evt);
+            }
+        });
+
+        hdReadModelActiveBtn.setText("Active");
+        hdReadModelActiveBtn.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                hdReadModelActiveBtnStateChanged(evt);
+            }
+        });
+
+        hdWriteModelActiveBtn.setText("Active");
+        hdWriteModelActiveBtn.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                hdWriteModelActiveBtnStateChanged(evt);
+            }
+        });
+
+        editCpuModelBtn.setText("Edit");
+        editCpuModelBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editCpuModelBtnActionPerformed(evt);
+            }
+        });
+
+        editMemModelBtn.setText("Edit");
+        editMemModelBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editMemModelBtnActionPerformed(evt);
+            }
+        });
+
+        editBwInModelBtn.setText("Edit");
+        editBwInModelBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editBwInModelBtnActionPerformed(evt);
+            }
+        });
+
+        editBwOutModelBtn.setText("Edit");
+        editBwOutModelBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editBwOutModelBtnActionPerformed(evt);
+            }
+        });
+
+        editHdReadModelBtn.setText("Edit");
+        editHdReadModelBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editHdReadModelBtnActionPerformed(evt);
+            }
+        });
+
+        editHdWriteModelBtn.setText("Edit");
+        editHdWriteModelBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editHdWriteModelBtnActionPerformed(evt);
+            }
+        });
+
+        modelTierComboBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                modelTierComboBoxItemStateChanged(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(modelTierComboBox, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel6Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel38)
+                            .addComponent(jLabel37)
+                            .addComponent(jLabel36)
+                            .addComponent(jLabel35)
+                            .addComponent(jLabel34)
+                            .addComponent(jLabel33))
+                        .addGap(35, 35, 35)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(hdWriteModelActiveBtn, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(hdReadModelActiveBtn, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(bwOutModelActiveBtn, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(bwInModelActiveBtn, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(memoryModelActiveBtn, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(cpuModelActiveBtn, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(editCpuModelBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 55, Short.MAX_VALUE)
+                            .addComponent(editMemModelBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(editBwInModelBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(editBwOutModelBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(editHdReadModelBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(editHdWriteModelBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addComponent(modelTierComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel33)
+                    .addComponent(cpuModelActiveBtn)
+                    .addComponent(editCpuModelBtn))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel34)
+                    .addComponent(memoryModelActiveBtn)
+                    .addComponent(editMemModelBtn))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel35)
+                    .addComponent(bwInModelActiveBtn)
+                    .addComponent(editBwInModelBtn))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel36)
+                    .addComponent(bwOutModelActiveBtn)
+                    .addComponent(editBwOutModelBtn))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel37)
+                    .addComponent(hdReadModelActiveBtn)
+                    .addComponent(editHdReadModelBtn))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel38)
+                    .addComponent(hdWriteModelActiveBtn)
+                    .addComponent(editHdWriteModelBtn))
+                .addContainerGap())
+        );
+
+        customModelInput.setColumns(20);
+        customModelInput.setRows(5);
+        jScrollPane1.setViewportView(customModelInput);
+
+        submitModelBtn.setText("Submit");
+        submitModelBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                submitModelBtnActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(submitModelBtn))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 897, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(submitModelBtn)))
+                .addContainerGap())
+        );
+
+        jTabbedPane1.addTab("Models", jPanel2);
+
         startBtn.setText("Start");
         startBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -705,6 +969,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
         });
 
         stopBtn.setText("Stop");
+        stopBtn.setEnabled(false);
         stopBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 stopBtnActionPerformed(evt);
@@ -750,6 +1015,36 @@ public class Gui extends javax.swing.JFrame implements Observer {
             }
         });
 
+        modelsRadioBtn.setSelected(false);
+        modelsRadioBtn.setText("Use Models from Model Tab");
+        modelsRadioBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                modelsRadioBtnMouseClicked(evt);
+            }
+        });
+        modelsRadioBtn.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                modelsRadioBtnStateChanged(evt);
+            }
+        });
+        modelsRadioBtn.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                modelsRadioBtnItemStateChanged(evt);
+            }
+        });
+
+        trainingRadioBtn.setText("Use Training File");
+        trainingRadioBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                trainingRadioBtnMouseClicked(evt);
+            }
+        });
+        trainingRadioBtn.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                trainingRadioBtnItemStateChanged(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -759,19 +1054,22 @@ public class Gui extends javax.swing.JFrame implements Observer {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1218, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(modelsRadioBtn)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(trainingRadioBtn))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(24, 24, 24)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(selectRunningBtn)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(stopBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(selectTrainingBtn)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(startBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                            .addComponent(selectRunningBtn)
+                            .addComponent(selectTrainingBtn))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(stopBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(startBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -784,24 +1082,28 @@ public class Gui extends javax.swing.JFrame implements Observer {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 392, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(15, 15, 15)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addGroup(layout.createSequentialGroup()
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(modelsRadioBtn)
+                    .addComponent(trainingRadioBtn))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(startBtn)
                         .addGap(6, 6, 6)
                         .addComponent(stopBtn))
-                    .addGroup(layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(selectTrainingBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jScrollPane2))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(6, 6, 6)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(selectRunningBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jScrollPane5))))
+                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap(444, Short.MAX_VALUE)
+                    .addContainerGap(488, Short.MAX_VALUE)
                     .addComponent(fileChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 9, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(42, 42, 42)))
         );
@@ -928,7 +1230,6 @@ public class Gui extends javax.swing.JFrame implements Observer {
  
     private void updateChart() {
         String selectedItem = (String) valueComboBox.getSelectedItem();
-        int tier = tierComboBox.getSelectedIndex();
         switch (selectedItem) {
             case ChartPanel.CPU: 
                 chartPanel.selectCpuChart();
@@ -960,6 +1261,10 @@ public class Gui extends javax.swing.JFrame implements Observer {
         File r = new File(runningInput.getText());
         if (t.isFile() && r.isFile()) {
             simulation.setTraining(t);
+            simulation.setRunning(r);
+            simulation.start();
+        } else if (modelsRadioBtn.isSelected() && r.isFile()) {
+            simulation.setModels(customModelMap);
             simulation.setRunning(r);
             simulation.start();
         }
@@ -1004,6 +1309,107 @@ public class Gui extends javax.swing.JFrame implements Observer {
         chartPanel.render();
     }//GEN-LAST:event_valueComboBoxItemStateChanged
 
+    private void modelTierComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_modelTierComboBoxItemStateChanged
+        customModelInput.setText("No Model Selected.");
+        selectedModel = null;
+    }//GEN-LAST:event_modelTierComboBoxItemStateChanged
+
+    private void submitModelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitModelBtnActionPerformed
+        selectedModel.setValuesFromString(customModelInput.getText());
+    }//GEN-LAST:event_submitModelBtnActionPerformed
+
+    private void editCpuModelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editCpuModelBtnActionPerformed
+        String tier = (String) modelTierComboBox.getSelectedItem();
+        selectModel(customModelMap.get(tier).get(ChartPanel.CPU));
+    }//GEN-LAST:event_editCpuModelBtnActionPerformed
+
+    private void editMemModelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editMemModelBtnActionPerformed
+        String tier = (String) modelTierComboBox.getSelectedItem();
+        selectModel(customModelMap.get(tier).get(ChartPanel.MEMORY));
+    }//GEN-LAST:event_editMemModelBtnActionPerformed
+
+    private void editBwInModelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBwInModelBtnActionPerformed
+        String tier = (String) modelTierComboBox.getSelectedItem();
+        selectModel(customModelMap.get(tier).get(ChartPanel.BANDWIDTH_IN));
+    }//GEN-LAST:event_editBwInModelBtnActionPerformed
+
+    private void editBwOutModelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBwOutModelBtnActionPerformed
+        String tier = (String) modelTierComboBox.getSelectedItem();
+        selectModel(customModelMap.get(tier).get(ChartPanel.BANDWIDTH_OUT));
+    }//GEN-LAST:event_editBwOutModelBtnActionPerformed
+
+    private void editHdReadModelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editHdReadModelBtnActionPerformed
+        String tier = (String) modelTierComboBox.getSelectedItem();
+        selectModel(customModelMap.get(tier).get(ChartPanel.HD_READ));
+    }//GEN-LAST:event_editHdReadModelBtnActionPerformed
+
+    private void editHdWriteModelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editHdWriteModelBtnActionPerformed
+        String tier = (String) modelTierComboBox.getSelectedItem();
+        selectModel(customModelMap.get(tier).get(ChartPanel.HD_WRITE));
+    }//GEN-LAST:event_editHdWriteModelBtnActionPerformed
+
+    private void modelsRadioBtnItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_modelsRadioBtnItemStateChanged
+        if (evt.getStateChange() == 1) {
+            trainingRadioBtn.setSelected(false);
+            trainingInput.setEnabled(false);
+            selectTrainingBtn.setEnabled(false);
+        }
+    }//GEN-LAST:event_modelsRadioBtnItemStateChanged
+
+    private void trainingRadioBtnItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_trainingRadioBtnItemStateChanged
+        if (evt.getStateChange() == 1) {
+            modelsRadioBtn.setSelected(false);
+            trainingInput.setEnabled(true);
+            selectTrainingBtn.setEnabled(true);
+        }
+    }//GEN-LAST:event_trainingRadioBtnItemStateChanged
+
+    private void bwOutModelActiveBtnStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_bwOutModelActiveBtnStateChanged
+        String tier = (String) modelTierComboBox.getSelectedItem();
+        customModelMap.get(tier).get(ChartPanel.CPU).setActive(bwOutModelActiveBtn.isSelected());
+    }//GEN-LAST:event_bwOutModelActiveBtnStateChanged
+
+    private void bwInModelActiveBtnStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_bwInModelActiveBtnStateChanged
+        String tier = (String) modelTierComboBox.getSelectedItem();
+        customModelMap.get(tier).get(ChartPanel.BANDWIDTH_IN).setActive(bwInModelActiveBtn.isSelected());
+    }//GEN-LAST:event_bwInModelActiveBtnStateChanged
+
+    private void memoryModelActiveBtnStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_memoryModelActiveBtnStateChanged
+        String tier = (String) modelTierComboBox.getSelectedItem();
+        customModelMap.get(tier).get(ChartPanel.MEMORY).setActive(memoryModelActiveBtn.isSelected());
+    }//GEN-LAST:event_memoryModelActiveBtnStateChanged
+
+    private void cpuModelActiveBtnStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_cpuModelActiveBtnStateChanged
+        String tier = (String) modelTierComboBox.getSelectedItem();
+        customModelMap.get(tier).get(ChartPanel.CPU).setActive(cpuModelActiveBtn.isSelected());
+    }//GEN-LAST:event_cpuModelActiveBtnStateChanged
+
+    private void hdReadModelActiveBtnStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_hdReadModelActiveBtnStateChanged
+        String tier = (String) modelTierComboBox.getSelectedItem();
+        customModelMap.get(tier).get(ChartPanel.HD_READ).setActive(hdReadModelActiveBtn.isSelected());
+    }//GEN-LAST:event_hdReadModelActiveBtnStateChanged
+
+    private void hdWriteModelActiveBtnStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_hdWriteModelActiveBtnStateChanged
+        String tier = (String) modelTierComboBox.getSelectedItem();
+        customModelMap.get(tier).get(ChartPanel.HD_WRITE).setActive(hdWriteModelActiveBtn.isSelected());
+    }//GEN-LAST:event_hdWriteModelActiveBtnStateChanged
+
+    private void modelsRadioBtnStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_modelsRadioBtnStateChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_modelsRadioBtnStateChanged
+
+    private void modelsRadioBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_modelsRadioBtnMouseClicked
+        modelsRadioBtn.setSelected(true);
+    }//GEN-LAST:event_modelsRadioBtnMouseClicked
+
+    private void trainingRadioBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_trainingRadioBtnMouseClicked
+        trainingRadioBtn.setSelected(true);
+    }//GEN-LAST:event_trainingRadioBtnMouseClicked
+
+    private void selectModel(ResourceModel model) {
+        selectedModel = model;
+        customModelInput.setText(selectedModel.toString());
+    }
     /**
      * @param args the command line arguments
      */
@@ -1049,14 +1455,26 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private javax.swing.JPanel GlobalStatisticsPanel;
     private javax.swing.JPanel SettingsPanel;
     private javax.swing.JPanel SimulationPanel;
+    private javax.swing.JToggleButton bwInModelActiveBtn;
+    private javax.swing.JToggleButton bwOutModelActiveBtn;
     private javax.swing.JTextField bwPerHostTextField;
     private javax.swing.JTextField bwPerVmTextField;
     private javax.swing.JPanel chartCanvas;
     private javax.swing.JTextField coresPerHostTextField;
     private javax.swing.JTextField coresPerVmTextField;
+    private javax.swing.JToggleButton cpuModelActiveBtn;
+    private javax.swing.JTextArea customModelInput;
     private javax.swing.JButton defaultSettingsButton;
     private javax.swing.JTextField delayTextField;
+    private javax.swing.JButton editBwInModelBtn;
+    private javax.swing.JButton editBwOutModelBtn;
+    private javax.swing.JButton editCpuModelBtn;
+    private javax.swing.JButton editHdReadModelBtn;
+    private javax.swing.JButton editHdWriteModelBtn;
+    private javax.swing.JButton editMemModelBtn;
     private javax.swing.JFileChooser fileChooser;
+    private javax.swing.JToggleButton hdReadModelActiveBtn;
+    private javax.swing.JToggleButton hdWriteModelActiveBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1083,6 +1501,12 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private javax.swing.JLabel jLabel30;
     private javax.swing.JLabel jLabel31;
     private javax.swing.JLabel jLabel32;
+    private javax.swing.JLabel jLabel33;
+    private javax.swing.JLabel jLabel34;
+    private javax.swing.JLabel jLabel35;
+    private javax.swing.JLabel jLabel36;
+    private javax.swing.JLabel jLabel37;
+    private javax.swing.JLabel jLabel38;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -1090,9 +1514,12 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTabbedPane jTabbedPane1;
@@ -1102,6 +1529,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private javax.swing.JTextField maxHdReadTextField;
     private javax.swing.JTextField maxHdWriteTextField;
     private javax.swing.JTextField maxMemTextField;
+    private javax.swing.JToggleButton memoryModelActiveBtn;
     private javax.swing.JTextField minBwInTextField;
     private javax.swing.JTextField minBwOutTextField;
     private javax.swing.JTextField minCpuTextField;
@@ -1110,6 +1538,8 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private javax.swing.JTextField minMemTextField;
     private javax.swing.JTextField mipsPerCoreTextField;
     private javax.swing.JTextField mipsPerVmCore;
+    private javax.swing.JComboBox modelTierComboBox;
+    private javax.swing.JRadioButton modelsRadioBtn;
     private javax.swing.JTextField numberOfHostsTextField;
     private javax.swing.JTextField numberStartVmsTextField;
     private javax.swing.JTextField ramPerHostTextField;
@@ -1121,6 +1551,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private javax.swing.JButton stopBtn;
     private javax.swing.JTextField storagePerHostTextField;
     private javax.swing.JTextField storagePerVmTextField;
+    private javax.swing.JButton submitModelBtn;
     private javax.swing.JButton submitSettingsButton;
     private javax.swing.JPanel tier1_VMPanel;
     private javax.swing.JScrollPane tier1_scrollPane;
@@ -1130,6 +1561,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private javax.swing.JScrollPane tier3_scrollPane;
     private javax.swing.JComboBox tierComboBox;
     private javax.swing.JTextPane trainingInput;
+    private javax.swing.JRadioButton trainingRadioBtn;
     private javax.swing.JComboBox valueComboBox;
     private javax.swing.JComboBox vmComboBox;
     // End of variables declaration//GEN-END:variables

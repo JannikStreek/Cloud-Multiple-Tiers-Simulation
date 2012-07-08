@@ -10,6 +10,7 @@ import de.hpi_web.cloudSim.profiling.example.NewCloudProfiler;
 import de.hpi_web.cloudSim.profiling.observer.Observer;
 import de.hpi_web.cloudSim.profiling.utilization.UtilizationThreshold;
 import java.io.File;
+import java.util.Map;
 
 /**
  *
@@ -26,8 +27,9 @@ public class Simulation extends Thread {
     private UtilizationThreshold bwOutThreshold;
     private UtilizationThreshold hdReadThreshold;
     private UtilizationThreshold hdWriteThreshold;
-    DatacenterBuilder dcBuilder;
-    VmBuilder vmBuilder;
+    private DatacenterBuilder dcBuilder;
+    private VmBuilder vmBuilder;
+    private Map<String, ResourceModelCollection> models;
 
     
     Simulation(Observer observer, File training, File running) {
@@ -68,6 +70,14 @@ public class Simulation extends Thread {
     public void stopped(Boolean stopped) {
         // TODO: stopping not implemented yet
         this.stopped = stopped;
+    }
+    
+    public void setModels(Map<String, ResourceModelCollection> models) {
+        this.models = models;
+    }
+    
+    public Map<String, ResourceModelCollection> getModels() {
+        return models;
     }
     
     public double getDelay() {
@@ -159,11 +169,11 @@ public class Simulation extends Thread {
         this.vmBuilder = vmBuilder;
     }
     private void initializeThresholds() {
-        cpuThreshold = new UtilizationThreshold(SimulationDefaults.MAX_THRESHOLD_CPU, SimulationDefaults.MIN_THRESHOLD_CPU);
-        memThreshold = new UtilizationThreshold(SimulationDefaults.MAX_THRESHOLD_MEM, SimulationDefaults.MIN_THRESHOLD_MEM);
-        bwInThreshold = new UtilizationThreshold(SimulationDefaults.MAX_THRESHOLD_BW, SimulationDefaults.MIN_THRESHOLD_BW);
-        bwOutThreshold = new UtilizationThreshold(SimulationDefaults.MAX_THRESHOLD_BW, SimulationDefaults.MIN_THRESHOLD_BW);
-        hdReadThreshold = new UtilizationThreshold(SimulationDefaults.MAX_THRESHOLD_HDD_READ, SimulationDefaults.MIN_THRESHOLD_HDD_READ);
-        hdWriteThreshold = new UtilizationThreshold(SimulationDefaults.MAX_THRESHOLD_HDD_WRITE, SimulationDefaults.MIN_THRESHOLD_HDD_WRITE);
+        cpuThreshold =      new UtilizationThreshold(SimulationDefaults.MAX_THRESHOLD_CPU, SimulationDefaults.MIN_THRESHOLD_CPU);
+        memThreshold =      new UtilizationThreshold(SimulationDefaults.MAX_THRESHOLD_MEM, SimulationDefaults.MIN_THRESHOLD_MEM);
+        bwInThreshold =     new UtilizationThreshold(SimulationDefaults.MAX_THRESHOLD_BW, SimulationDefaults.MIN_THRESHOLD_BW);
+        bwOutThreshold =    new UtilizationThreshold(SimulationDefaults.MAX_THRESHOLD_BW, SimulationDefaults.MIN_THRESHOLD_BW);
+        hdReadThreshold =   new UtilizationThreshold(SimulationDefaults.MAX_THRESHOLD_HDD_READ, SimulationDefaults.MIN_THRESHOLD_HDD_READ);
+        hdWriteThreshold =  new UtilizationThreshold(SimulationDefaults.MAX_THRESHOLD_HDD_WRITE, SimulationDefaults.MIN_THRESHOLD_HDD_WRITE);
     }
 }
