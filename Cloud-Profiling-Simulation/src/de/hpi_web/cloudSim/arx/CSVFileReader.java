@@ -1,4 +1,4 @@
-package arx;
+package de.hpi_web.cloudSim.arx;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

@@ -1,4 +1,4 @@
-package de.hpi_web.cloudSim.profiling.datacenter;
+package de.hpi_web.cloudSim.profiling.utilization;
 
 public class UtilWrapper {
 	private double cpuUtil;

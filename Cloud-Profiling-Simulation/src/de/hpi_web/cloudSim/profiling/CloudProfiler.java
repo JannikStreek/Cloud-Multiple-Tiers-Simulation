@@ -1,4 +1,4 @@
-package de.hpi_web.cloudSim.profiling.example;
+package de.hpi_web.cloudSim.profiling;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -11,7 +11,7 @@ import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
 
-import arx.NewArx;
+import de.hpi_web.cloudSim.arx.NewArx;
 import de.hpi_web.cloudSim.multitier.factories.VmFactory;
 import de.hpi_web.cloudSim.profiling.datacenter.FixedDatacenterFactory;
 import de.hpi_web.cloudSim.profiling.datacenter.ProfilingBroker;

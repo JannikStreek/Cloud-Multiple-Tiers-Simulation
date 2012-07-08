@@ -16,6 +16,7 @@ import org.cloudbus.cloudsim.core.SimEvent;
 import de.hpi_web.cloudSim.profiling.observer.Observable;
 import de.hpi_web.cloudSim.profiling.observer.Observer;
 import de.hpi_web.cloudSim.profiling.utilization.UtilManager;
+import de.hpi_web.cloudSim.profiling.utilization.UtilWrapper;
 import de.hpi_web.cloudSim.profiling.utilization.UtilizationModelFixed;
 
 public class ProfilingBroker extends DatacenterBroker implements Observable{

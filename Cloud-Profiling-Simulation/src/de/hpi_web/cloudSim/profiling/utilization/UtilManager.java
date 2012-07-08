@@ -13,11 +13,10 @@ import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.SimEntity;
 import org.cloudbus.cloudsim.core.SimEvent;
 
-import arx.NewArx;
+import de.hpi_web.cloudSim.arx.NewArx;
 import de.hpi_web.cloudSim.multitier.factories.VmFactory;
 import de.hpi_web.cloudSim.profiling.builders.VmBuilder;
 import de.hpi_web.cloudSim.profiling.datacenter.ProfilingVm;
-import de.hpi_web.cloudSim.profiling.datacenter.UtilWrapper;
 
 public class UtilManager extends SimEntity {
 	

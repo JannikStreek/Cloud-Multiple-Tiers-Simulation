@@ -3,7 +3,7 @@ package de.hpi_web.cloudSim.profiling.gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import de.hpi_web.cloudSim.profiling.example.CloudProfiler;
+import de.hpi_web.cloudSim.profiling.CloudProfiler;
 import de.hpi_web.cloudSim.profiling.observer.Observer;
 import de.hpi_web.cloudSim.profiling.utilization.UtilizationThreshold;
 
