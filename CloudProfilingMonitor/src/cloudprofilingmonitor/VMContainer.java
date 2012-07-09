@@ -66,13 +66,13 @@ public class VMContainer extends JPanel {
 
     void setHdReadUtil(Double value, UtilizationThreshold threshold) {
         Color fgColor = getColorForValue(value, threshold);
-        hdReadUtilValue.setText(df.format(value) + "Kb/s");
+        hdReadUtilValue.setText(df.format(value) + "%");
         hdReadUtilValue.setForeground(fgColor);
     }
 
     void setHdWriteUtil(Double value, UtilizationThreshold threshold) {
         Color fgColor = getColorForValue(value, threshold);
-        hdWriteUtilValue.setText(df.format(value) + "Kb/s");
+        hdWriteUtilValue.setText(df.format(value) + "%");
         hdWriteUtilValue.setForeground(fgColor);
     }
     
