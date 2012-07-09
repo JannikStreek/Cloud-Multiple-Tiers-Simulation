@@ -4,6 +4,7 @@
  */
 package cloudprofilingmonitor;
 
+import de.hpi_web.cloudSim.model.ResourceModelCollection;
 import de.hpi_web.cloudSim.profiling.NewCloudProfiler;
 import de.hpi_web.cloudSim.profiling.builders.DatacenterBuilder;
 import de.hpi_web.cloudSim.profiling.builders.VmBuilder;
@@ -52,16 +53,8 @@ public class Simulation extends Thread {
                 bwThreshold,
                 hdThreshold,
                 dcBuilder,
-                vmBuilder);
-//        CloudProfiler.start(
-//                observer, 
-//                delay, 
-//                training.getAbsolutePath(), 
-//                running.getAbsolutePath(), 
-//                cpuThreshold, 
-//                memThreshold,
-//                bwInThreshold,
-//                bwOutThreshold);
+                vmBuilder,
+                models);
     }
     
     public void stopped(Boolean stopped) {

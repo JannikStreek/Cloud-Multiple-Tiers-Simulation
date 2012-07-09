@@ -4,6 +4,9 @@
  */
 package cloudprofilingmonitor;
 
+import de.hpi_web.cloudSim.model.ResourceModel;
+import de.hpi_web.cloudSim.model.ResourceModelCollection;
+import de.hpi_web.cloudSim.model.StringConstants;
 import de.hpi_web.cloudSim.profiling.builders.DatacenterBuilder;
 import de.hpi_web.cloudSim.profiling.builders.HostBuilder;
 import de.hpi_web.cloudSim.profiling.builders.VmBuilder;
@@ -45,7 +48,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
         initializeModels();
     }
     
-    void initializeSimulation() {
+    private void initializeSimulation() {
         simulation = new Simulation(this, null, null);
         hostBuilder = new HostBuilder();
         dcBuilder = new DatacenterBuilder("DummyName");
@@ -55,40 +58,40 @@ public class Gui extends javax.swing.JFrame implements Observer {
         simulation.setVmBuilder(vmBuilder);
     }
     
-    void initializeCharting() {
+    private void initializeCharting() {
         DefaultComboBoxModel tierModel = new DefaultComboBoxModel();
         DefaultComboBoxModel valueModel = new DefaultComboBoxModel();
         
         tierModel.addElement("All");
-        tierModel.addElement(ChartPanel.WEB_TIER);
-        tierModel.addElement(ChartPanel.APP_TIER);
-        tierModel.addElement(ChartPanel.DB_TIER);
+        tierModel.addElement(StringConstants.Tier.WEB);
+        tierModel.addElement(StringConstants.Tier.APP);
+        tierModel.addElement(StringConstants.Tier.DB);
         tierComboBox.setModel(tierModel);
         
-        valueModel.addElement(ChartPanel.CPU);
-        valueModel.addElement(ChartPanel.MEMORY);
-        valueModel.addElement(ChartPanel.BANDWIDTH_IN);
-        valueModel.addElement(ChartPanel.BANDWIDTH_OUT);
-        valueModel.addElement(ChartPanel.HD_READ);
-        valueModel.addElement(ChartPanel.HD_WRITE);
+        valueModel.addElement(StringConstants.Resource.CPU);
+        valueModel.addElement(StringConstants.Resource.MEMORY);
+        valueModel.addElement(StringConstants.Resource.BANDWIDTH_IN);
+        valueModel.addElement(StringConstants.Resource.BANDWIDTH_OUT);
+        valueModel.addElement(StringConstants.Resource.HD_READ);
+        valueModel.addElement(StringConstants.Resource.HD_WRITE);
         valueComboBox.setModel(valueModel);
         
         chartPanel = new ChartPanel();
         chartPanel.render(chartCanvas);
     }
     
-    void initializeModels() {
+    private void initializeModels() {
         trainingRadioBtn.doClick();
         DefaultComboBoxModel tierModel = new DefaultComboBoxModel();
-        tierModel.addElement(ChartPanel.WEB_TIER);
-        tierModel.addElement(ChartPanel.APP_TIER);
-        tierModel.addElement(ChartPanel.DB_TIER);
+        tierModel.addElement(StringConstants.Tier.WEB);
+        tierModel.addElement(StringConstants.Tier.APP);
+        tierModel.addElement(StringConstants.Tier.DB);
         modelTierComboBox.setModel(tierModel);
         
         customModelMap = new HashMap<>();
-        customModelMap.put(ChartPanel.WEB_TIER, new ResourceModelCollection());
-        customModelMap.put(ChartPanel.APP_TIER, new ResourceModelCollection());
-        customModelMap.put(ChartPanel.DB_TIER, new ResourceModelCollection());
+        customModelMap.put(StringConstants.Tier.WEB, new ResourceModelCollection());
+        customModelMap.put(StringConstants.Tier.APP, new ResourceModelCollection());
+        customModelMap.put(StringConstants.Tier.DB, new ResourceModelCollection());
     }
     
     /**
@@ -1116,13 +1119,13 @@ public class Gui extends javax.swing.JFrame implements Observer {
         Boolean newValuesForGraph = true;
         // TODO: we need to decide which text area to use; this is just a fixed, quick and dirty solution
         JPanel area = tier1_VMPanel;
-        String tier = ChartPanel.WEB_TIER;
+        String tier = StringConstants.Tier.WEB;
         if (broker.getName().equalsIgnoreCase("appBroker")) {
             area = tier2_VMPanel;
-            tier = ChartPanel.APP_TIER;
+            tier = StringConstants.Tier.APP;
         } else if (broker.getName().equalsIgnoreCase("dbBroker")) {
             area = tier3_VMPanel;
-            tier = ChartPanel.DB_TIER;
+            tier = StringConstants.Tier.DB;
         }
         area.invalidate();
         area.removeAll();
@@ -1174,22 +1177,22 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private void updateChart() {
         String selectedItem = (String) valueComboBox.getSelectedItem();
         switch (selectedItem) {
-            case ChartPanel.CPU: 
+            case StringConstants.Resource.CPU: 
                 chartPanel.selectCpuChart();
                 break;        
-            case ChartPanel.MEMORY: 
+            case StringConstants.Resource.MEMORY: 
                 chartPanel.selectMemChart();
                 break;
-            case ChartPanel.BANDWIDTH_IN: 
+            case StringConstants.Resource.BANDWIDTH_IN: 
                 chartPanel.selectBwInChart();
                 break;
-            case ChartPanel.BANDWIDTH_OUT: 
+            case StringConstants.Resource.BANDWIDTH_OUT: 
                 chartPanel.selectBwOutChart();
                 break;
-            case ChartPanel.HD_READ: 
+            case StringConstants.Resource.HD_READ: 
                 chartPanel.selectHdReadChart();
                 break;
-            case ChartPanel.HD_WRITE: 
+            case StringConstants.Resource.HD_WRITE: 
                 chartPanel.selectHdWriteChart();
                 break;
             default:
@@ -1263,32 +1266,32 @@ public class Gui extends javax.swing.JFrame implements Observer {
 
     private void editCpuModelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editCpuModelBtnActionPerformed
         String tier = (String) modelTierComboBox.getSelectedItem();
-        selectModel(customModelMap.get(tier).get(ChartPanel.CPU));
+        selectModel(customModelMap.get(tier).get(StringConstants.Resource.CPU));
     }//GEN-LAST:event_editCpuModelBtnActionPerformed
 
     private void editMemModelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editMemModelBtnActionPerformed
         String tier = (String) modelTierComboBox.getSelectedItem();
-        selectModel(customModelMap.get(tier).get(ChartPanel.MEMORY));
+        selectModel(customModelMap.get(tier).get(StringConstants.Resource.MEMORY));
     }//GEN-LAST:event_editMemModelBtnActionPerformed
 
     private void editBwInModelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBwInModelBtnActionPerformed
         String tier = (String) modelTierComboBox.getSelectedItem();
-        selectModel(customModelMap.get(tier).get(ChartPanel.BANDWIDTH_IN));
+        selectModel(customModelMap.get(tier).get(StringConstants.Resource.BANDWIDTH_IN));
     }//GEN-LAST:event_editBwInModelBtnActionPerformed
 
     private void editBwOutModelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBwOutModelBtnActionPerformed
         String tier = (String) modelTierComboBox.getSelectedItem();
-        selectModel(customModelMap.get(tier).get(ChartPanel.BANDWIDTH_OUT));
+        selectModel(customModelMap.get(tier).get(StringConstants.Resource.BANDWIDTH_OUT));
     }//GEN-LAST:event_editBwOutModelBtnActionPerformed
 
     private void editHdReadModelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editHdReadModelBtnActionPerformed
         String tier = (String) modelTierComboBox.getSelectedItem();
-        selectModel(customModelMap.get(tier).get(ChartPanel.HD_READ));
+        selectModel(customModelMap.get(tier).get(StringConstants.Resource.HD_READ));
     }//GEN-LAST:event_editHdReadModelBtnActionPerformed
 
     private void editHdWriteModelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editHdWriteModelBtnActionPerformed
         String tier = (String) modelTierComboBox.getSelectedItem();
-        selectModel(customModelMap.get(tier).get(ChartPanel.HD_WRITE));
+        selectModel(customModelMap.get(tier).get(StringConstants.Resource.HD_WRITE));
     }//GEN-LAST:event_editHdWriteModelBtnActionPerformed
 
     private void modelsRadioBtnItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_modelsRadioBtnItemStateChanged
@@ -1309,32 +1312,32 @@ public class Gui extends javax.swing.JFrame implements Observer {
 
     private void bwOutModelActiveBtnStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_bwOutModelActiveBtnStateChanged
         String tier = (String) modelTierComboBox.getSelectedItem();
-        customModelMap.get(tier).get(ChartPanel.CPU).setActive(bwOutModelActiveBtn.isSelected());
+        customModelMap.get(tier).get(StringConstants.Resource.CPU).setActive(bwOutModelActiveBtn.isSelected());
     }//GEN-LAST:event_bwOutModelActiveBtnStateChanged
 
     private void bwInModelActiveBtnStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_bwInModelActiveBtnStateChanged
         String tier = (String) modelTierComboBox.getSelectedItem();
-        customModelMap.get(tier).get(ChartPanel.BANDWIDTH_IN).setActive(bwInModelActiveBtn.isSelected());
+        customModelMap.get(tier).get(StringConstants.Resource.BANDWIDTH_IN).setActive(bwInModelActiveBtn.isSelected());
     }//GEN-LAST:event_bwInModelActiveBtnStateChanged
 
     private void memoryModelActiveBtnStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_memoryModelActiveBtnStateChanged
         String tier = (String) modelTierComboBox.getSelectedItem();
-        customModelMap.get(tier).get(ChartPanel.MEMORY).setActive(memoryModelActiveBtn.isSelected());
+        customModelMap.get(tier).get(StringConstants.Resource.MEMORY).setActive(memoryModelActiveBtn.isSelected());
     }//GEN-LAST:event_memoryModelActiveBtnStateChanged
 
     private void cpuModelActiveBtnStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_cpuModelActiveBtnStateChanged
         String tier = (String) modelTierComboBox.getSelectedItem();
-        customModelMap.get(tier).get(ChartPanel.CPU).setActive(cpuModelActiveBtn.isSelected());
+        customModelMap.get(tier).get(StringConstants.Resource.CPU).setActive(cpuModelActiveBtn.isSelected());
     }//GEN-LAST:event_cpuModelActiveBtnStateChanged
 
     private void hdReadModelActiveBtnStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_hdReadModelActiveBtnStateChanged
         String tier = (String) modelTierComboBox.getSelectedItem();
-        customModelMap.get(tier).get(ChartPanel.HD_READ).setActive(hdReadModelActiveBtn.isSelected());
+        customModelMap.get(tier).get(StringConstants.Resource.HD_READ).setActive(hdReadModelActiveBtn.isSelected());
     }//GEN-LAST:event_hdReadModelActiveBtnStateChanged
 
     private void hdWriteModelActiveBtnStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_hdWriteModelActiveBtnStateChanged
         String tier = (String) modelTierComboBox.getSelectedItem();
-        customModelMap.get(tier).get(ChartPanel.HD_WRITE).setActive(hdWriteModelActiveBtn.isSelected());
+        customModelMap.get(tier).get(StringConstants.Resource.HD_WRITE).setActive(hdWriteModelActiveBtn.isSelected());
     }//GEN-LAST:event_hdWriteModelActiveBtnStateChanged
 
     private void modelsRadioBtnStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_modelsRadioBtnStateChanged

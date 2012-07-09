@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.cloudbus.cloudsim.Datacenter;
 import org.cloudbus.cloudsim.DatacenterBroker;
@@ -12,6 +13,7 @@ import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
 
 import de.hpi_web.cloudSim.arx.NewArx;
+import de.hpi_web.cloudSim.model.ResourceModelCollection;
 import de.hpi_web.cloudSim.profiling.builders.DatacenterBuilder;
 import de.hpi_web.cloudSim.profiling.builders.VmBuilder;
 import de.hpi_web.cloudSim.profiling.datacenter.ProfilingBroker;
@@ -32,14 +34,20 @@ public class NewCloudProfiler {
 			UtilizationThreshold bwThreshold,
 			UtilizationThreshold hdThreshold,
 			DatacenterBuilder dcBuilder,
-			VmBuilder vmBuilder) {
+			VmBuilder vmBuilder,
+			Map<String, ResourceModelCollection> models) {
 		
 		Log.printLine("Starting...");
 		initializeCloudSim();
 		List<ProfilingBroker> brokers = prepareThreeTierScenario(observer, dcBuilder, vmBuilder);
 		
 		// create a map where for each broker the CPU usage is recorded
-		NewArx.init(training, running);
+		if (models == null) {
+			NewArx.init(training, running);
+		} else {
+			NewArx.init(models, running);
+		}
+			
 		HashMap<DatacenterBroker, List<List<Double>>> layers = new HashMap<DatacenterBroker, List<List<Double>>>();
 		layers.put(brokers.get(0), NewArx.predictWebTierUtil());
 		layers.put(brokers.get(1), NewArx.predictAppTierUtil());

@@ -2,6 +2,10 @@ package de.hpi_web.cloudSim.arx;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import de.hpi_web.cloudSim.model.ResourceModelCollection;
+import de.hpi_web.cloudSim.model.StringConstants;
 
 import Jama.Matrix;
 
@@ -13,6 +17,7 @@ public class NewArx {
 	
 	private static CSVFileReader training;
 	private static CSVFileReader running;
+	private static Map<String, ResourceModelCollection> models;
 	public static int RUNNING_VALUES = 370;
 
 	public static void init(String trainFile, String runFile) {
@@ -20,6 +25,12 @@ public class NewArx {
         training = new CSVFileReader(trainFile);
         training.ReadFile();
         //The location of the validation file
+        running = new CSVFileReader(runFile);
+        running.ReadFile();
+	}
+	
+	public static void init(Map<String, ResourceModelCollection> modelMap, String runFile) {
+        models = modelMap;
         running = new CSVFileReader(runFile);
         running.ReadFile();
 	}
@@ -48,16 +59,22 @@ public class NewArx {
 	
 	public static List<List<Double>> predictWebTierUtil() {
 		int modeledMetricIndices[] = {28, 29, 30, 31, 32, 33};
+		if (models != null)
+			return getResultList(modeledMetricIndices, StringConstants.Tier.WEB);
 		return getResultList(modeledMetricIndices);
 	}
 	
 	public static List<List<Double>> predictAppTierUtil() {
 		int modeledMetricIndices[] = {35,36,37,38,39,40};
+		if (models != null)
+			return getResultList(modeledMetricIndices, StringConstants.Tier.APP);
 		return getResultList(modeledMetricIndices);
 	}
 	
 	public static List<List<Double>> predictDbTierUtil() {
 		int modeledMetricIndices[] = {42, 43, 44, 45,46,47};
+		if (models != null)
+			return getResultList(modeledMetricIndices, StringConstants.Tier.DB);
 		return getResultList(modeledMetricIndices);
 	}
 	
@@ -74,6 +91,15 @@ public class NewArx {
 		for(int value : modeledMetricIndices) {
 			System.out.println("starting");
 			resultList.add(getUsage(value));
+		}
+		System.out.println(resultList);
+		return resultList;
+	}
+	private static List<List<Double>> getResultList(int modeledMetricIndices[], String tier) {
+		List<List<Double>> resultList = new ArrayList<List<Double>>();
+		for(int value : modeledMetricIndices) {
+			System.out.println("starting");
+			resultList.add(getUsageFromModel(value, models.get(tier)));
 		}
 		System.out.println(resultList);
 		return resultList;
@@ -197,4 +223,78 @@ public class NewArx {
         System.out.println(result);
         return result;
     }
+
+
+private static List<Double> getUsageFromModel(int modeledMetricIndex, ResourceModelCollection model) {
+	List<Double> result = new ArrayList<Double>();
+    
+    Matrix Mv = new Matrix(running.getRowsNum(),running.getColsNum()-1);
+    for(int row=0; row < running.getRowsNum(); row++)
+        for(int col=0; col< running.getColsNum()-1; col++)
+            Mv.set(row, col, running.getValue(row, col+1));
+    
+    Double[] values = (Double[]) model.get("foo").toList().toArray();
+    double[] primitiveValues = new double[370];
+    for (int i = 0; i < values.length; i++)
+    	primitiveValues[i] = values[i].doubleValue();
+    Matrix x;
+    x = new Matrix(0, 0);
+//    try {
+//    	x = R.solve(ys);
+//    }catch(RuntimeException e){
+//    	for(int i = 0; i < 370; i++) {
+//    		result.add(0.0);
+//    	}
+//    	return result;
+//    	
+//    }
+    System.out.println("System parameters, (theta) at equation 5: ");
+    x.print(2, 4);
+    
+    //Prepare some samples for validation
+    //In your simulator you should expect a continues stream of these samples. It is the only input to the simulator!
+    //These samples will be used to describe the CPU utilization of each VM instance in multi-tier system
+    //int samplingOut[] = {modeledMetricIndex};
+    //Matrix yv = Mv.getMatrix(0, numberOfValidationSamples, samplingOut);
+    
+    int validationInput[] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17};
+    Matrix uv = Mv.getMatrix(0, RUNNING_VALUES, validationInput);
+    
+    //Assume the last measured value of the modeled metric to be zero
+    double yk_minus_1 = 0.0;
+    Matrix input_row = new Matrix(1,validationInput.length+1);
+    
+    
+
+    
+    //System.out.println(input_row.getColumnDimension());
+    //input_row.print(2, 4);
+    
+    
+    for(int j=0; j<RUNNING_VALUES; j++)
+    {
+        for(int i=1; i<validationInput.length+1; i++)
+            input_row.set(0, i, uv.get(j, i-1));
+        
+        input_row.set(0, 0, yk_minus_1*(-1.0));
+                    
+//        System.out.print("\u03D5"+"k(at equation 6):");
+        input_row.print(2, 4);
+        
+        //It is equation 7 at paper!
+        Matrix yk = input_row.times(x);
+//        System.out.print("yk (Predicted y at equation 7):");
+        yk.print(2, 4);
+        
+        yk_minus_1 = yk.get(0, 0);
+        
+        if(0.0 > yk_minus_1) {
+        	yk_minus_1 = 0.0;
+        }
+        result.add(yk_minus_1);
+
+    }
+    System.out.println(result);
+    return result;
+}
 }

@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package cloudprofilingmonitor;
+package de.hpi_web.cloudSim.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,13 +15,13 @@ public class ResourceModel {
     List<Double> values;
     Boolean isActive;
     
-    ResourceModel() {
+    public ResourceModel() {
         super();
         this.values = new ArrayList<>();
         this.isActive = true;
     }
     
-    ResourceModel(List<Double> values) {
+    public ResourceModel(List<Double> values) {
         super();
         this.values = values;
         this.isActive = true;
