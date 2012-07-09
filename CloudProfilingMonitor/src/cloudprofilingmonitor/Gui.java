@@ -1205,7 +1205,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private void startBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startBtnActionPerformed
         File t = new File(trainingInput.getText());
         File r = new File(runningInput.getText());
-        if (t.isFile() && r.isFile()) {
+        if (trainingRadioBtn.isSelected() && t.isFile() && r.isFile()) {
             simulation.setTraining(t);
             simulation.setRunning(r);
             simulation.start();
@@ -1261,7 +1261,8 @@ public class Gui extends javax.swing.JFrame implements Observer {
     }//GEN-LAST:event_modelTierComboBoxItemStateChanged
 
     private void submitModelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitModelBtnActionPerformed
-        selectedModel.setValuesFromString(customModelInput.getText());
+        if (selectedModel != null)
+            selectedModel.setValuesFromString(customModelInput.getText());
     }//GEN-LAST:event_submitModelBtnActionPerformed
 
     private void editCpuModelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editCpuModelBtnActionPerformed

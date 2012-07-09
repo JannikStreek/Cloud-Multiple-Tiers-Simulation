@@ -12,6 +12,7 @@ import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
 
+import de.hpi_web.cloudSim.arx.ModelBasedPrediction;
 import de.hpi_web.cloudSim.arx.NewArx;
 import de.hpi_web.cloudSim.model.ResourceModelCollection;
 import de.hpi_web.cloudSim.profiling.builders.DatacenterBuilder;
@@ -42,16 +43,18 @@ public class NewCloudProfiler {
 		List<ProfilingBroker> brokers = prepareThreeTierScenario(observer, dcBuilder, vmBuilder);
 		
 		// create a map where for each broker the CPU usage is recorded
+		HashMap<DatacenterBroker, List<List<Double>>> layers = new HashMap<DatacenterBroker, List<List<Double>>>();
 		if (models == null) {
 			NewArx.init(training, running);
+			layers.put(brokers.get(0), NewArx.predictWebTierUtil());
+			layers.put(brokers.get(1), NewArx.predictAppTierUtil());
+			layers.put(brokers.get(2), NewArx.predictDbTierUtil());
 		} else {
-			NewArx.init(models, running);
+			ModelBasedPrediction mbp = new ModelBasedPrediction(models, running);
+			layers.put(brokers.get(0), mbp.predictWebTierUtil());
+			layers.put(brokers.get(1), mbp.predictAppTierUtil());
+			layers.put(brokers.get(2), mbp.predictDbTierUtil());
 		}
-			
-		HashMap<DatacenterBroker, List<List<Double>>> layers = new HashMap<DatacenterBroker, List<List<Double>>>();
-		layers.put(brokers.get(0), NewArx.predictWebTierUtil());
-		layers.put(brokers.get(1), NewArx.predictAppTierUtil());
-		layers.put(brokers.get(2), NewArx.predictDbTierUtil());
 		//List<MultiTierCloudlet> wsCloudlets = CloudletFactory.createCloudlets(0, 10, wsBroker);
 
 		//wsBroker.submitCloudletList(wsCloudlets);
