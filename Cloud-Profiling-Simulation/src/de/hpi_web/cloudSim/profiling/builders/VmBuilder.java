@@ -14,7 +14,7 @@ public class VmBuilder {
 	public static final int  DEFAULT_RAM  =    1700;  		// vm memory (MB)
 	public static final long DEFAULT_SIZE =  160000; 		// image size (MB)
 	public static final long DEFAULT_BW   =    1000;		// total bandwith available
-	public static final double DEFAULT_DISK   =    75.0;	
+	public static final double DEFAULT_DISK   =    75000.0;	
 	
 	public static final String VMM = "Xen";					// virtual machine manager (hypervisor)
 	
