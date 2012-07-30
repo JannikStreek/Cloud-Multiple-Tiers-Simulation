@@ -154,8 +154,11 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 			double cloudletsSubmittedDouble = (double)cloudletsSubmitted;
 			
 			ProfilingCloudlet pcloudlet = (ProfilingCloudlet) cloudlet;
+			
+			//save the ticks for this cloudlet, maybe this information will be used in the future
 			pcloudlet.incrementTicks();
 
+			//calculate new amount value for this layer
 			addAmount();
 			
 			pcloudlet.setUtilizationModelCpu(new UtilizationModelFixed(wrapper.getCpuUtil()/cloudletsSubmittedDouble));

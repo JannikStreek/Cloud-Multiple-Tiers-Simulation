@@ -17,7 +17,9 @@ import de.hpi_web.cloudSim.arx.NewArx;
 import de.hpi_web.cloudSim.multitier.factories.VmFactory;
 import de.hpi_web.cloudSim.profiling.builders.VmBuilder;
 import de.hpi_web.cloudSim.profiling.datacenter.ProfilingVm;
-
+/*
+ * The UtilManager triggers the updating process of the cloudlets and checks whether thresholds are exceeded 
+ */
 public class UtilManager extends SimEntity {
 	
 	public static final int RUN = 7000;
@@ -66,7 +68,7 @@ public class UtilManager extends SimEntity {
 		
 		
 		for (DatacenterBroker tier : layers.keySet()) {
-			System.out.println("Broker values: "+ layers.get(tier).get(0).size()); 
+			Log.printLine("Broker values: "+ layers.get(tier).get(0).size()); 
 		}
 
 	}
@@ -76,6 +78,7 @@ public class UtilManager extends SimEntity {
 	@Override
 	public void startEntity() {
 		//sendNow("utilManager", CloudSimTags.REGISTER_RESOURCE, getId());
+		//start with a short delay, to avoid interference
 		schedule(getId(), 10, RUN);
 		
 	}
@@ -155,22 +158,20 @@ public class UtilManager extends SimEntity {
 			Log.printLine("Current BwOut Util: " + bwOutUtilizationPerVm);
 			Log.printLine("Running Vms: " + runningVms);
 			
-			if (runningVms > 0 &&
-					(cpuThreshold.aboveThreshold(cpuUtilizationPerVm)) ||
-					(memThreshold.aboveThreshold(memUtilizationPerVm)) ||
-					(hdThreshold.aboveThreshold(diskReadUtilizationPerVm+diskWriteUtilizationPerVm)) ||
-					(bwThreshold.aboveThreshold(bwInUtilizationPerVm+bwOutUtilizationPerVm))) {
+			if (checkUpperThreshold(runningVms, cpuUtilizationPerVm,
+					memUtilizationPerVm, diskReadUtilizationPerVm,
+					diskWriteUtilizationPerVm, bwInUtilizationPerVm,
+					bwOutUtilizationPerVm)) {
 				// create new vm
 				Log.printLine("Too few Vms... creating");
 				//Vm v = VmFactory.createVm(tier.getId());
 				ProfilingVm v = vmBuilder.setUserId(tier.getId()).build();
 				schedule(tier.getId(), 1, CloudSimTags.VM_CREATE, v);
 			}
-			else if (runningVms > 1 &&
-						(cpuThreshold.belowThreshold(cpuUtilizationPerVm)) &&
-						(memThreshold.belowThreshold(memUtilizationPerVm)) &&
-						(hdThreshold.belowThreshold(diskWriteUtilizationPerVm+diskReadUtilizationPerVm)) &&
-						(bwThreshold.belowThreshold(bwInUtilizationPerVm+bwOutUtilizationPerVm))) {
+			else if (checkLowerThreshold(runningVms, cpuUtilizationPerVm,
+					memUtilizationPerVm, diskReadUtilizationPerVm,
+					diskWriteUtilizationPerVm, bwInUtilizationPerVm,
+					bwOutUtilizationPerVm)) {
 				// destroy vm
 				Log.printLine("Too many Vms... destroying");
 				schedule(tier.getId(), 1, CloudSimTags.VM_DESTROY);
@@ -182,6 +183,32 @@ public class UtilManager extends SimEntity {
 		}
 		this.i++;
 		
+	}
+
+
+
+	private boolean checkLowerThreshold(int runningVms,
+			double cpuUtilizationPerVm, double memUtilizationPerVm,
+			double diskReadUtilizationPerVm, double diskWriteUtilizationPerVm,
+			double bwInUtilizationPerVm, double bwOutUtilizationPerVm) {
+		return runningVms > 1 &&
+					(cpuThreshold.belowThreshold(cpuUtilizationPerVm)) &&
+					(memThreshold.belowThreshold(memUtilizationPerVm)) &&
+					(hdThreshold.belowThreshold(diskWriteUtilizationPerVm+diskReadUtilizationPerVm)) &&
+					(bwThreshold.belowThreshold(bwInUtilizationPerVm+bwOutUtilizationPerVm));
+	}
+
+
+
+	private boolean checkUpperThreshold(int runningVms,
+			double cpuUtilizationPerVm, double memUtilizationPerVm,
+			double diskReadUtilizationPerVm, double diskWriteUtilizationPerVm,
+			double bwInUtilizationPerVm, double bwOutUtilizationPerVm) {
+		return runningVms > 0 &&
+				(cpuThreshold.aboveThreshold(cpuUtilizationPerVm)) ||
+				(memThreshold.aboveThreshold(memUtilizationPerVm)) ||
+				(hdThreshold.aboveThreshold(diskReadUtilizationPerVm+diskWriteUtilizationPerVm)) ||
+				(bwThreshold.aboveThreshold(bwInUtilizationPerVm+bwOutUtilizationPerVm));
 	}
 	
 
