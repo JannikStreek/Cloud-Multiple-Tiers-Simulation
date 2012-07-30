@@ -132,41 +132,18 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 		Log.printLine(CloudSim.clock() + ": " + getName() + ": Updating Cloudlets for next round ");
 		UtilWrapper wrapper = (UtilWrapper) ev.getData();
 		if(cloudletsSubmitted < getVmsCreatedList().size()) {
-			List<Integer> vmsWithCloudletIds = getVmsWithCloudletIds();
-			List<Vm> vms = getVmsCreatedList();
-			List<Vm> missingCloudletVms = getMissingCloudletVms(vmsWithCloudletIds, vms);
-			for (Vm vm : missingCloudletVms) {
-			    Cloudlet cloudlet = createCloudlet(vm, wrapper);
-				cloudlet.setVmId(vm.getId());
-				sendNow(getVmsToDatacentersMap().get(vm.getId()), CloudSimTags.CLOUDLET_SUBMIT, cloudlet);
-				//cloudlets.add(cloudlet);
-				getCloudletSubmittedList().add(cloudlet);
-				cloudletsSubmitted++;
-				// remove submitted cloudlets from waiting list
-				for (Cloudlet submittedCloudlet : getCloudletSubmittedList()) {
-					getCloudletList().remove(submittedCloudlet);
-				}
-			}
-			
+			createMissingCloudlets(wrapper);
 		}
 		
 		for (Cloudlet cloudlet : getCloudletSubmittedList()) {
-			double cloudletsSubmittedDouble = (double)cloudletsSubmitted;
-			
 			ProfilingCloudlet pcloudlet = (ProfilingCloudlet) cloudlet;
-			
 			//save the ticks for this cloudlet, maybe this information will be used in the future
 			pcloudlet.incrementTicks();
 
 			//calculate new amount value for this layer
 			addAmount();
 			
-			pcloudlet.setUtilizationModelCpu(new UtilizationModelFixed(wrapper.getCpuUtil()/cloudletsSubmittedDouble));
-			pcloudlet.setUtilizationModelRam(new UtilizationModelFixed(wrapper.getMemUtil()/cloudletsSubmittedDouble));
-			pcloudlet.setUtilizationModelDiskRead(new UtilizationModelFixed(wrapper.getDiskReadUtil()/cloudletsSubmittedDouble));
-			pcloudlet.setUtilizationModelDiskWrite(new UtilizationModelFixed(wrapper.getDiskWriteUtil()/cloudletsSubmittedDouble));
-			pcloudlet.setUtilizationModelBw(new UtilizationModelFixed(wrapper.getBwInUtil()/cloudletsSubmittedDouble));
-			pcloudlet.setUtilizationModelBwOut(new UtilizationModelFixed(wrapper.getBwOutUtil()/cloudletsSubmittedDouble));
+			setNewUtils(wrapper, pcloudlet);
 			
 		}
 		
@@ -185,6 +162,34 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 		
 		//proceed if all brokers have finished their execution
 	    sendNow(ev.getSource(), UtilManager.ROUND_COMPLETED, getId());
+	}
+	
+	private void setNewUtils(UtilWrapper wrapper, ProfilingCloudlet pcloudlet) {
+		double cloudletsSubmittedDouble = (double)cloudletsSubmitted;
+		pcloudlet.setUtilizationModelCpu(new UtilizationModelFixed(wrapper.getCpuUtil()/cloudletsSubmittedDouble));
+		pcloudlet.setUtilizationModelRam(new UtilizationModelFixed(wrapper.getMemUtil()/cloudletsSubmittedDouble));
+		pcloudlet.setUtilizationModelDiskRead(new UtilizationModelFixed(wrapper.getDiskReadUtil()/cloudletsSubmittedDouble));
+		pcloudlet.setUtilizationModelDiskWrite(new UtilizationModelFixed(wrapper.getDiskWriteUtil()/cloudletsSubmittedDouble));
+		pcloudlet.setUtilizationModelBw(new UtilizationModelFixed(wrapper.getBwInUtil()/cloudletsSubmittedDouble));
+		pcloudlet.setUtilizationModelBwOut(new UtilizationModelFixed(wrapper.getBwOutUtil()/cloudletsSubmittedDouble));
+	}
+	
+	private void createMissingCloudlets(UtilWrapper wrapper) {
+		List<Integer> vmsWithCloudletIds = getVmsWithCloudletIds();
+		List<Vm> vms = getVmsCreatedList();
+		List<Vm> missingCloudletVms = getMissingCloudletVms(vmsWithCloudletIds, vms);
+		for (Vm vm : missingCloudletVms) {
+		    Cloudlet cloudlet = createCloudlet(vm, wrapper);
+			cloudlet.setVmId(vm.getId());
+			sendNow(getVmsToDatacentersMap().get(vm.getId()), CloudSimTags.CLOUDLET_SUBMIT, cloudlet);
+			//cloudlets.add(cloudlet);
+			getCloudletSubmittedList().add(cloudlet);
+			cloudletsSubmitted++;
+			// remove submitted cloudlets from waiting list
+			for (Cloudlet submittedCloudlet : getCloudletSubmittedList()) {
+				getCloudletList().remove(submittedCloudlet);
+			}
+		}
 	}
 	
 	@Override
@@ -255,6 +260,7 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 
 	  long fileSize = 300;
 	  long outputSize = 300;
+	  //TODO cloudlet really needed here? is also created in the update method...
 	  UtilizationModel cpuUtilizationModel = new UtilizationModelFixed(cpuUtilizationPerVm);
 	  UtilizationModel memUtilizationModel = new UtilizationModelFixed(memUtilizationPerVm);
 	  UtilizationModel diskReadUtilizationModel = new UtilizationModelFixed(diskReadUtilizationPerVm);
