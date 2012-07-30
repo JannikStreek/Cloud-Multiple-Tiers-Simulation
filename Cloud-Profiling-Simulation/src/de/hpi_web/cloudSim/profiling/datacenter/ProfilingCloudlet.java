@@ -8,6 +8,19 @@ public class ProfilingCloudlet extends Cloudlet {
 	private UtilizationModel utilizationModelDiskRead;
 	private UtilizationModel utilizationModelDiskWrite;
 	private UtilizationModel utilizationModelBwOut;
+	private int ticks = 0;
+
+	public int getTicks() {
+		return ticks;
+	}
+
+	public void setTicks(int ticks) {
+		this.ticks = ticks;
+	}
+	
+	public void incrementTicks() {
+		this.ticks++;
+	}
 
 	public ProfilingCloudlet(int cloudletId, long cloudletLength,
 			int pesNumber, long cloudletFileSize, long cloudletOutputSize,

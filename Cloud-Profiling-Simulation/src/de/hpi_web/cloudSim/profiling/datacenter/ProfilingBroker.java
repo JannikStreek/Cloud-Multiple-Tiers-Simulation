@@ -24,6 +24,9 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 //	private List<Cloudlet> cloudlets;
 	private List<Observer> observers;
 	private List<Integer> dcAffinity;
+	private int amount = 0;
+	private int pricePerVm = 10;
+	private int MinPerTick = 10;
 
 	public ProfilingBroker(String name) throws Exception {
 		super(name);
@@ -78,6 +81,10 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 		getVmsCreatedList().remove(0);
 	}
 	
+	private void addAmount() {
+		this.amount += this.pricePerVm*this.MinPerTick;
+		
+	}
 	public Vm getVmForVmId(int vmId) {
 		for(Vm vm : getVmList()) {
 			if(vm.getId() == vmId) {
@@ -147,6 +154,10 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 			double cloudletsSubmittedDouble = (double)cloudletsSubmitted;
 			
 			ProfilingCloudlet pcloudlet = (ProfilingCloudlet) cloudlet;
+			pcloudlet.incrementTicks();
+
+			addAmount();
+			
 			pcloudlet.setUtilizationModelCpu(new UtilizationModelFixed(wrapper.getCpuUtil()/cloudletsSubmittedDouble));
 			pcloudlet.setUtilizationModelRam(new UtilizationModelFixed(wrapper.getMemUtil()/cloudletsSubmittedDouble));
 			pcloudlet.setUtilizationModelDiskRead(new UtilizationModelFixed(wrapper.getDiskReadUtil()/cloudletsSubmittedDouble));
@@ -258,6 +269,10 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 			obs.refreshData(this);
 		}
 		
+	}
+	
+	public int getAmount() {
+		return amount;
 	}
 
 	@Override
