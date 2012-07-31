@@ -136,12 +136,17 @@ public class UtilManager extends SimEntity {
 			List<Double> memUtils = convertToRelative(layers.get(tier).get(1), vmBuilder.getRam(), 1024);
 			List<Double> diskReadUtils = convertToRelative(layers.get(tier).get(2), vmBuilder.getDiskAccessRate(), 1);
 			List<Double> diskWriteUtils = convertToRelative(layers.get(tier).get(3), vmBuilder.getDiskAccessRate(), 1);
-			List<Double> bwInUtils = convertToRelative(layers.get(tier).get(4), vmBuilder.getBandwidth(), 1);
-			List<Double> bwOutUtils = convertToRelative(layers.get(tier).get(5), vmBuilder.getBandwidth(), 1);
+			List<Double> bwInUtils = convertToRelative(layers.get(tier).get(4), vmBuilder.getBandwidth(), 1000);
+			List<Double> bwOutUtils = convertToRelative(layers.get(tier).get(5), vmBuilder.getBandwidth(), 1000);
 			//schedule(tier.getId(),1, UtilManager.CLOUDLET_UPDATE, cpuUtils.get(i));
 
 			// check if enough vms are present / too much vms present and handle this event => regarding threshold
-			int runningVms = tier.getCloudletSubmittedList().size();
+			int runningVms = 1;
+			int cloudlets = tier.getCloudletSubmittedList().size();
+			
+			if(cloudlets > 1)
+				runningVms = cloudlets;
+			
 			Log.printLine(CloudSim.clock() + ": " + getName() + ": Vms running: " + runningVms);
 			double cpuUtilizationPerVm = (cpuUtils.get(i)/(double)runningVms);
 			// TODO: need to make those in percent!
@@ -157,7 +162,7 @@ public class UtilManager extends SimEntity {
 			Log.printLine("Current BwIn Util: " + bwInUtilizationPerVm);
 			Log.printLine("Current BwOut Util: " + bwOutUtilizationPerVm);
 			Log.printLine("Running Vms: " + runningVms);
-			
+
 			if (checkUpperThreshold(runningVms, cpuUtilizationPerVm,
 					memUtilizationPerVm, diskReadUtilizationPerVm,
 					diskWriteUtilizationPerVm, bwInUtilizationPerVm,
@@ -176,10 +181,12 @@ public class UtilManager extends SimEntity {
 				Log.printLine("Too many Vms... destroying");
 				schedule(tier.getId(), 1, CloudSimTags.VM_DESTROY);
 			}
+			
 			//update utilization of all cloudlets
 			UtilWrapper wrapper = new UtilWrapper(cpuUtils.get(i), memUtils.get(i), diskReadUtils.get(i),diskWriteUtils.get(i),bwInUtils.get(i),bwOutUtils.get(i));
 			
 			schedule(tier.getId(), 2, UtilManager.CLOUDLET_UPDATE, wrapper);
+
 		}
 		this.i++;
 		
