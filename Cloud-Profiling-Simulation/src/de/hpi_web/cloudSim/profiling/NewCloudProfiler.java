@@ -36,13 +36,15 @@ public class NewCloudProfiler {
 			UtilizationThreshold hdThreshold,
 			DatacenterBuilder dcBuilder,
 			VmBuilder vmBuilder,
-			Map<String, ResourceModelCollection> models) {
+			Map<String, ResourceModelCollection> models,
+			int vmsAtStart) {
 		
 		Log.printLine("Starting...");
 		initializeCloudSim();
-		List<ProfilingBroker> brokers = prepareThreeTierScenario(observer, dcBuilder, vmBuilder);
+		List<ProfilingBroker> brokers = prepareThreeTierScenario(observer, dcBuilder, vmBuilder, vmsAtStart);
 		
 		// create a map where for each broker the CPU usage is recorded
+		// if our input contains models, we will calculate the usage based on them, otherwise we take the sample file provided
 		HashMap<DatacenterBroker, List<List<Double>>> layers = new HashMap<DatacenterBroker, List<List<Double>>>();
 		if (models == null) {
 			NewArx.init(training, running);
@@ -55,9 +57,6 @@ public class NewCloudProfiler {
 			layers.put(brokers.get(1), mbp.predictAppTierUtil());
 			layers.put(brokers.get(2), mbp.predictDbTierUtil());
 		}
-		//List<MultiTierCloudlet> wsCloudlets = CloudletFactory.createCloudlets(0, 10, wsBroker);
-
-		//wsBroker.submitCloudletList(wsCloudlets);
 
 		@SuppressWarnings("unused")
 		UtilManager utilManager = new UtilManager(
@@ -73,16 +72,16 @@ public class NewCloudProfiler {
 		CloudSim.startSimulation();
 		CloudSim.stopSimulation();
 
-		//Print results
-		//List<Cloudlet> wsList = wsBroker.getCloudletReceivedList();
 		Log.printLine("Simulation finished!");
 		
 	}
 	
 	private static List<ProfilingBroker> prepareThreeTierScenario(
 			Observer observer, 
-			DatacenterBuilder dcBuilder, VmBuilder vmBuilder) {
+			DatacenterBuilder dcBuilder, VmBuilder vmBuilder,
+			int vmsAtStart) {
 
+		// setup datacenters and brokers
 		Datacenter wsDatacenter = dcBuilder.setName("WebserverCenter").build();
 		Datacenter appDatacenter = dcBuilder.setName("ApplicationCenter").build();
 		Datacenter dbDatacenter = dcBuilder.setName("DatabaseCenter").build();
@@ -105,10 +104,12 @@ public class NewCloudProfiler {
 		appVms = new ArrayList<>();
 		dbVms = new ArrayList<>();
 		
-		// TODO: include different amount of start Vms (has to be passed down from the GUI)
-		wsVms.add(vmBuilder.setUserId(wsBroker.getId()).build());
-		appVms.add(vmBuilder.setUserId(appBroker.getId()).build());
-		dbVms.add(vmBuilder.setUserId(dbBroker.getId()).build());
+		// create initial Vms
+		for (int i = 0; i < vmsAtStart; i++) {
+			wsVms.add(vmBuilder.setUserId(wsBroker.getId()).build());
+			appVms.add(vmBuilder.setUserId(appBroker.getId()).build());
+			dbVms.add(vmBuilder.setUserId(dbBroker.getId()).build());
+		}
 		
 		// submit vm lists to the brokers
 		wsBroker.submitVmList(wsVms);

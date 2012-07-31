@@ -22,6 +22,7 @@ public class Simulation extends Thread {
     private Observer observer;
     private File running, training;
     private double delay = SimulationDefaults.STEP_DELAY;
+    private int vmsAtStart;
     private UtilizationThreshold cpuThreshold;
     private UtilizationThreshold memThreshold;
     private UtilizationThreshold bwThreshold;
@@ -37,6 +38,7 @@ public class Simulation extends Thread {
         this.observer = observer;
         this.running = running;
         this.training = training;
+        this.vmsAtStart = 1;
         initializeThresholds();
     }
 
@@ -54,7 +56,8 @@ public class Simulation extends Thread {
                 hdThreshold,
                 dcBuilder,
                 vmBuilder,
-                models);
+                models,
+                vmsAtStart);
     }
     
     public void stopped(Boolean stopped) {
@@ -76,6 +79,14 @@ public class Simulation extends Thread {
 
     public void setDelay(double delay) {
         this.delay = delay;
+    }
+
+    public double getVmsAtStart() {
+        return vmsAtStart;
+    }
+
+    public void setVmsAtStart(int vmsAtStart) {
+        this.vmsAtStart = vmsAtStart;
     }
     
     public File getRunning() {

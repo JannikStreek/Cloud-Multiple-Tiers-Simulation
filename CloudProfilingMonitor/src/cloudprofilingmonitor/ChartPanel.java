@@ -16,15 +16,6 @@ import javax.swing.JPanel;
  * @author christoph
  */
 public class ChartPanel {
-//    public final static String WEB_TIER = "Webserver";
-//    public final static String APP_TIER = "Application";
-//    public final static String DB_TIER = "Database";
-//    public final static String CPU = "CPU";
-//    public final static String MEMORY = "Memory";
-//    public final static String BANDWIDTH_IN = "Bandwidth I";
-//    public final static String BANDWIDTH_OUT = "Bandwidth O";
-//    public final static String HD_READ = "Disk Read";
-//    public final static String HD_WRITE = "Disk Write";
     public final static int TRACE_SIZE = 2000;
     private Chart cpuChart;
     private Chart memChart;
@@ -132,7 +123,7 @@ public class ChartPanel {
             case StringConstants.Resource.BANDWIDTH_OUT: selectCpuChart();       break;
             case StringConstants.Resource.HD_READ:       selectHdReadChart();    break;
             case StringConstants.Resource.HD_WRITE:      selectHdWriteChart();   break;
-            default:            selectCpuChart();       break;
+            default:                                     selectCpuChart();       break;
         }
     }
     

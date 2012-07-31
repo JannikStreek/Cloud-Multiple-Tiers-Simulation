@@ -17,7 +17,6 @@ import de.hpi_web.cloudSim.profiling.observer.Observer;
 import de.hpi_web.cloudSim.profiling.utilization.UtilizationThreshold;
 import java.io.File;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
@@ -33,6 +32,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private HostBuilder hostBuilder;
     private DatacenterBuilder dcBuilder;
     private VmBuilder vmBuilder;
+    private StatisticsPanel statistics;
     
     private ChartPanel chartPanel;
     private ResourceModel selectedModel;
@@ -44,6 +44,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
         initComponents();
         
         initializeSimulation();
+        initializeStatistics();
         initializeCharting();
         initializeModels();
     }
@@ -58,6 +59,10 @@ public class Gui extends javax.swing.JFrame implements Observer {
         simulation.setVmBuilder(vmBuilder);
     }
     
+    private void initializeStatistics() {
+        statistics = new StatisticsPanel();
+        GlobalStatisticsPanel.add(statistics);
+    }
     private void initializeCharting() {
         DefaultComboBoxModel tierModel = new DefaultComboBoxModel();
         DefaultComboBoxModel valueModel = new DefaultComboBoxModel();
@@ -106,10 +111,6 @@ public class Gui extends javax.swing.JFrame implements Observer {
         jTabbedPane1 = new javax.swing.JTabbedPane();
         SimulationPanel = new javax.swing.JPanel();
         GlobalStatisticsPanel = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
         tier1_scrollPane = new javax.swing.JScrollPane();
         tier1_VMPanel = new javax.swing.JPanel();
         tier2_scrollPane = new javax.swing.JScrollPane();
@@ -164,6 +165,10 @@ public class Gui extends javax.swing.JFrame implements Observer {
         maxHdRWTextField = new javax.swing.JTextField();
         jLabel30 = new javax.swing.JLabel();
         minHdRWTextField = new javax.swing.JTextField();
+        jLabel27 = new javax.swing.JLabel();
+        costPerMinTextField = new javax.swing.JTextField();
+        minPerTurnTextField = new javax.swing.JTextField();
+        jLabel28 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         tierComboBox = new javax.swing.JComboBox();
         jLabel5 = new javax.swing.JLabel();
@@ -174,12 +179,12 @@ public class Gui extends javax.swing.JFrame implements Observer {
         chartCanvas = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
-        jLabel33 = new javax.swing.JLabel();
-        jLabel34 = new javax.swing.JLabel();
-        jLabel35 = new javax.swing.JLabel();
-        jLabel36 = new javax.swing.JLabel();
-        jLabel37 = new javax.swing.JLabel();
-        jLabel38 = new javax.swing.JLabel();
+        cpuModelLabel = new javax.swing.JLabel();
+        memModelLabel = new javax.swing.JLabel();
+        bwInModelLabel = new javax.swing.JLabel();
+        bwOutModelLabel = new javax.swing.JLabel();
+        hdReadModelLabel = new javax.swing.JLabel();
+        hdWriteModelLabel = new javax.swing.JLabel();
         bwInModelActiveBtn = new javax.swing.JToggleButton();
         cpuModelActiveBtn = new javax.swing.JToggleButton();
         memoryModelActiveBtn = new javax.swing.JToggleButton();
@@ -196,6 +201,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
         jScrollPane1 = new javax.swing.JScrollPane();
         customModelInput = new javax.swing.JTextArea();
         submitModelBtn = new javax.swing.JButton();
+        selectedModelLabel = new javax.swing.JLabel();
         startBtn = new javax.swing.JButton();
         stopBtn = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -216,46 +222,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
         GlobalStatisticsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Global Statistics"));
         GlobalStatisticsPanel.setMaximumSize(new java.awt.Dimension(250, 32767));
         GlobalStatisticsPanel.setPreferredSize(new java.awt.Dimension(250, 355));
-
-        jLabel1.setText("#VMs:");
-
-        jLabel2.setText("0");
-
-        jLabel3.setText("CPU Avg:");
-
-        jLabel4.setText("0");
-
-        javax.swing.GroupLayout GlobalStatisticsPanelLayout = new javax.swing.GroupLayout(GlobalStatisticsPanel);
-        GlobalStatisticsPanel.setLayout(GlobalStatisticsPanelLayout);
-        GlobalStatisticsPanelLayout.setHorizontalGroup(
-            GlobalStatisticsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(GlobalStatisticsPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(GlobalStatisticsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(GlobalStatisticsPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel2))
-                    .addGroup(GlobalStatisticsPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 145, Short.MAX_VALUE)
-                        .addComponent(jLabel4)))
-                .addContainerGap())
-        );
-        GlobalStatisticsPanelLayout.setVerticalGroup(
-            GlobalStatisticsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(GlobalStatisticsPanelLayout.createSequentialGroup()
-                .addGap(65, 65, 65)
-                .addGroup(GlobalStatisticsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(GlobalStatisticsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4))
-                .addContainerGap(225, Short.MAX_VALUE))
-        );
-
+        GlobalStatisticsPanel.setLayout(new javax.swing.BoxLayout(GlobalStatisticsPanel, javax.swing.BoxLayout.LINE_AXIS));
         SimulationPanel.add(GlobalStatisticsPanel);
 
         tier1_scrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -475,6 +442,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
 
         maxCpuTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         maxCpuTextField.setText("70");
+        maxCpuTextField.setMaximumSize(new java.awt.Dimension(26, 27));
 
         jLabel21.setText("min. CPU/VM:");
 
@@ -491,6 +459,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
 
         maxMemTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         maxMemTextField.setText("70");
+        maxMemTextField.setMaximumSize(new java.awt.Dimension(26, 27));
 
         jLabel23.setText("max. Mem./VM:");
 
@@ -503,6 +472,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
 
         maxBwIOTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         maxBwIOTextField.setText("0");
+        maxBwIOTextField.setMaximumSize(new java.awt.Dimension(26, 27));
 
         jLabel26.setText("max. Bw IO/VM:");
 
@@ -510,11 +480,22 @@ public class Gui extends javax.swing.JFrame implements Observer {
 
         maxHdRWTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         maxHdRWTextField.setText("0");
+        maxHdRWTextField.setMaximumSize(new java.awt.Dimension(26, 27));
 
         jLabel30.setText("min. HD RW/VM:");
 
         minHdRWTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         minHdRWTextField.setText("0");
+
+        jLabel27.setText("VM Cost/Minute:");
+
+        costPerMinTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        costPerMinTextField.setText("1");
+
+        minPerTurnTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        minPerTurnTextField.setText("1");
+
+        jLabel28.setText("Minutes/Simulation Turn:");
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -531,28 +512,36 @@ public class Gui extends javax.swing.JFrame implements Observer {
                             .addComponent(jLabel14))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(maxHdRWTextField, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(maxBwIOTextField, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(maxMemTextField, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(maxCpuTextField, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addComponent(maxHdRWTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(maxBwIOTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(maxMemTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(maxCpuTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel30)
                             .addComponent(jLabel25)
                             .addComponent(jLabel24)
-                            .addComponent(jLabel21))
-                        .addGap(22, 22, 22))
+                            .addComponent(jLabel21)))
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addComponent(jLabel22)
-                        .addGap(160, 160, 160)))
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(delayTextField)
-                    .addComponent(minHdRWTextField, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(minBwIOTextField, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(minMemTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
-                    .addComponent(minCpuTextField, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addContainerGap())
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addGap(12, 12, 12)
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel27)
+                                    .addComponent(jLabel22)))
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jLabel28)))
+                        .addGap(138, 138, 138)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(minPerTurnTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(delayTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(costPerMinTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(minMemTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(minBwIOTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(minHdRWTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(minCpuTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -594,7 +583,14 @@ public class Gui extends javax.swing.JFrame implements Observer {
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel22)
                     .addComponent(delayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel27)
+                    .addComponent(costPerMinTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel28)
+                    .addComponent(minPerTurnTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         javax.swing.GroupLayout SettingsPanelLayout = new javax.swing.GroupLayout(SettingsPanel);
@@ -697,17 +693,17 @@ public class Gui extends javax.swing.JFrame implements Observer {
 
         jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Model Settings"));
 
-        jLabel33.setText("CPU:");
+        cpuModelLabel.setText("CPU:");
 
-        jLabel34.setText("Memory:");
+        memModelLabel.setText("Memory:");
 
-        jLabel35.setText("Bandw. I:");
+        bwInModelLabel.setText("Bandw. I:");
 
-        jLabel36.setText("Bandw. O:");
+        bwOutModelLabel.setText("Bandw. O:");
 
-        jLabel37.setText("Disk Read:");
+        hdReadModelLabel.setText("Disk Read:");
 
-        jLabel38.setText("Disk Write:");
+        hdWriteModelLabel.setText("Disk Write:");
 
         bwInModelActiveBtn.setText("Active");
         bwInModelActiveBtn.addChangeListener(new javax.swing.event.ChangeListener() {
@@ -809,12 +805,12 @@ public class Gui extends javax.swing.JFrame implements Observer {
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel6Layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel38)
-                            .addComponent(jLabel37)
-                            .addComponent(jLabel36)
-                            .addComponent(jLabel35)
-                            .addComponent(jLabel34)
-                            .addComponent(jLabel33))
+                            .addComponent(hdWriteModelLabel)
+                            .addComponent(hdReadModelLabel)
+                            .addComponent(bwOutModelLabel)
+                            .addComponent(bwInModelLabel)
+                            .addComponent(memModelLabel)
+                            .addComponent(cpuModelLabel))
                         .addGap(35, 35, 35)
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(hdWriteModelActiveBtn, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -839,32 +835,32 @@ public class Gui extends javax.swing.JFrame implements Observer {
                 .addComponent(modelTierComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel33)
+                    .addComponent(cpuModelLabel)
                     .addComponent(cpuModelActiveBtn)
                     .addComponent(editCpuModelBtn))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel34)
+                    .addComponent(memModelLabel)
                     .addComponent(memoryModelActiveBtn)
                     .addComponent(editMemModelBtn))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel35)
+                    .addComponent(bwInModelLabel)
                     .addComponent(bwInModelActiveBtn)
                     .addComponent(editBwInModelBtn))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel36)
+                    .addComponent(bwOutModelLabel)
                     .addComponent(bwOutModelActiveBtn)
                     .addComponent(editBwOutModelBtn))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel37)
+                    .addComponent(hdReadModelLabel)
                     .addComponent(hdReadModelActiveBtn)
                     .addComponent(editHdReadModelBtn))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel38)
+                    .addComponent(hdWriteModelLabel)
                     .addComponent(hdWriteModelActiveBtn)
                     .addComponent(editHdWriteModelBtn))
                 .addContainerGap())
@@ -872,6 +868,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
 
         customModelInput.setColumns(20);
         customModelInput.setRows(5);
+        customModelInput.setText("No model selected.");
         jScrollPane1.setViewportView(customModelInput);
 
         submitModelBtn.setText("Submit");
@@ -881,6 +878,9 @@ public class Gui extends javax.swing.JFrame implements Observer {
             }
         });
 
+        selectedModelLabel.setFont(new java.awt.Font("Ubuntu", 3, 15)); // NOI18N
+        selectedModelLabel.setText("None >> None");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -888,13 +888,13 @@ public class Gui extends javax.swing.JFrame implements Observer {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(selectedModelLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(submitModelBtn))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 897, Short.MAX_VALUE)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 897, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -906,7 +906,9 @@ public class Gui extends javax.swing.JFrame implements Observer {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jScrollPane1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(submitModelBtn)))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(submitModelBtn)
+                            .addComponent(selectedModelLabel))))
                 .addContainerGap())
         );
 
@@ -1085,6 +1087,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
                 .setMips(Integer.parseInt(mipsPerVmCore.getText()));
         
         // TODO: set disc access rate
+        simulation.setVmsAtStart(Integer.parseInt(numberStartVmsTextField.getText()));
     }
     
     private void submitDelay() {
@@ -1116,8 +1119,8 @@ public class Gui extends javax.swing.JFrame implements Observer {
     @Override
     public void refreshData(Observable subject) {
         ProfilingBroker broker = (ProfilingBroker) subject;
-        Boolean newValuesForGraph = true;
-        // TODO: we need to decide which text area to use; this is just a fixed, quick and dirty solution
+        Boolean newBrokerValues = true;
+        
         JPanel area = tier1_VMPanel;
         String tier = StringConstants.Tier.WEB;
         if (broker.getName().equalsIgnoreCase("appBroker")) {
@@ -1145,7 +1148,6 @@ public class Gui extends javax.swing.JFrame implements Observer {
                 hostId = broker.getVmForVmId(vmId).getHost().getId();
                 VMContainer c = createVmContainer(area, "VM: " + vmId + " at host " + hostId);
                 
-                // TODO: do this for BW IN, BW OUT, HD Write, HD Read. Need to adjust cloudlet
                 c.setCpuUtil(cpuUtil, simulation.getCpuThreshold());
                 c.setMemUtil(memUtil, simulation.getMemThreshold());
                 c.setBwInUtil(bwInUtil, simulation.getBwThreshold());
@@ -1153,14 +1155,19 @@ public class Gui extends javax.swing.JFrame implements Observer {
                 c.setHdReadUtil(hdReadUtil, simulation.getHdThreshold());
                 c.setHdWriteUtil(hdWriteUtil, simulation.getHdThreshold());
                 
-                if (newValuesForGraph) {
+                if (newBrokerValues) {
+                    statistics.setNumberOfVms(tier, broker.getCloudletSubmittedList().size());
+                    statistics.setCost(tier, broker.getAmount());
+                    statistics.setCPUUtilization(tier, cpuUtil);
+                    statistics.setMemoryUtilization(tier, memUtil);
+                    
                     chartPanel.addCpuValue(tier, cpuUtil);
                     chartPanel.addMemValue(tier, memUtil);
                     chartPanel.addBwInValue(tier, bwInUtil);
                     chartPanel.addBwOutValue(tier, bwOutUtil);
                     chartPanel.addHdReadValue(tier, hdReadUtil);
                     chartPanel.addHdWriteValue(tier, hdWriteUtil);
-                    newValuesForGraph = false;
+                    newBrokerValues = false;
                 }
         }
         area.validate();
@@ -1256,7 +1263,8 @@ public class Gui extends javax.swing.JFrame implements Observer {
     }//GEN-LAST:event_valueComboBoxItemStateChanged
 
     private void modelTierComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_modelTierComboBoxItemStateChanged
-        customModelInput.setText("No Model Selected.");
+        customModelInput.setText("No model selected.");
+        selectedModelLabel.setText((String) evt.getItem() + " >> " + "None");
         selectedModel = null;
     }//GEN-LAST:event_modelTierComboBoxItemStateChanged
 
@@ -1268,31 +1276,37 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private void editCpuModelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editCpuModelBtnActionPerformed
         String tier = (String) modelTierComboBox.getSelectedItem();
         selectModel(customModelMap.get(tier).get(StringConstants.Resource.CPU));
+        selectedModelLabel.setText(tier + " >> " + "CPU");
     }//GEN-LAST:event_editCpuModelBtnActionPerformed
 
     private void editMemModelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editMemModelBtnActionPerformed
         String tier = (String) modelTierComboBox.getSelectedItem();
         selectModel(customModelMap.get(tier).get(StringConstants.Resource.MEMORY));
+        selectedModelLabel.setText(tier + " >> " + "Memory");
     }//GEN-LAST:event_editMemModelBtnActionPerformed
 
     private void editBwInModelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBwInModelBtnActionPerformed
         String tier = (String) modelTierComboBox.getSelectedItem();
         selectModel(customModelMap.get(tier).get(StringConstants.Resource.BANDWIDTH_IN));
+        selectedModelLabel.setText(tier + " >> " + "Bandwidth In");
     }//GEN-LAST:event_editBwInModelBtnActionPerformed
 
     private void editBwOutModelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBwOutModelBtnActionPerformed
         String tier = (String) modelTierComboBox.getSelectedItem();
         selectModel(customModelMap.get(tier).get(StringConstants.Resource.BANDWIDTH_OUT));
+        selectedModelLabel.setText(tier + " >> " + "Bandwidth Out");
     }//GEN-LAST:event_editBwOutModelBtnActionPerformed
 
     private void editHdReadModelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editHdReadModelBtnActionPerformed
         String tier = (String) modelTierComboBox.getSelectedItem();
         selectModel(customModelMap.get(tier).get(StringConstants.Resource.HD_READ));
+        selectedModelLabel.setText(tier + " >> " + "Disk Read");
     }//GEN-LAST:event_editHdReadModelBtnActionPerformed
 
     private void editHdWriteModelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editHdWriteModelBtnActionPerformed
         String tier = (String) modelTierComboBox.getSelectedItem();
         selectModel(customModelMap.get(tier).get(StringConstants.Resource.HD_WRITE));
+        selectedModelLabel.setText(tier + " >> " + "Disk Write");
     }//GEN-LAST:event_editHdWriteModelBtnActionPerformed
 
     private void modelsRadioBtnItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_modelsRadioBtnItemStateChanged
@@ -1403,13 +1417,17 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private javax.swing.JPanel SettingsPanel;
     private javax.swing.JPanel SimulationPanel;
     private javax.swing.JToggleButton bwInModelActiveBtn;
+    private javax.swing.JLabel bwInModelLabel;
     private javax.swing.JToggleButton bwOutModelActiveBtn;
+    private javax.swing.JLabel bwOutModelLabel;
     private javax.swing.JTextField bwPerHostTextField;
     private javax.swing.JTextField bwPerVmTextField;
     private javax.swing.JPanel chartCanvas;
     private javax.swing.JTextField coresPerHostTextField;
     private javax.swing.JTextField coresPerVmTextField;
+    private javax.swing.JTextField costPerMinTextField;
     private javax.swing.JToggleButton cpuModelActiveBtn;
+    private javax.swing.JLabel cpuModelLabel;
     private javax.swing.JTextArea customModelInput;
     private javax.swing.JButton defaultSettingsButton;
     private javax.swing.JTextField delayTextField;
@@ -1421,8 +1439,9 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private javax.swing.JButton editMemModelBtn;
     private javax.swing.JFileChooser fileChooser;
     private javax.swing.JToggleButton hdReadModelActiveBtn;
+    private javax.swing.JLabel hdReadModelLabel;
     private javax.swing.JToggleButton hdWriteModelActiveBtn;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel hdWriteModelLabel;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
@@ -1433,7 +1452,6 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
@@ -1441,16 +1459,10 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
+    private javax.swing.JLabel jLabel27;
+    private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel29;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel30;
-    private javax.swing.JLabel jLabel33;
-    private javax.swing.JLabel jLabel34;
-    private javax.swing.JLabel jLabel35;
-    private javax.swing.JLabel jLabel36;
-    private javax.swing.JLabel jLabel37;
-    private javax.swing.JLabel jLabel38;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
@@ -1470,11 +1482,13 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private javax.swing.JTextField maxCpuTextField;
     private javax.swing.JTextField maxHdRWTextField;
     private javax.swing.JTextField maxMemTextField;
+    private javax.swing.JLabel memModelLabel;
     private javax.swing.JToggleButton memoryModelActiveBtn;
     private javax.swing.JTextField minBwIOTextField;
     private javax.swing.JTextField minCpuTextField;
     private javax.swing.JTextField minHdRWTextField;
     private javax.swing.JTextField minMemTextField;
+    private javax.swing.JTextField minPerTurnTextField;
     private javax.swing.JTextField mipsPerCoreTextField;
     private javax.swing.JTextField mipsPerVmCore;
     private javax.swing.JComboBox modelTierComboBox;
@@ -1486,6 +1500,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private javax.swing.JTextPane runningInput;
     private javax.swing.JButton selectRunningBtn;
     private javax.swing.JButton selectTrainingBtn;
+    private javax.swing.JLabel selectedModelLabel;
     private javax.swing.JButton startBtn;
     private javax.swing.JButton stopBtn;
     private javax.swing.JTextField storagePerHostTextField;
