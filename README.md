@@ -28,7 +28,10 @@ To start the simulation, just start the Gui.java in the monitoring project as a 
 
 Using the project in Netbeans
 ==========
+Netbeans is the tool of choice for editing the GUI. The CloudProfilingMonitor/ folder contains the project files for Netbeans. Simply chose File > Open Project from the Netbeans menu and select the folder. 
+If you want to edit the rest of the code (which was managed using Eclipse) we suggest to use the import function for Eclipse projects built into Netbeans. Go to File > Import Project > Eclipse Project and follow the wizard.
 
+The main class to start the simulator is Gui.java.
 
 Fixed Bugs in CloudSim
 ============

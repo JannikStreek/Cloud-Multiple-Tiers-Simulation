@@ -177,8 +177,6 @@ public class Gui extends javax.swing.JFrame implements Observer {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         valueComboBox = new javax.swing.JComboBox();
-        jLabel10 = new javax.swing.JLabel();
-        vmComboBox = new javax.swing.JComboBox();
         chartCanvas = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
@@ -274,7 +272,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
         jLabel7.setText("#Hosts:");
 
         numberOfHostsTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        numberOfHostsTextField.setText("3");
+        numberOfHostsTextField.setText("50");
 
         jLabel8.setText("#PES per Host:");
 
@@ -647,10 +645,6 @@ public class Gui extends javax.swing.JFrame implements Observer {
             }
         });
 
-        jLabel10.setText("VM:");
-
-        vmComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
         chartCanvas.setLayout(new javax.swing.BoxLayout(chartCanvas, javax.swing.BoxLayout.LINE_AXIS));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -668,11 +662,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(valueComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel10)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(vmComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 799, Short.MAX_VALUE))
+                        .addGap(0, 934, Short.MAX_VALUE))
                     .addComponent(chartCanvas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -684,9 +674,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
                     .addComponent(tierComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5)
                     .addComponent(valueComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6)
-                    .addComponent(vmComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel10))
+                    .addComponent(jLabel6))
                 .addGap(18, 18, 18)
                 .addComponent(chartCanvas, javax.swing.GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE)
                 .addContainerGap())
@@ -1222,6 +1210,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private void startBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startBtnActionPerformed
         File t = new File(trainingInput.getText());
         File r = new File(runningInput.getText());
+
         if (trainingRadioBtn.isSelected() && t.isFile() && r.isFile()) {
             simulation.setTraining(t);
             simulation.setRunning(r);
@@ -1452,7 +1441,6 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private javax.swing.JLabel hdReadModelLabel;
     private javax.swing.JToggleButton hdWriteModelActiveBtn;
     private javax.swing.JLabel hdWriteModelLabel;
-    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
@@ -1527,7 +1515,6 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private javax.swing.JTextPane trainingInput;
     private javax.swing.JRadioButton trainingRadioBtn;
     private javax.swing.JComboBox valueComboBox;
-    private javax.swing.JComboBox vmComboBox;
     // End of variables declaration//GEN-END:variables
 
 }
