@@ -26,3 +26,8 @@ To start the simulation, just start the Gui.java as a java application.
 Using the simulator
 ============
 
+Fixed Bugs in CloudSim
+============
+Datacenter: processCloudletResume => forgot to subtract actual time during scheduling
+Datacenter: processCloudletResume + processCloudletPause => getVm(vmId, userId) wrong parameter order
+
