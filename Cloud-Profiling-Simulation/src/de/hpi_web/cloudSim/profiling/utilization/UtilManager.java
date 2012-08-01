@@ -7,14 +7,12 @@ import java.util.Map;
 
 import org.cloudbus.cloudsim.DatacenterBroker;
 import org.cloudbus.cloudsim.Log;
-import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.SimEntity;
 import org.cloudbus.cloudsim.core.SimEvent;
 
-import de.hpi_web.cloudSim.arx.NewArx;
-import de.hpi_web.cloudSim.multitier.factories.VmFactory;
+import de.hpi_web.cloudSim.arx.FileBasedPrediction;
 import de.hpi_web.cloudSim.profiling.builders.VmBuilder;
 import de.hpi_web.cloudSim.profiling.datacenter.ProfilingVm;
 /*
@@ -110,7 +108,7 @@ public class UtilManager extends SimEntity {
 					e.printStackTrace();
 				}
 				Log.printLine(CloudSim.clock() + ": " + getName() + ": Completed Round ");
-				if(i < NewArx.RUNNING_VALUES) {
+				if(i < FileBasedPrediction.RUNNING_VALUES) {
 					schedule(getId(), 3, RUN);
 				} else {
 					//TODO check if it makes a difference if we end each layer here instead of all

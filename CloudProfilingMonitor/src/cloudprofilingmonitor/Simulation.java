@@ -5,7 +5,7 @@
 package cloudprofilingmonitor;
 
 import de.hpi_web.cloudSim.model.ResourceModelCollection;
-import de.hpi_web.cloudSim.profiling.NewCloudProfiler;
+import de.hpi_web.cloudSim.profiling.CloudProfiler;
 import de.hpi_web.cloudSim.profiling.builders.DatacenterBuilder;
 import de.hpi_web.cloudSim.profiling.builders.VmBuilder;
 import de.hpi_web.cloudSim.profiling.observer.Observer;
@@ -47,7 +47,7 @@ public class Simulation extends Thread {
     @Override
     public void run() {
         // TODO: how to safely stop and resume the thread?
-        NewCloudProfiler.start(
+        CloudProfiler.start(
                 observer, 
                 delay, 
                 training.getAbsolutePath(), 

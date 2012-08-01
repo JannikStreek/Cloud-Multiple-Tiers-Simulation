@@ -13,7 +13,7 @@ import Jama.Matrix;
  *
  * @author wesam.dawoud
  */
-public class NewArx {
+public class FileBasedPrediction {
 	
 	private static CSVFileReader training;
 	private static CSVFileReader running;

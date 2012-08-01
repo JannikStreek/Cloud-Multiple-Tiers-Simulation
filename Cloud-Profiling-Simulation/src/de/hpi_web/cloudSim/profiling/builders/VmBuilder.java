@@ -2,8 +2,6 @@ package de.hpi_web.cloudSim.profiling.builders;
 
 import org.cloudbus.cloudsim.CloudletScheduler;
 import org.cloudbus.cloudsim.CloudletSchedulerTimeShared;
-import org.cloudbus.cloudsim.Vm;
-
 import de.hpi_web.cloudSim.profiling.datacenter.ProfilingVm;
 
 public class VmBuilder {

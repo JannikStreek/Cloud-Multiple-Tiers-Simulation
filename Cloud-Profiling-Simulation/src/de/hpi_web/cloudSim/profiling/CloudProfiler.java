@@ -9,11 +9,10 @@ import java.util.Map;
 import org.cloudbus.cloudsim.Datacenter;
 import org.cloudbus.cloudsim.DatacenterBroker;
 import org.cloudbus.cloudsim.Log;
-import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
 
 import de.hpi_web.cloudSim.arx.ModelBasedPrediction;
-import de.hpi_web.cloudSim.arx.NewArx;
+import de.hpi_web.cloudSim.arx.FileBasedPrediction;
 import de.hpi_web.cloudSim.model.ResourceModelCollection;
 import de.hpi_web.cloudSim.profiling.builders.DatacenterBuilder;
 import de.hpi_web.cloudSim.profiling.builders.VmBuilder;
@@ -23,7 +22,7 @@ import de.hpi_web.cloudSim.profiling.observer.Observer;
 import de.hpi_web.cloudSim.profiling.utilization.UtilManager;
 import de.hpi_web.cloudSim.profiling.utilization.UtilizationThreshold;
 
-public class NewCloudProfiler {
+public class CloudProfiler {
 		
 	public static void start(
 			Observer observer, 
@@ -49,10 +48,10 @@ public class NewCloudProfiler {
 		// if our input contains models, we will calculate the usage based on them, otherwise we take the sample file provided
 		HashMap<DatacenterBroker, List<List<Double>>> layers = new HashMap<DatacenterBroker, List<List<Double>>>();
 		if (models == null) {
-			NewArx.init(training, running);
-			layers.put(brokers.get(0), NewArx.predictWebTierUtil());
-			layers.put(brokers.get(1), NewArx.predictAppTierUtil());
-			layers.put(brokers.get(2), NewArx.predictDbTierUtil());
+			FileBasedPrediction.init(training, running);
+			layers.put(brokers.get(0), FileBasedPrediction.predictWebTierUtil());
+			layers.put(brokers.get(1), FileBasedPrediction.predictAppTierUtil());
+			layers.put(brokers.get(2), FileBasedPrediction.predictDbTierUtil());
 		} else {
 			ModelBasedPrediction mbp = new ModelBasedPrediction(models, running);
 			layers.put(brokers.get(0), mbp.predictWebTierUtil());
