@@ -59,7 +59,9 @@ public class Simulation extends Thread {
                 dcBuilder,
                 vmBuilder,
                 models,
-                vmsAtStart);
+                vmsAtStart,
+                minPerTurn,
+                costPerMin);
     }
     
     public void stopped(Boolean stopped) {

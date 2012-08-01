@@ -25,10 +25,10 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 	private List<Observer> observers;
 	private List<Integer> dcAffinity;
 	private int amount = 0;
-	private int pricePerVm = 0;
-	private int minPerTick = 0;
+	private double pricePerVm = 0.0;
+	private double minPerTick = 0.0;
 
-	public ProfilingBroker(String name, int pricePerVm, int minPerTick) throws Exception {
+	public ProfilingBroker(String name, double pricePerVm, double minPerTick) throws Exception {
 		super(name);
 		observers = new ArrayList<Observer>();
 //		cloudlets = new ArrayList<Cloudlet>();
@@ -85,7 +85,7 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 	
 	private void addAmount() {
 		this.amount += this.pricePerVm*this.minPerTick;
-		
+		Log.printLine("Amount for vm: "+this.amount);
 	}
 	public Vm getVmForVmId(int vmId) {
 		for(Vm vm : getVmList()) {

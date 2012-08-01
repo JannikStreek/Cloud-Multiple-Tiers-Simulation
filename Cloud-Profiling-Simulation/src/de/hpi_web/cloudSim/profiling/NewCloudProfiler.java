@@ -37,11 +37,13 @@ public class NewCloudProfiler {
 			DatacenterBuilder dcBuilder,
 			VmBuilder vmBuilder,
 			Map<String, ResourceModelCollection> models,
-			int vmsAtStart) {
+			int vmsAtStart,
+			double minPerTurn,
+			double costPerMin) {
 		
 		Log.printLine("Starting...");
 		initializeCloudSim();
-		List<ProfilingBroker> brokers = prepareThreeTierScenario(observer, dcBuilder, vmBuilder, vmsAtStart);
+		List<ProfilingBroker> brokers = prepareThreeTierScenario(observer, dcBuilder, vmBuilder, vmsAtStart, minPerTurn, costPerMin);
 		
 		// create a map where for each broker the CPU usage is recorded
 		// if our input contains models, we will calculate the usage based on them, otherwise we take the sample file provided
@@ -79,16 +81,18 @@ public class NewCloudProfiler {
 	private static List<ProfilingBroker> prepareThreeTierScenario(
 			Observer observer, 
 			DatacenterBuilder dcBuilder, VmBuilder vmBuilder,
-			int vmsAtStart) {
+			int vmsAtStart,
+			double minPerTurn,
+			double costPerMin) {
 
 		// setup datacenters and brokers
 		Datacenter wsDatacenter = dcBuilder.setName("WebserverCenter").build();
 		Datacenter appDatacenter = dcBuilder.setName("ApplicationCenter").build();
 		Datacenter dbDatacenter = dcBuilder.setName("DatabaseCenter").build();
 		
-		ProfilingBroker wsBroker = createBroker("wsBroker");
-		ProfilingBroker appBroker = createBroker("appBroker");
-		ProfilingBroker dbBroker = createBroker("dbBroker");
+		ProfilingBroker wsBroker = createBroker("wsBroker", minPerTurn, costPerMin);
+		ProfilingBroker appBroker = createBroker("appBroker", minPerTurn, costPerMin);
+		ProfilingBroker dbBroker = createBroker("dbBroker", minPerTurn, costPerMin);
 		
 		wsBroker.addAffinity(wsDatacenter.getId());
 		appBroker.addAffinity(appDatacenter.getId());
@@ -138,10 +142,10 @@ public class NewCloudProfiler {
 	 *
 	 * @return the datacenter broker
 	 */
-	private static ProfilingBroker createBroker(String brokerId) {
+	private static ProfilingBroker createBroker(String brokerId, double minPerTurn, double costPerMin) {
 		ProfilingBroker broker = null;
 		try {
-			broker = new ProfilingBroker(brokerId);
+			broker = new ProfilingBroker(brokerId,minPerTurn, costPerMin);
 			//broker = new DatacenterBroker(brokerId);
 		} catch (Exception e) {
 			e.printStackTrace();
