@@ -2,6 +2,8 @@ Cloud-Multiple-Tiers-Simulation
 ===============================
 This project extends / changes CloudSim, a cloud simulator tool for cloud environments, to simulate models for dynamic scalability. The models are build on real usage data of applications. For more information please have a look at the paper "Dynamic scalability and contention prediction at public infrastructure using Internet application profiling" by Wesam Dawoud, Ibrahim Takouna and Christoph Meinel.
 
+The project is released under GPL license.
+
 Developed by Christoph Müller and Jannik Streek at Hasso Plattner Institute in Potsdam under supervision of Wesam Dawoud.
 
 Getting started: Using the provided simulator as a jar
