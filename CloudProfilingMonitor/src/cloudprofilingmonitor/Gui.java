@@ -913,7 +913,6 @@ public class Gui extends javax.swing.JFrame implements Observer {
         });
 
         stopBtn.setText("Stop");
-        stopBtn.setEnabled(false);
         stopBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 stopBtnActionPerformed(evt);
