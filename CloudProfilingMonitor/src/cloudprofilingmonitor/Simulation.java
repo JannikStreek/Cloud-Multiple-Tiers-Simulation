@@ -66,11 +66,10 @@ public class Simulation extends Thread {
                 costPerMin);
     }
     
-    public void stopped(Boolean stopped, Gui gui) {
-        // TODO: stopping not implemented yet
+    public void stopped(Boolean stopped) {
         this.stopped = stopped;
         CloudSim.terminateSimulation();
-        gui.init();
+        
     }
     
     public void setModels(Map<String, ResourceModelCollection> models) {
