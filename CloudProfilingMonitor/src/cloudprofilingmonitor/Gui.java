@@ -47,6 +47,9 @@ public class Gui extends javax.swing.JFrame implements Observer {
         initializeStatistics();
         initializeCharting();
         initializeModels();
+        
+        // set defaults
+        submitSettings();
     }
     
     private void initializeSimulation() {
@@ -1064,13 +1067,16 @@ public class Gui extends javax.swing.JFrame implements Observer {
     }// </editor-fold>//GEN-END:initComponents
 
     private void submitSettingsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitSettingsButtonActionPerformed
+        submitSettings();
+    }//GEN-LAST:event_submitSettingsButtonActionPerformed
+
+    private void submitSettings() {
         submitDcSettings();
         submitVmSettings();
         submitUtilizationThresholds();
         submitDelay();
         submitCostSettings();
-    }//GEN-LAST:event_submitSettingsButtonActionPerformed
-
+    }
     private void submitDcSettings() {
         hostBuilder.setBandwidth(Long.parseLong(bwPerHostTextField.getText()))
                 .setRam(Integer.parseInt(ramPerHostTextField.getText()))
