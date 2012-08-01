@@ -41,6 +41,10 @@ public class Gui extends javax.swing.JFrame implements Observer {
      * Creates new form Gui
      */
     public Gui() {
+    	init();
+    }
+    
+    public void init() {
         initComponents();
         
         initializeSimulation();
@@ -1248,7 +1252,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
     }//GEN-LAST:event_selectRunningBtnActionPerformed
 
     private void stopBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopBtnActionPerformed
-        simulation.stopped(true);
+        simulation.stopped(true, this);
     }//GEN-LAST:event_stopBtnActionPerformed
 
     private void tierComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_tierComboBoxItemStateChanged
