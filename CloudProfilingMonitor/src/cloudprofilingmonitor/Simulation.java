@@ -31,6 +31,8 @@ public class Simulation extends Thread {
     private DatacenterBuilder dcBuilder;
     private VmBuilder vmBuilder;
     private Map<String, ResourceModelCollection> models;
+    private double costPerMin;
+    private double minPerTurn;
 
     
     Simulation(Observer observer, File training, File running) {
@@ -159,5 +161,13 @@ public class Simulation extends Thread {
         memThreshold = new UtilizationThreshold(SimulationDefaults.MAX_THRESHOLD_MEM, SimulationDefaults.MIN_THRESHOLD_MEM);
         bwThreshold = new UtilizationThreshold(SimulationDefaults.MAX_THRESHOLD_BW, SimulationDefaults.MIN_THRESHOLD_BW);
         hdThreshold = new UtilizationThreshold(SimulationDefaults.MAX_THRESHOLD_HDD, SimulationDefaults.MIN_THRESHOLD_HDD);
+    }
+
+    void setCostPerMin(double costPerMin) {
+        this.costPerMin = costPerMin;
+    }
+
+    void setMinPerTurn(double minPerTurn) {
+        this.minPerTurn = minPerTurn;
     }
 }

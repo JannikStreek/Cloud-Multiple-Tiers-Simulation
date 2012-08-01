@@ -1066,8 +1066,9 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private void submitSettingsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitSettingsButtonActionPerformed
         submitDcSettings();
         submitVmSettings();
-        submitDelay();
         submitUtilizationThresholds();
+        submitDelay();
+        submitCostSettings();
     }//GEN-LAST:event_submitSettingsButtonActionPerformed
 
     private void submitDcSettings() {
@@ -1090,10 +1091,6 @@ public class Gui extends javax.swing.JFrame implements Observer {
         simulation.setVmsAtStart(Integer.parseInt(numberStartVmsTextField.getText()));
     }
     
-    private void submitDelay() {
-        simulation.setDelay(Double.parseDouble(delayTextField.getText()));
-    }
-    
     private void submitUtilizationThresholds() {
         UtilizationThreshold cpuThreshold = new UtilizationThreshold(
                 Integer.parseInt(maxCpuTextField.getText()), 
@@ -1111,8 +1108,15 @@ public class Gui extends javax.swing.JFrame implements Observer {
                 Integer.parseInt(maxHdRWTextField.getText()), 
                 Integer.parseInt(minHdRWTextField.getText()));
         simulation.setHdThreshold(hdThreshold);
+    }
+    
+    private void submitDelay() {
+        simulation.setDelay(Double.parseDouble(delayTextField.getText()));
+    }
 
-        
+    private void submitCostSettings() {
+        simulation.setCostPerMin(Double.parseDouble(costPerMinTextField.getText()));
+        simulation.setMinPerTurn(Double.parseDouble(minPerTurnTextField.getText()));
     }
     
     
