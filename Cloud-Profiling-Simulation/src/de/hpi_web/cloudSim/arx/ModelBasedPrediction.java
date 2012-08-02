@@ -11,6 +11,7 @@ import de.hpi_web.cloudSim.model.ResourceModelCollection;
 import de.hpi_web.cloudSim.model.StringConstants;
 
 public class ModelBasedPrediction {
+	
 	private Map<String, ResourceModelCollection> models;
 	private CSVFileReader running;
 	private int RUNNING_VALUES = 370;

@@ -2,10 +2,6 @@ package de.hpi_web.cloudSim.arx;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
-import de.hpi_web.cloudSim.model.ResourceModelCollection;
-import de.hpi_web.cloudSim.model.StringConstants;
 
 import Jama.Matrix;
 
@@ -18,6 +14,15 @@ public class FileBasedPrediction {
 	private static CSVFileReader training;
 	private static CSVFileReader running;
 	public static int RUNNING_VALUES = 370;
+	
+	FileBasedPrediction(String trainFile, String runFile) {
+        //The location of the training file
+        training = new CSVFileReader(trainFile);
+        training.ReadFile();
+        //The location of the validation file
+        running = new CSVFileReader(runFile);
+        running.ReadFile();
+	}
 
 	public static void init(String trainFile, String runFile) {
         //The location of the training file
