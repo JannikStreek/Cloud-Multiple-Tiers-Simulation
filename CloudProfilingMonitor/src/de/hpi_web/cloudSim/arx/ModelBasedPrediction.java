@@ -34,7 +34,7 @@ public class ModelBasedPrediction {
         models = modelMap;
         running = new CSVFileReader(runFile);
         running.ReadFile();
-        //RUNNING_VALUES = running.getRowsNum();
+        RUNNING_VALUES = running.getRowsNum()-1;
     }
 
     public List<List<Double>> predictWebTierUtil() {
