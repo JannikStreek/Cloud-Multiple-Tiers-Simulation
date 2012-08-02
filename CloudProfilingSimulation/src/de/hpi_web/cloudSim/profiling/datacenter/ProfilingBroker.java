@@ -19,6 +19,10 @@ import de.hpi_web.cloudSim.profiling.utilization.UtilManager;
 import de.hpi_web.cloudSim.profiling.utilization.UtilWrapper;
 import de.hpi_web.cloudSim.profiling.utilization.UtilizationModelFixed;
 
+/*
+ * This ProfilingBroker manages all the hosts in the datacenter of one tier/layer.
+ * It updates and creates all cloudlets, if the UtilManager commands that.
+ */
 public class ProfilingBroker extends DatacenterBroker implements Observable{
 	
 //	private List<Cloudlet> cloudlets;
@@ -100,7 +104,7 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 	private void processNewVm(SimEvent ev) {
 		Vm vm = (Vm) ev.getData();
 		getVmList().add(vm);
-		// TODO choose datacenter here
+		// just choose the first datacenter here, because one layer has exact one datacenter
 		int datacenterId;
 		if (getDcAffinityList().isEmpty()) {
 			datacenterId = getDatacenterIdsList().get(0);
@@ -258,11 +262,9 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 	  double diskWriteUtilizationPerVm = (wrapper.getDiskWriteUtil()/createdVms);
 	  double bwInUtilizationPerVm = (wrapper.getBwInUtil()/createdVms);
 	  double bwOutUtilizationPerVm = (wrapper.getBwOutUtil()/createdVms);
-	  //double cpuUtilizationPerVm = (wrapper.getCpuUtil()/(double)getVmsCreatedList().size());// util = 1 means 100% utilization
-
+	 
 	  long fileSize = 300;
 	  long outputSize = 300;
-	  //TODO cloudlet really needed here? is also created in the update method...
 	  UtilizationModel cpuUtilizationModel = new UtilizationModelFixed(cpuUtilizationPerVm);
 	  UtilizationModel memUtilizationModel = new UtilizationModelFixed(memUtilizationPerVm);
 	  UtilizationModel diskReadUtilizationModel = new UtilizationModelFixed(diskReadUtilizationPerVm);

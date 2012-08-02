@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Cloud-Profiling-Simulation"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/CloudProfilingSimulation"/>
 	<classpathentry kind="lib" path="/home/jannik/Cloud-Multiple-Tiers-Simulation/dependencies/cloudsim-3.0.jar" sourcepath="/home/jannik/Cloud-Multiple-Tiers-Simulation/dependencies/cloudsim-3.0-sources.jar"/>
 	<classpathentry kind="lib" path="/home/jannik/Cloud-Multiple-Tiers-Simulation/dependencies/cloudsim-3.0-sources.jar"/>
 	<classpathentry kind="lib" path="/home/jannik/Cloud-Multiple-Tiers-Simulation/dependencies/cloudsim-examples-3.0.jar"/>

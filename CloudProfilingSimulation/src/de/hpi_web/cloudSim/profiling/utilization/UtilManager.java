@@ -131,11 +131,11 @@ public class UtilManager extends SimEntity {
 			//5 = network in
 			//6 = network out
 			List<Double> cpuUtils = layers.get(tier).get(0);
-			List<Double> memUtils = convertToRelative(layers.get(tier).get(1), vmBuilder.getRam(), 1024);
+			List<Double> memUtils = convertToRelative(layers.get(tier).get(1), vmBuilder.getRam(), 1024); //kb to mb
 			List<Double> diskReadUtils = convertToRelative(layers.get(tier).get(2), vmBuilder.getDiskAccessRate(), 1);
 			List<Double> diskWriteUtils = convertToRelative(layers.get(tier).get(3), vmBuilder.getDiskAccessRate(), 1);
-			List<Double> bwInUtils = convertToRelative(layers.get(tier).get(4), vmBuilder.getBandwidth(), 1000);
-			List<Double> bwOutUtils = convertToRelative(layers.get(tier).get(5), vmBuilder.getBandwidth(), 1000);
+			List<Double> bwInUtils = convertToRelative(layers.get(tier).get(4), vmBuilder.getBandwidth(), 1024); //kbs to mbs
+			List<Double> bwOutUtils = convertToRelative(layers.get(tier).get(5), vmBuilder.getBandwidth(), 1024); //kbs to mbs
 			//schedule(tier.getId(),1, UtilManager.CLOUDLET_UPDATE, cpuUtils.get(i));
 
 			// check if enough vms are present / too much vms present and handle this event => regarding threshold

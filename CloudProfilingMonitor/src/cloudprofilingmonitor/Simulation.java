@@ -13,6 +13,8 @@ import de.hpi_web.cloudSim.profiling.utilization.UtilizationThreshold;
 import java.io.File;
 import java.util.Map;
 
+import org.cloudbus.cloudsim.core.CloudSim;
+
 /**
  *
  * @author christoph
@@ -65,8 +67,9 @@ public class Simulation extends Thread {
     }
     
     public void stopped(Boolean stopped) {
-        // TODO: stopping not implemented yet
         this.stopped = stopped;
+        CloudSim.terminateSimulation();
+        
     }
     
     public void setModels(Map<String, ResourceModelCollection> models) {

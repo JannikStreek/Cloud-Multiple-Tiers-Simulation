@@ -1,5 +1,8 @@
 package de.hpi_web.cloudSim.profiling.utilization;
 
+/*
+ * DataWrapper for all util values. Used to pass all data at once to the broker. 
+ */
 public class UtilWrapper {
 	private double cpuUtil;
 	private double memUtil;

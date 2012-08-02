@@ -41,18 +41,47 @@ public class Gui extends javax.swing.JFrame implements Observer {
      * Creates new form Gui
      */
     public Gui() {
-        initComponents();
-        
-        initializeSimulation();
-        initializeStatistics();
+    	initComponents();
+    	initializeStatistics();
         initializeCharting();
         initializeModels();
-        
+        initSimRun();
+    }
+    
+    public void initSimRun() {
+        initializeSimulation();
         // set defaults
         submitSettings();
     }
     
-    private void initializeSimulation() {
+    private void restart() {
+    	restartStatistics();
+    	restartCharting();
+    	restartVmPanels();
+    	SimulationPanel.updateUI();
+    	initSimRun();
+    }
+    
+    private void restartVmPanels() {
+    	tier1_VMPanel.removeAll();
+    	tier2_VMPanel.removeAll();
+    	tier3_VMPanel.removeAll();
+		
+	}
+
+	private void restartCharting() {
+        chartPanel = null;
+        chartPanel = new ChartPanel();
+        chartPanel.render(chartCanvas);
+	}
+
+	private void restartStatistics() {
+    	GlobalStatisticsPanel.remove(statistics);
+        statistics = new StatisticsPanel();
+        GlobalStatisticsPanel.add(statistics);
+	}
+
+	private void initializeSimulation() {
         simulation = new Simulation(this, null, null);
         hostBuilder = new HostBuilder();
         dcBuilder = new DatacenterBuilder("DummyName");
@@ -1248,6 +1277,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
 
     private void stopBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopBtnActionPerformed
         simulation.stopped(true);
+        restart();
     }//GEN-LAST:event_stopBtnActionPerformed
 
     private void tierComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_tierComboBoxItemStateChanged

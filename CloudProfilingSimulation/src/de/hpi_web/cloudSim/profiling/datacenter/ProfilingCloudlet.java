@@ -3,6 +3,9 @@ package de.hpi_web.cloudSim.profiling.datacenter;
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.UtilizationModel;
 
+/*
+ * This class extends the CloudSim Cloudlet by some more attributes / properties.
+ */
 public class ProfilingCloudlet extends Cloudlet {
 	
 	private UtilizationModel utilizationModelDiskRead;

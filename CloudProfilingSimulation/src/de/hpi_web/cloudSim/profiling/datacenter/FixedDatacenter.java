@@ -15,6 +15,10 @@ import org.cloudbus.cloudsim.core.SimEvent;
 
 import de.hpi_web.cloudSim.profiling.utilization.UtilManager;
 
+/*
+ * Our FixedDatacenter is basically the same as the one of CloudSim. However, some adjustments have been made.
+ * Especially the cloudlet submit process was changed, to fit to the other changes.
+ */
 public class FixedDatacenter extends Datacenter{
 
 	public FixedDatacenter(de.hpi_web.cloudSim.profiling.builders.DatacenterBuilder builder) throws Exception {

@@ -3,6 +3,9 @@ package de.hpi_web.cloudSim.profiling.datacenter;
 import org.cloudbus.cloudsim.CloudletScheduler;
 import org.cloudbus.cloudsim.Vm;
 
+/*
+ * This class extends the CloudSim Vm by some more attributes / properties.
+ */
 public class ProfilingVm extends Vm {
 	
 	private double diskAccessRate;
