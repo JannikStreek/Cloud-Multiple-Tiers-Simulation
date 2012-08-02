@@ -11,20 +11,11 @@ import Jama.Matrix;
  */
 public class FileBasedPrediction {
 	
-	private static CSVFileReader training;
-	private static CSVFileReader running;
+	private CSVFileReader training;
+	private CSVFileReader running;
 	public static int RUNNING_VALUES = 370;
 	
-	FileBasedPrediction(String trainFile, String runFile) {
-        //The location of the training file
-        training = new CSVFileReader(trainFile);
-        training.ReadFile();
-        //The location of the validation file
-        running = new CSVFileReader(runFile);
-        running.ReadFile();
-	}
-
-	public static void init(String trainFile, String runFile) {
+	public FileBasedPrediction(String trainFile, String runFile) {
         //The location of the training file
         training = new CSVFileReader(trainFile);
         training.ReadFile();
@@ -55,30 +46,30 @@ public class FileBasedPrediction {
     //db network in - 46
     //db network out - 47
 	
-	public static List<List<Double>> predictWebTierUtil() {
+	public List<List<Double>> predictWebTierUtil() {
 		int modeledMetricIndices[] = {28, 29, 30, 31, 32, 33};
 		return getResultList(modeledMetricIndices);
 	}
 	
-	public static List<List<Double>> predictAppTierUtil() {
+	public List<List<Double>> predictAppTierUtil() {
 		int modeledMetricIndices[] = {35,36,37,38,39,40};
 		return getResultList(modeledMetricIndices);
 	}
 	
-	public static List<List<Double>> predictDbTierUtil() {
+	public List<List<Double>> predictDbTierUtil() {
 		int modeledMetricIndices[] = {42, 43, 44, 45,46,47};
 		return getResultList(modeledMetricIndices);
 	}
 	
 	
-	public static List<List<Double>> predictCPUUsage() {
+	public List<List<Double>> predictCPUUsage() {
 		int modeledMetricIndices[] = {21, 28, 35, 42};
 		return getResultList(modeledMetricIndices);
 	}
 	
 
 	
-	protected static List<List<Double>> getResultList(int modeledMetricIndices[]) {
+	protected List<List<Double>> getResultList(int modeledMetricIndices[]) {
 		List<List<Double>> resultList = new ArrayList<List<Double>>();
 		for(int value : modeledMetricIndices) {
 			System.out.println("starting");
@@ -88,33 +79,33 @@ public class FileBasedPrediction {
 		return resultList;
 	}
 	
-	public static List<List<Double>> predictMemoryUsage() {
+	public List<List<Double>> predictMemoryUsage() {
         int modeledMetricIndices[] = {22, 29, 36, 43};
         return getResultList(modeledMetricIndices);
 	}
 	
-	public static List<List<Double>> predictDiskReadUsage() {
+	public List<List<Double>> predictDiskReadUsage() {
         int modeledMetricIndices[] = {23, 30, 37, 44};
         return getResultList(modeledMetricIndices);
 	}
 	
-	public static List<List<Double>> predictDiskWriteUsage() {
+	public List<List<Double>> predictDiskWriteUsage() {
         int modeledMetricIndices[] = {24, 31, 38, 45};
         return getResultList(modeledMetricIndices);
 	}
 	
-	public static List<List<Double>> predictNetworkIncomingUsage() {
+	public List<List<Double>> predictNetworkIncomingUsage() {
         int modeledMetricIndices[] = {25, 32, 39, 46};
         return getResultList(modeledMetricIndices);
 	}
 	
-	public static List<List<Double>> predictNetworkOutgoingUsage() {
+	public List<List<Double>> predictNetworkOutgoingUsage() {
         int modeledMetricIndices[] = {26, 33, 40, 47};
         return getResultList(modeledMetricIndices);
 	}
 
 
-	protected static List<Double> getUsage(int modeledMetricIndex) {
+	protected List<Double> getUsage(int modeledMetricIndex) {
     	List<Double> result = new ArrayList<Double>();
     	//We ignore first column in the csv file which shows the sampling time
         Matrix Ms = new Matrix(training.getRowsNum(),training.getColsNum()-1);

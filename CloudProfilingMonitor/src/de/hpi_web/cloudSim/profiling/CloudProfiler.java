@@ -48,10 +48,10 @@ public class CloudProfiler {
 		// if our input contains models, we will calculate the usage based on them, otherwise we take the sample file provided
 		HashMap<DatacenterBroker, List<List<Double>>> layers = new HashMap<DatacenterBroker, List<List<Double>>>();
 		if (models == null) {
-			FileBasedPrediction.init(training, running);
-			layers.put(brokers.get(0), FileBasedPrediction.predictWebTierUtil());
-			layers.put(brokers.get(1), FileBasedPrediction.predictAppTierUtil());
-			layers.put(brokers.get(2), FileBasedPrediction.predictDbTierUtil());
+			FileBasedPrediction fbp = new FileBasedPrediction(training, running);
+			layers.put(brokers.get(0), fbp.predictWebTierUtil());
+			layers.put(brokers.get(1), fbp.predictAppTierUtil());
+			layers.put(brokers.get(2), fbp.predictDbTierUtil());
 		} else {
 			ModelBasedPrediction mbp = new ModelBasedPrediction(models, running);
 			layers.put(brokers.get(0), mbp.predictWebTierUtil());

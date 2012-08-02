@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package cloudprofilingmonitor;
+package de.hpi_web.cloudSim.monitor;
 
 import de.hpi_web.cloudSim.model.StringConstants;
 import info.monitorenter.gui.chart.ITrace2D;

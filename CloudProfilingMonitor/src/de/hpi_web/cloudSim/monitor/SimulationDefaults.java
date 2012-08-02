@@ -1,4 +1,4 @@
-package cloudprofilingmonitor;
+package de.hpi_web.cloudSim.monitor;
 
 /**
  *

@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package cloudprofilingmonitor;
+package de.hpi_web.cloudSim.monitor;
 
 import java.io.File;
 
