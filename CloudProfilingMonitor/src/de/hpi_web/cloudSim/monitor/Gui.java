@@ -726,44 +726,44 @@ public class Gui extends javax.swing.JFrame implements Observer {
         hdWriteModelLabel.setText("Disk Write:");
 
         bwInModelActiveBtn.setText("Active");
-        bwInModelActiveBtn.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                bwInModelActiveBtnStateChanged(evt);
+        bwInModelActiveBtn.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                bwInModelActiveBtnItemStateChanged(evt);
             }
         });
 
         cpuModelActiveBtn.setText("Active");
-        cpuModelActiveBtn.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                cpuModelActiveBtnStateChanged(evt);
+        cpuModelActiveBtn.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cpuModelActiveBtnItemStateChanged(evt);
             }
         });
 
         memoryModelActiveBtn.setText("Active");
-        memoryModelActiveBtn.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                memoryModelActiveBtnStateChanged(evt);
+        memoryModelActiveBtn.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                memoryModelActiveBtnItemStateChanged(evt);
             }
         });
 
         bwOutModelActiveBtn.setText("Active");
-        bwOutModelActiveBtn.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                bwOutModelActiveBtnStateChanged(evt);
+        bwOutModelActiveBtn.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                bwOutModelActiveBtnItemStateChanged(evt);
             }
         });
 
         hdReadModelActiveBtn.setText("Active");
-        hdReadModelActiveBtn.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                hdReadModelActiveBtnStateChanged(evt);
+        hdReadModelActiveBtn.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                hdReadModelActiveBtnItemStateChanged(evt);
             }
         });
 
         hdWriteModelActiveBtn.setText("Active");
-        hdWriteModelActiveBtn.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                hdWriteModelActiveBtnStateChanged(evt);
+        hdWriteModelActiveBtn.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                hdWriteModelActiveBtnItemStateChanged(evt);
             }
         });
 
@@ -1353,36 +1353,6 @@ public class Gui extends javax.swing.JFrame implements Observer {
         }
     }//GEN-LAST:event_trainingRadioBtnItemStateChanged
 
-    private void bwOutModelActiveBtnStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_bwOutModelActiveBtnStateChanged
-        String tier = (String) modelTierComboBox.getSelectedItem();
-        customModelMap.get(tier).get(StringConstants.Resource.CPU).setActive(bwOutModelActiveBtn.isSelected());
-    }//GEN-LAST:event_bwOutModelActiveBtnStateChanged
-
-    private void bwInModelActiveBtnStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_bwInModelActiveBtnStateChanged
-        String tier = (String) modelTierComboBox.getSelectedItem();
-        customModelMap.get(tier).get(StringConstants.Resource.BANDWIDTH_IN).setActive(bwInModelActiveBtn.isSelected());
-    }//GEN-LAST:event_bwInModelActiveBtnStateChanged
-
-    private void memoryModelActiveBtnStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_memoryModelActiveBtnStateChanged
-        String tier = (String) modelTierComboBox.getSelectedItem();
-        customModelMap.get(tier).get(StringConstants.Resource.MEMORY).setActive(memoryModelActiveBtn.isSelected());
-    }//GEN-LAST:event_memoryModelActiveBtnStateChanged
-
-    private void cpuModelActiveBtnStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_cpuModelActiveBtnStateChanged
-        String tier = (String) modelTierComboBox.getSelectedItem();
-        customModelMap.get(tier).get(StringConstants.Resource.CPU).setActive(cpuModelActiveBtn.isSelected());
-    }//GEN-LAST:event_cpuModelActiveBtnStateChanged
-
-    private void hdReadModelActiveBtnStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_hdReadModelActiveBtnStateChanged
-        String tier = (String) modelTierComboBox.getSelectedItem();
-        customModelMap.get(tier).get(StringConstants.Resource.HD_READ).setActive(hdReadModelActiveBtn.isSelected());
-    }//GEN-LAST:event_hdReadModelActiveBtnStateChanged
-
-    private void hdWriteModelActiveBtnStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_hdWriteModelActiveBtnStateChanged
-        String tier = (String) modelTierComboBox.getSelectedItem();
-        customModelMap.get(tier).get(StringConstants.Resource.HD_WRITE).setActive(hdWriteModelActiveBtn.isSelected());
-    }//GEN-LAST:event_hdWriteModelActiveBtnStateChanged
-
     private void modelsRadioBtnStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_modelsRadioBtnStateChanged
         // TODO add your handling code here:
     }//GEN-LAST:event_modelsRadioBtnStateChanged
@@ -1394,6 +1364,36 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private void trainingRadioBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_trainingRadioBtnMouseClicked
         trainingRadioBtn.setSelected(true);
     }//GEN-LAST:event_trainingRadioBtnMouseClicked
+
+    private void cpuModelActiveBtnItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cpuModelActiveBtnItemStateChanged
+        String tier = (String) modelTierComboBox.getSelectedItem();
+        customModelMap.get(tier).get(StringConstants.Resource.CPU).setActive(cpuModelActiveBtn.isSelected());
+    }//GEN-LAST:event_cpuModelActiveBtnItemStateChanged
+
+    private void memoryModelActiveBtnItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_memoryModelActiveBtnItemStateChanged
+        String tier = (String) modelTierComboBox.getSelectedItem();
+        customModelMap.get(tier).get(StringConstants.Resource.MEMORY).setActive(memoryModelActiveBtn.isSelected());
+    }//GEN-LAST:event_memoryModelActiveBtnItemStateChanged
+
+    private void bwInModelActiveBtnItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_bwInModelActiveBtnItemStateChanged
+        String tier = (String) modelTierComboBox.getSelectedItem();
+        customModelMap.get(tier).get(StringConstants.Resource.BANDWIDTH_IN).setActive(bwInModelActiveBtn.isSelected());
+    }//GEN-LAST:event_bwInModelActiveBtnItemStateChanged
+
+    private void bwOutModelActiveBtnItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_bwOutModelActiveBtnItemStateChanged
+        String tier = (String) modelTierComboBox.getSelectedItem();
+        customModelMap.get(tier).get(StringConstants.Resource.BANDWIDTH_OUT).setActive(bwOutModelActiveBtn.isSelected());
+    }//GEN-LAST:event_bwOutModelActiveBtnItemStateChanged
+
+    private void hdReadModelActiveBtnItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_hdReadModelActiveBtnItemStateChanged
+        String tier = (String) modelTierComboBox.getSelectedItem();
+        customModelMap.get(tier).get(StringConstants.Resource.HD_READ).setActive(hdReadModelActiveBtn.isSelected());
+    }//GEN-LAST:event_hdReadModelActiveBtnItemStateChanged
+
+    private void hdWriteModelActiveBtnItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_hdWriteModelActiveBtnItemStateChanged
+        String tier = (String) modelTierComboBox.getSelectedItem();
+        customModelMap.get(tier).get(StringConstants.Resource.HD_WRITE).setActive(hdWriteModelActiveBtn.isSelected());
+    }//GEN-LAST:event_hdWriteModelActiveBtnItemStateChanged
 
     private void selectModel(ResourceModel model) {
         selectedModel = model;

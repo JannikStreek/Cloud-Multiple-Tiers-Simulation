@@ -14,6 +14,7 @@ public class ModelBasedPrediction {
     private Map<String, ResourceModelCollection> models;
     private CSVFileReader running;
     private static int RUNNING_VALUES = 370;
+    private static int validationInput[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17};
     // mapping for the keys from the model dictionary to the modeledMetrixIndex
     //1 = cpu
     //2 = memory
@@ -33,7 +34,7 @@ public class ModelBasedPrediction {
         models = modelMap;
         running = new CSVFileReader(runFile);
         running.ReadFile();
-        RUNNING_VALUES = running.getRowsNum();
+        //RUNNING_VALUES = running.getRowsNum();
     }
 
     public List<List<Double>> predictWebTierUtil() {
@@ -74,7 +75,7 @@ public class ModelBasedPrediction {
             }
         }
 
-
+ 
         Matrix x = convertModelToMatrix(model);
         if (x == null) {
             return zeroedList(RUNNING_VALUES);
@@ -83,7 +84,7 @@ public class ModelBasedPrediction {
 //	System.out.println("System parameters, (theta) at equation 5: ");
         x.print(2, 4);
 
-        int validationInput[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17};
+        
         Matrix uv = Mv.getMatrix(0, RUNNING_VALUES, validationInput);
 
         //Assume the last measured value of the modeled metric to be zero
@@ -125,8 +126,8 @@ public class ModelBasedPrediction {
         // this looks horrible... is there another way?
         Object[] modelArray = model.toList().toArray();
         Double[] values = Arrays.copyOf(modelArray, modelArray.length, Double[].class);
-        double[] primitiveValues = new double[RUNNING_VALUES];
-        for (int i = 0; i < RUNNING_VALUES; i++) {
+        double[] primitiveValues = new double[validationInput.length+1];
+        for (int i = 0; i < validationInput.length+1; i++) {
             if (i >= values.length) {
                 primitiveValues[i] = 0.0;
             } else {
