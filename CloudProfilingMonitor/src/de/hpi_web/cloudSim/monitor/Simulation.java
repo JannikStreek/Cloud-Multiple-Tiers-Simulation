@@ -48,8 +48,24 @@ public class Simulation extends Thread {
 
     @Override
     public void run() {
-        // TODO: how to safely stop and resume the thread?
-        CloudProfiler.start(
+        if (training == null) {
+            CloudProfiler.start(
+                observer, 
+                delay, 
+                "", 
+                running.getAbsolutePath(), 
+                cpuThreshold, 
+                memThreshold,
+                bwThreshold,
+                hdThreshold,
+                dcBuilder,
+                vmBuilder,
+                models,
+                vmsAtStart,
+                minPerTurn,
+                costPerMin);
+        } else {
+           CloudProfiler.start(
                 observer, 
                 delay, 
                 training.getAbsolutePath(), 
@@ -64,6 +80,7 @@ public class Simulation extends Thread {
                 vmsAtStart,
                 minPerTurn,
                 costPerMin);
+        }
     }
     
     public void stopped(Boolean stopped) {

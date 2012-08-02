@@ -5,6 +5,7 @@ import de.hpi_web.cloudSim.model.ResourceModel;
 import de.hpi_web.cloudSim.model.ResourceModelCollection;
 import de.hpi_web.cloudSim.model.StringConstants;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -120,7 +121,10 @@ public class ModelBasedPrediction {
         if (!model.isActive()) {
             return null;
         }
-        Double[] values = (Double[]) model.toList().toArray();
+//        Double[] values = (Double[]) model.toList().toArray();
+        // this looks horrible... is there another way?
+        Object[] modelArray = model.toList().toArray();
+        Double[] values = Arrays.copyOf(modelArray, modelArray.length, Double[].class);
         double[] primitiveValues = new double[RUNNING_VALUES];
         for (int i = 0; i < RUNNING_VALUES; i++) {
             if (i >= values.length) {
