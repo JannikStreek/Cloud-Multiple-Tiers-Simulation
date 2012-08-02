@@ -35,6 +35,19 @@ If you want to edit the rest of the code (which was managed using Eclipse) we su
 
 The main class to start the simulator is Gui.java in the monitoring project.
 
+Using the Model Tab
+-------------
+To add new Models, select a Tier, click 'Edit' on the resource you are about to edit and paste your model inside the field. Click 'submit' and set the model 'active' with the dedicated button. Some examples of models can be found below.
+
+Example Models
+-------------
+CPU Web Tier: 0.0119;0.039;0.0668;0.0288;0.0133;0.0604;-0.029;0.0384;0.0625;0.0741;-0.0367;0.0826;0.0124;-0.0184;0.0366;0.0139;0.1013;0.0296;0.0431
+
+Memory Web Tier: 0.893;70.7097;-100.5962;69.3366;-522.9268;1217.8132;-219.092;152.5894;243.5844;-1191.8981;76.0063;148.5534;-50.5976;995.324;521.8842;-549.1095;39.1384;-159.4872;119.2077
+
+CPU App Tier: -0.0289;0.0337;0.046;0.029;0.0092;0.0284;0.0374;-0.0389;0.057;0.0033;0.0176;0.0476;0.0262;-0.0054;0.0314;0.0218;0.0339;0.0268;0.0271
+
+
 Fixed Bugs in CloudSim
 -------------
 During our work with cloudsim, we discovered at least these three bugs:
