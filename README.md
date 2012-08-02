@@ -8,7 +8,7 @@ Developed by Christoph Müller and Jannik Streek at Hasso Plattner Institute in 
 
 Getting started: Using the provided simulator as a jar
 -------------
-The most convenient way to get started, is to just use the provided jar. To do so, change to the folder where you checked out the project, and start the jar via: java -jar xy.jar
+The most convenient way to get started, is to just use the provided jar in the main folder. To do so, change to the folder where you checked out the project, and start the jar via: java -jar CloudMultiSim.jar
 A window will appear. Now you can adjust your settings, put certain models inside the simulation etc.
 Hit the start button, to finally start the simulation. Via the graph tab, you can get a live feedback of your provided models.
 
@@ -21,10 +21,7 @@ Used java sdk: 1.7
 
 Using the project in Eclipse
 -------------
-From Eclipse choose New Project > New Java Project and select the folder where you cloned the project. Note that you have to uncheck the checkbox 'use default location'. Select both possible projects which you can add. The overall project consists of two projects, one responsible for the backend and one responsible for the gui.
-
-Now you need to add the dependencies for the projects, because we don't use maven/other build tools. To do so, select the projects, go to properties > java build path and add all the dependencies form the dependencies folder you just cloned.
-For the monitoring project it is also important to add the second project to the build path.
+From Eclipse choose Import Project > Select the Project inside the cloned folder.
 
 To start the simulation, just start the Gui.java in the monitoring project as a java application.
 
@@ -37,7 +34,7 @@ The main class to start the simulator is Gui.java in the monitoring project.
 
 Using the Model Tab
 -------------
-To add new Models, select a Tier, click 'Edit' on the resource you are about to edit and paste your model inside the field. Click 'submit' and set the model 'active' with the dedicated button. Some examples of models can be found below.
+To add new Models, select a Tier, click 'Edit' on the resource you are about to edit and paste your model inside the field. Click 'submit' to save your entries. Some examples of models can be found below.
 
 Example Models
 -------------
