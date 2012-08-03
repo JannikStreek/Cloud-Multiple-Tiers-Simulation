@@ -28,7 +28,7 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 //	private List<Cloudlet> cloudlets;
 	private List<Observer> observers;
 	private List<Integer> dcAffinity;
-	private int amount = 0;
+	private double amount = 0;
 	private double pricePerVm = 0.0;
 	private double minPerTick = 0.0;
 
@@ -284,7 +284,7 @@ public class ProfilingBroker extends DatacenterBroker implements Observable{
 		
 	}
 	
-	public int getAmount() {
+	public double getAmount() {
 		return amount;
 	}
 

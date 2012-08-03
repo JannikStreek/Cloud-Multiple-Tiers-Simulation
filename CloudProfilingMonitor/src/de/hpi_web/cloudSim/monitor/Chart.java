@@ -8,6 +8,7 @@ import de.hpi_web.cloudSim.model.StringConstants;
 import info.monitorenter.gui.chart.Chart2D;
 import info.monitorenter.gui.chart.ITrace2D;
 import info.monitorenter.gui.chart.traces.Trace2DLtd;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,9 +31,9 @@ public class Chart extends Chart2D {
         valuesMap.put(StringConstants.Tier.DB, new ArrayList<Double>());
         
         tracesMap = new HashMap<>();
-        tracesMap.put(StringConstants.Tier.WEB, new Trace2DLtd(ChartPanel.TRACE_SIZE));
-        tracesMap.put(StringConstants.Tier.APP, new Trace2DLtd(ChartPanel.TRACE_SIZE));
-        tracesMap.put(StringConstants.Tier.DB, new Trace2DLtd(ChartPanel.TRACE_SIZE));
+        tracesMap.put(StringConstants.Tier.WEB, newTrace(ChartPanel.TRACE_SIZE, Color.red));
+        tracesMap.put(StringConstants.Tier.APP, newTrace(ChartPanel.TRACE_SIZE, Color.green));
+        tracesMap.put(StringConstants.Tier.DB, newTrace(ChartPanel.TRACE_SIZE, Color.blue));
         
         for (String tier : tracesMap.keySet()) {
             ITrace2D trace = tracesMap.get(tier);
@@ -72,6 +73,12 @@ public class Chart extends Chart2D {
     private void setVisibilityForTraces(boolean visible) {
         for (ITrace2D trace : tracesMap.values())
             trace.setVisible(visible);
+    }
+
+    private ITrace2D newTrace(int size, Color color) {
+        ITrace2D trace = new Trace2DLtd(size);
+        trace.setColor(color);
+        return trace;
     }
     
     

@@ -151,7 +151,6 @@ public class Gui extends javax.swing.JFrame implements Observer {
         tier3_VMPanel = new javax.swing.JPanel();
         SettingsPanel = new javax.swing.JPanel();
         submitSettingsButton = new javax.swing.JButton();
-        defaultSettingsButton = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         numberOfHostsTextField = new javax.swing.JTextField();
@@ -287,8 +286,6 @@ public class Gui extends javax.swing.JFrame implements Observer {
                 submitSettingsButtonActionPerformed(evt);
             }
         });
-
-        defaultSettingsButton.setText("Default");
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Datacenter"));
 
@@ -629,9 +626,7 @@ public class Gui extends javax.swing.JFrame implements Observer {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(defaultSettingsButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(submitSettingsButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(submitSettingsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         SettingsPanelLayout.setVerticalGroup(
@@ -642,8 +637,6 @@ public class Gui extends javax.swing.JFrame implements Observer {
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, SettingsPanelLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(defaultSettingsButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(submitSettingsButton))
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -1362,7 +1355,6 @@ public class Gui extends javax.swing.JFrame implements Observer {
     private javax.swing.JTextField costPerMinTextField;
     private javax.swing.JLabel cpuModelLabel;
     private javax.swing.JTextArea customModelInput;
-    private javax.swing.JButton defaultSettingsButton;
     private javax.swing.JTextField delayTextField;
     private javax.swing.JButton editBwInModelBtn;
     private javax.swing.JButton editBwOutModelBtn;
