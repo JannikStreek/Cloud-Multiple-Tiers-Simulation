@@ -18,7 +18,7 @@ public class ResourceModel {
     public ResourceModel() {
         super();
         this.values = new ArrayList<>();
-        this.isActive = false;
+        this.isActive = true;
     }
     
     public ResourceModel(List<Double> values) {
