@@ -67,15 +67,18 @@ public class ChartPanel {
     }
     public void selectCpuChart() {
         selectAndUpdate(cpuChart);
+        System.out.println("cpuChart");
     }
     public void selectMemChart() {
         selectAndUpdate(memChart);
     }
     public void selectBwInChart() {
         selectAndUpdate(bwInChart);
+        System.out.println("bwInChart");
     }
     public void selectBwOutChart() {
         selectAndUpdate(bwOutChart);
+        System.out.println("bwOutChart");
     }
     public void selectHdReadChart() {
         selectAndUpdate(hdReadChart);
@@ -120,7 +123,7 @@ public class ChartPanel {
             case StringConstants.Resource.CPU:           selectCpuChart();       break;
             case StringConstants.Resource.MEMORY:        selectMemChart();       break;
             case StringConstants.Resource.BANDWIDTH_IN:  selectBwInChart();      break;
-            case StringConstants.Resource.BANDWIDTH_OUT: selectCpuChart();       break;
+            case StringConstants.Resource.BANDWIDTH_OUT: selectBwOutChart();       break;
             case StringConstants.Resource.HD_READ:       selectHdReadChart();    break;
             case StringConstants.Resource.HD_WRITE:      selectHdWriteChart();   break;
             default:                                     selectCpuChart();       break;
